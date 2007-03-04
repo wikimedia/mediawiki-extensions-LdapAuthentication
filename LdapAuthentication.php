@@ -22,10 +22,10 @@
  * Password authentication, and Smartcard Authentication support are currently
  * available. All forms of authentication, current and future, should support
  * group, and attribute based restrictions; preference pulling; and group
- * syncronization. All forms should have basic support for adding users, changing
- * passwords, and updating preferences in LDAP.
+ * syncronization. All forms of authentication should have basic support for 
+ * adding users, changing passwords, and updating preferences in LDAP.
  *
- * Password authentication has a number of configurations including straight binds,
+ * Password authentication has a number of configurations, including straight binds,
  * proxy based authentication, and anonymous-search based authentication.
  *
  * @package MediaWiki
@@ -34,9 +34,11 @@
 #
 # LdapAuthentication.php
 #
-# Info availible at http://bugzilla.wikipedia.org/show_bug.cgi?id=814
-# and at http://meta.wikimedia.org/wiki/LDAP_Authentication
+# Info available at http://meta.wikimedia.org/wiki/LDAP_Authentication
 # and at http://meta.wikimedia.org/wiki/LDAP_Authentication_Configuration_Examples
+# and at http://meta.wikimedia.org/wiki/LDAP_Smartcard_Authentication_Configuration_Examples
+#
+# Support is available at http://meta.wikimedia.org/wiki/Talk:LDAP_Authentication
 #
 # Version 1.1d / 12/04/2006
 #
