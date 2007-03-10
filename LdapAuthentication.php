@@ -857,6 +857,14 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		if ( $username != '' ) {
 			$this->printDebug("Username isn't empty.",1);
+
+			//We want to use the username returned by LDAP
+			//if it exists
+			if ( $this->LDAPUsername != '' ) {
+				$this->printDebug("Using LDAPUsername.",1);
+				$username = $this->LDAPUsername;
+			}
+
 			//Change username to lowercase so that multiple user accounts
 			//won't be created for the same user.
 			$username = strtolower($username);
@@ -1433,6 +1441,7 @@ function AutoAuthSetup() {
 	global $wgAuth;
 	global $wgLDAPAutoAuthMethod;
 	global $wgLDAPUseSmartcardAuth;
+	global $wgLDAPSmartcardDomain;
 
 	$wgAuth = new LdapAuthenticationPlugin();
 
@@ -1450,6 +1459,7 @@ function AutoAuthSetup() {
 				$wgHooks['AutoAuthenticate'][] = 'SSLAuth'; /* Hook for magical authN */
 				$wgHooks['PersonalUrls'][] = 'NoLogout'; /* Disallow logout link */
 				$wgLDAPUseSmartcardAuth = true;
+				$wgAuth->setDomain($wgLDAPSmartcardDomain);
 			}
 			break;
 		default:
@@ -1471,17 +1481,8 @@ function SSLAuth(&$user) {
 	global $wgLDAPSSLUsername;
 	global $wgUser;
 	global $wgAuth;
-	global $wgLDAPSmartcardDomain;
-	global $wgLDAPUseSmartcardAuth;
 
 	$wgAuth->printDebug("Entering SSLAuth.",1);
-
-	if (!$wgLDAPUseSmartcardAuth) {
-		$wgAuth->printDebug("Not using smartcard authentication, returning.",1);
-		return;
-	}
-
-	$wgAuth->setDomain($wgLDAPSmartcardDomain);
 
 	//Give us a user, see if we're around
 	$tmpuser = User::LoadFromSession();
@@ -1490,20 +1491,21 @@ function SSLAuth(&$user) {
 	if($tmpuser->isLoggedIn()) {
 		$wgAuth->printDebug("User is already logged in.",1);
 		return;
-	} else {
-		$wgAuth->printDebug("User is not logged in, we need to authenticate",1);
-		$authenticated = $wgAuth->authenticate($wgLDAPSSLUsername);
-		if (!$authenticated) {
-			//If the user doesn't exist in LDAP, there isn't much reason to
-			//go any further.
-			$wgAuth->printDebug("User wasn't found in LDAP, exiting.",1);
-			return;
-		}
-
-		//We need the username that MediaWiki will always use, *not* the one we
-		//get from LDAP.
-		$mungedUsername = $wgAuth->getCanonicalName($wgAuth->getLDAPUsername());
 	}
+
+	//The user hasn't already been authenticated, let's check them
+	$wgAuth->printDebug("User is not logged in, we need to authenticate",1);
+	$authenticated = $wgAuth->authenticate($wgLDAPSSLUsername);
+	if (!$authenticated) {
+		//If the user doesn't exist in LDAP, there isn't much reason to
+		//go any further.
+		$wgAuth->printDebug("User wasn't found in LDAP, exiting.",1);
+		return;
+	}
+
+	//We need the username that MediaWiki will always use, *not* the one we
+	//get from LDAP.
+	$mungedUsername = $wgAuth->getCanonicalName($wgLDAPSSLUsername);
 
 	$wgAuth->printDebug("User exists in LDAP; finding the user by name in MediaWiki.",1);
 
@@ -1553,9 +1555,6 @@ function SSLAuth(&$user) {
 
 	//Create the user
 	$lf->initUser($wgUser);
-
-	//Update the user's settings
-	$wgAuth->updateUser($wgUser);
 
 	//Initialize the user
 	$wgUser->setupSession();
