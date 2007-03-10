@@ -163,7 +163,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		//TLS needs to be started after the connection is made
 		if ( $encryptionType == "tls" ) {
 			$this->printDebug("Using TLS",2);
-			ldap_start_tls($ldapconn);
+			if ( !ldap_start_tls( $ldapconn ) ) {
+				$this->printDebug("Failed to start TLS.",2);
+				return;
+			}
 		}
 
 		return $ldapconn;
