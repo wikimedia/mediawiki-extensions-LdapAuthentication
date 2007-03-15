@@ -1,5 +1,5 @@
 <?php
-# Copyright (C) 2004 Ryan Lane <rlane32@gmail.com>
+# Copyright (C) 2004 Ryan Lane <http://www.mediawiki.org/wiki/User:Ryan_lane>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -891,6 +891,20 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	}
 
 	/**
+	 * Configures the authentication plugin for use with auto-authentication
+	 * plugins.
+	 *
+	 * @access public
+	 */
+	function autoAuthSetup() {
+		global $wgLDAPUseSmartcardAuth;
+		global $wgLDAPSmartcardDomain;
+
+		$wgLDAPUseSmartcardAuth = true;
+		$this->setDomain($wgLDAPSmartcardDomain);
+	}
+
+	/**
 	 * Gets the searchstring for a user based upon settings for the domain.
 	 * Returns a full DN for a user.
 	 *
@@ -1415,6 +1429,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 */
 	function useSmartcardAuth() {
 		global $wgLDAPUseSmartcardAuth, $wgLDAPSmartcardDomain;
+
 		return $wgLDAPUseSmartcardAuth && $_SESSION['wsDomain'] == $wgLDAPSmartcardDomain;
 	}
 }
@@ -1424,9 +1439,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
  */
 $wgExtensionCredits['other'][] = array(
 	'name' => 'LDAP Authentication Plugin',
-	'version' => '1.1d',
+	'version' => '1.1e',
 	'author' => 'Ryan Lane',
-	'description' => 'LDAP Authentication plugin with support for numerous LDAP authentication methods',
+	'description' => 'LDAP Authentication plugin with support for multiple LDAP authentication methods',
 	'url' => 'http://meta.wikimedia.org/wiki/LDAP_Authentication'
 	);
 
@@ -1443,8 +1458,6 @@ function AutoAuthSetup() {
 	global $wgHooks;
 	global $wgAuth;
 	global $wgLDAPAutoAuthMethod;
-	global $wgLDAPUseSmartcardAuth;
-	global $wgLDAPSmartcardDomain;
 
 	$wgAuth = new LdapAuthenticationPlugin();
 
@@ -1461,8 +1474,6 @@ function AutoAuthSetup() {
 				$wgAuth->printDebug("wgLDAPSSLUsername is not null, adding hooks.",1);
 				$wgHooks['AutoAuthenticate'][] = 'SSLAuth'; /* Hook for magical authN */
 				$wgHooks['PersonalUrls'][] = 'NoLogout'; /* Disallow logout link */
-				$wgLDAPUseSmartcardAuth = true;
-				$wgAuth->setDomain($wgLDAPSmartcardDomain);
 			}
 			break;
 		default:
@@ -1495,6 +1506,10 @@ function SSLAuth(&$user) {
 		$wgAuth->printDebug("User is already logged in.",1);
 		return;
 	}
+
+	//Let regular authentication plugins configure themselves for auto
+	//authentication chaining
+	$wgAuth->autoAuthSetup();
 
 	//The user hasn't already been authenticated, let's check them
 	$wgAuth->printDebug("User is not logged in, we need to authenticate",1);
