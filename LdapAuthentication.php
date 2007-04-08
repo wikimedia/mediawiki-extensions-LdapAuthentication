@@ -592,9 +592,13 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		if ( isset($wgLDAPUpdateLDAP[$_SESSION['wsDomain']]) ) {
 			$updateLDAP = $wgLDAPUpdateLDAP[$_SESSION['wsDomain']];
+		} else {
+			$updateLDAP = false;
 		}
 		if ( isset($wgLDAPMailPassword[$_SESSION['wsDomain']]) ) {
 			$mailPassword = $wgLDAPMailPassword[$_SESSION['wsDomain']];
+		} else {
+			$mailPassword = false;
 		}
 
 		if ( $updateLDAP || $mailPassword ) { 
@@ -631,7 +635,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		}
 
 		if ($wgLDAPRequiredGroups || $wgLDAPGroupDN) {
-			$this->printDebug("The wiki is requiring users to be in specific groups, cannot add users as this would be a security hole.",1);
+			$this->printDebug("The wiki is requiring users to be in specific groups, and cannot add users as this would be a security hole.",1);
 			//It is possible that later we can add users into
 			//groups, but since we don't support it, we don't want
 			//to open holes!
@@ -971,11 +975,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		if ( (isset($wgLDAPRequireAuthAttribute[$_SESSION['wsDomain']]) && $wgLDAPRequireAuthAttribute[$_SESSION['wsDomain']])
 			&& $this->useSmartcardAuth() ) {
 			$auth_filter = "(" . $wgLDAPAuthAttribute[$_SESSION['wsDomain']] . ")";
-			$srch_filter = "(" . $wgLDAPSearchAttributes[$_SESSION['wsDomain']] . "=$username)";
+			$srch_filter = "(" . $wgLDAPSearchAttributes[$_SESSION['wsDomain']] . "=" . $this->getLdapEscapedString($username) . ")";
 			$filter = "(&" . $srch_filter . $auth_filter . ")";
 			$this->printDebug("Created an auth attribute filter: $filter",2);
 		} else {
-			$filter = "(" . $wgLDAPSearchAttributes[$_SESSION['wsDomain']] . "=$username)";
+			$filter = "(" . $wgLDAPSearchAttributes[$_SESSION['wsDomain']] . "=" . $this->getLdapEscapedString($username) . ")";
 			$this->printDebug("Created a regular filter: $filter",2);
 		}
 
@@ -1009,9 +1013,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$this->printDebug("Entering isMemberOfLdapGroup (DEPRECATED)",1);
 
 		//we need to do a subbase search for the entry
-		$filter = "(member=".$userDN.")";
-		$info=ldap_get_entries($ldapconn,@ldap_search($ldapconn, $groupDN, $filter));
-		return ($info["count"]>=1);
+		$filter = "(member=" . $this->getLdapEscapedString($userDN) . ")";
+		$info = ldap_get_entries( $ldapconn, @ldap_search($ldapconn, $groupDN, $filter) );
+		return ( $info["count"] >= 1 );
 	}
 
 	/**
@@ -1239,7 +1243,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$nameattribute = $wgLDAPGroupNameAttribute[$_SESSION['wsDomain']];
 
 		//Search for the groups this user is in
-		$filter = "(&($attribute=$dn)(objectclass=$objectclass))";
+		$filter = "(&($attribute=" . $this->getLdapEscapedString($dn) . ")(objectclass=$objectclass))";
 
 		$this->printDebug("Search string: $filter",2);
 
@@ -1432,6 +1436,21 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		return $wgLDAPUseSmartcardAuth && $_SESSION['wsDomain'] == $wgLDAPSmartcardDomain;
 	}
+
+	/**
+	 * Returns a string which has the chars *, (, ), \ & NUL escaped to LDAP compliant
+	 * syntax as per RFC 2254
+	 * Thanks and credit to Iain Colledge for the research and function.
+	 * 
+	 * @param string $string
+	 * @return string
+	 * @access private
+	 */
+	function getLdapEscapedString ($string) {
+		// Make the string LDAP compliant by escaping *, (, ) , \ & NUL
+		return str_replace(array("*","(",")","\\","\x00"),array("\\2a","\\28","\\29","\\5c","\\00"),$string);
+	}
+
 }
 
 /**
