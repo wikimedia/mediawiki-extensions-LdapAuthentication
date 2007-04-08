@@ -1255,17 +1255,25 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$bind = $this->bindAs($ldapconn, $wgLDAPProxyAgent[$_SESSION['wsDomain']], $wgLDAPProxyAgentPassword[$_SESSION['wsDomain']]);
 		}
 
-		$info = ldap_get_entries($ldapconn,@ldap_search($ldapconn, $base, $filter));
+		$info = @ldap_search($ldapconn, $base, $filter);
+		if ( !$info ) {
+			$this->printDebug("No entries returned from search.",2);
+			//Return an array with two empty arrays so that other functions
+			//don't error out.
+			return array( array(), array() );
+		}
+
+		$entries = @ldap_get_entries($ldapconn,$info);
 
 		//We need to shift because the first entry will be a count
-		array_shift($info);
+		array_shift($entries);
 
 		//Let's get a list of both full dn groups and shortname groups
 		$groups = array();
 		$shortnamegroups = array();
-		foreach ($info as $i) {
-			$mem = strtolower($i['dn']);
-			$shortnamemem = strtolower($i[$nameattribute][0]);
+		foreach ($entries as $entry) {
+			$mem = strtolower($entry['dn']);
+			$shortnamemem = strtolower($entry[$nameattribute][0]);
 
 			array_push($groups,$mem);
 			array_push($shortnamegroups,$shortnamemem);
