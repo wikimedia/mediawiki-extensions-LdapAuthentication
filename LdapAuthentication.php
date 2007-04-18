@@ -590,6 +590,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	function allowPasswordChange() {
 		global $wgLDAPUpdateLDAP, $wgLDAPMailPassword;
 
+		// Local domains need to be able to change passwords
+		if ( 'local' == $_SESSION['wsDomain'] ) {
+			return true;
+		}
+
 		if ( isset($wgLDAPUpdateLDAP[$_SESSION['wsDomain']]) ) {
 			$updateLDAP = $wgLDAPUpdateLDAP[$_SESSION['wsDomain']];
 		} else {
