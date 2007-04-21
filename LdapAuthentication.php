@@ -34,11 +34,11 @@
 #
 # LdapAuthentication.php
 #
-# Info available at http://meta.wikimedia.org/wiki/LDAP_Authentication
-# and at http://meta.wikimedia.org/wiki/LDAP_Authentication_Configuration_Examples
-# and at http://meta.wikimedia.org/wiki/LDAP_Smartcard_Authentication_Configuration_Examples
+# Info available at http://www.mediawiki.org/wiki/Extension:LDAP_Authentication
+# and at http://www.mediawiki.org/wiki/Extension:LDAP_Authentication/Configuration_Examples
+# and at http://www.mediawiki.org/wiki/Extension:LDAP_Authentication/Smartcard_Configuration_Examples
 #
-# Support is available at http://meta.wikimedia.org/wiki/Talk:LDAP_Authentication
+# Support is available at http://www.mediawiki.org/wiki/Extension_talk:LDAP_Authentication 
 #
 
 require_once( 'AuthPlugin.php' );
@@ -1472,7 +1472,7 @@ $wgExtensionCredits['other'][] = array(
 	'version' => '1.1f (alpha)',
 	'author' => 'Ryan Lane',
 	'description' => 'LDAP Authentication plugin with support for multiple LDAP authentication methods',
-	'url' => 'http://meta.wikimedia.org/wiki/LDAP_Authentication'
+	'url' => 'http://www.mediawiki.org/wiki/Extension:LDAP_Authentication',
 	);
 
 // The following was derived from the SSL Authentication plugin
