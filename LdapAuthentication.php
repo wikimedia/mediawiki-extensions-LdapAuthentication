@@ -1529,7 +1529,7 @@ function SSLAuth(&$user) {
 	$wgAuth->printDebug("Entering SSLAuth.",1);
 
 	//Give us a user, see if we're around
-	$tmpuser = User::LoadFromSession();
+	$tmpuser = User::newFromSession();
 
 	//They already with us?  If so, quit this function.
 	if($tmpuser->isLoggedIn()) {
