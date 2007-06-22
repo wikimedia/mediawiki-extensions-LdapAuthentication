@@ -1653,7 +1653,7 @@ function SSLAuth( &$user ) {
 		$wgAuth->updateUser( $wgUser );
 		$wgUser->setCookies();
 		$wgUser->setupSession();
-		return false;
+		return true;
 	}
 	$wgAuth->printDebug( "User does not exist in local database; creating.", 1 );
 
