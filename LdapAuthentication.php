@@ -1669,7 +1669,7 @@ function SSLAuth( &$user ) {
 	//They already with us?  If so, quit this function.
 	if( $tmpuser->isLoggedIn() ) {
 		$wgAuth->printDebug( "User is already logged in.", self::NONSENSITIVE );
-		return;
+		return true;
 	}
 
 	//Let regular authentication plugins configure themselves for auto
@@ -1683,7 +1683,7 @@ function SSLAuth( &$user ) {
 		//If the user doesn't exist in LDAP, there isn't much reason to
 		//go any further.
 		$wgAuth->printDebug("User wasn't found in LDAP, exiting.", self::NONSENSITIVE );
-		return;
+		return false;
 	}
 
 	//We need the username that MediaWiki will always use, *not* the one we
@@ -1697,7 +1697,7 @@ function SSLAuth( &$user ) {
 
 	if ( $tmpuser == null ) {
 		$wgAuth->printDebug( "Username is not a valid MediaWiki username.", self::NONSENSITIVE );
-		return;
+		return false;
 	}
 
 	//If exists, log them in
@@ -1707,7 +1707,7 @@ function SSLAuth( &$user ) {
 		$wgAuth->updateUser( $wgUser );
 		$wgUser->setCookies();
 		$wgUser->setupSession();
-		return;
+		return true;
 	}
 	$wgAuth->printDebug( "User does not exist in local database; creating.", self::NONSENSITIVE );
 
@@ -1741,5 +1741,7 @@ function SSLAuth( &$user ) {
 	//Initialize the user
 	$wgUser->setupSession();
 	$wgUser->setCookies();
+
+	return true;
 }
 ?>
