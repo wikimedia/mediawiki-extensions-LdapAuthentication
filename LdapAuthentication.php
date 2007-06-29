@@ -1744,4 +1744,4 @@ function SSLAuth( &$user ) {
 
 	return true;
 }
-?>
+
