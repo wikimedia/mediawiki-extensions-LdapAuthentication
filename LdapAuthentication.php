@@ -375,10 +375,18 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 				$entry = @ldap_read( $ldapconn, $userdn, "objectclass=*" );
 				$info = @ldap_get_entries( $ldapconn, $entry );
-				$this->email = $info[0]["mail"][0];
-				$this->lang = $info[0]["preferredlanguage"][0];
-				$this->nickname = $info[0]["displayname"][0];
-				$this->realname = $info[0]["cn"][0];
+                                if (isset($info[0]["mail"])) {
+        				$this->email = $info[0]["mail"][0];
+                                }
+                                if (isset($info[0]["preferredlanguage"])) {
+				        $this->lang = $info[0]["preferredlanguage"][0];
+                                }
+                                if (isset($info[0]["displayname"])) {
+				        $this->nickname = $info[0]["displayname"][0];
+                                }
+                                if (isset($info[0]["cn"])) {
+				        $this->realname = $info[0]["cn"][0];
+                                }
 
 				$this->printDebug( "Retrieved: $this->email, $this->lang, $this->nickname, $this->realname", self::SENSITIVE );
 			}
