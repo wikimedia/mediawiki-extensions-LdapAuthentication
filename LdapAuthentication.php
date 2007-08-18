@@ -277,7 +277,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 					@ldap_unbind();
 					return false;
 				}
-				$this->printDebug( "Binded successfully", self::NONSENSITIVE );
+				$this->printDebug( "Bound successfully", self::NONSENSITIVE );
 
 				if ( isset( $wgLDAPSearchStrings[$_SESSION['wsDomain']] ) ) { 
 					$ss = $wgLDAPSearchStrings[$_SESSION['wsDomain']];
@@ -1205,13 +1205,15 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$groupstocheck = array();
 		foreach ( $groups as $group ) {
-			$returnedgroups = $this->getUserGroups( $ldapconn, $group );
+			$returnedgroups = $this->getUserGroups( $ldapconn, $group, false, false );
+			$this->printDebug( "Group $group is in the following groups:" . implode( ",", $returnedgroups ) . "", self::SENSITIVE );
 			foreach ( $returnedgroups as $checkme ) {
-				$this->printDebug( "Checking membership for: $checkme", self::SENSITIVE );
 				if ( in_array( $checkme, $checkedgroups ) ) {
 					//We already checked this, move on
 					continue;
-				} else if ( in_array( $checkme, $reqgroups ) ) {
+				}
+				$this->printDebug( "Checking membership for: $checkme", self::SENSITIVE );
+                                if ( in_array( $checkme, $reqgroups ) ) {
 					$this->printDebug( "Found user in a nested group.", self::NONSENSITIVE );
 					//Woohoo
 					return true;
@@ -1238,16 +1240,18 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return array
 	 * @access private
 	 */
-	function getUserGroups( $ldapconn, $dn, $getShortnames = false ) {
+	function getUserGroups( $ldapconn, $dn, $getShortnames = false, $returncache = true ) {
 		$this->printDebug( "Entering getUserGroups", self::NONSENSITIVE );
 
 		//Let's return the saved groups if they are available
 		if ( $getShortnames ) {
-			if ( isset( $this->userLDAPShortnameGroupCache ) ) {
+			if ( $returncache && isset( $this->userLDAPShortnameGroupCache ) ) {
+				$this->printDebug( "Returning short name group cache.", self::NONSENSITIVE );
 				return $this->userLDAPShortnameGroupCache;
 			}
 		} else {
-			if ( isset( $this->userLDAPGroupCache ) ) {
+			if ( $returncache && isset( $this->userLDAPGroupCache ) ) {
+				$this->printDebug( "Returning long name group cache.", self::NONSENSITIVE );
 				return $this->userLDAPGroupCache;
 			}
 		}
@@ -1256,8 +1260,18 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		list( $groups, $shortnamegroups ) = $this->getGroups( $ldapconn, $dn );
 
 		//Save the groups for next time we are called
-		$this->userLDAPGroupCache = $groups;
-		$this->userLDAPShortnameGroupCache = $shortnamegroups;
+		//Merge groups if a set of groups already exist for
+		//nested group searching (half assed) support
+		if ( isset( $this->userLDAPGroupCache ) ) {
+			array_unique( array_merge( $groups, $this->userLDAPGroupCache ) );
+		} else {
+			$this->userLDAPGroupCache = $groups;
+		}
+		if ( isset( $this->userLDAPShortnameGroupCache ) ) {
+			array_unique( array_merge( $shortnamegroups, $this->userLDAPShortnameGroupCache ) );
+		} else {
+			$this->userLDAPShortnameGroupCache = $shortnamegroups;
+		}
 
 		//We only need to check one of the two arrays, as they should be
 		//identical from a member standpoint.
@@ -1337,12 +1351,16 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$this->printDebug( "Entering getGroups", self::NONSENSITIVE );
 
 		$base = $this->getBaseDN( self::GROUPDN );
+
 		$objectclass = $wgLDAPGroupObjectclass[$_SESSION['wsDomain']];
 		$attribute = $wgLDAPGroupAttribute[$_SESSION['wsDomain']];
 		$nameattribute = $wgLDAPGroupNameAttribute[$_SESSION['wsDomain']];
 
-		//Search for the groups this user is in
-		$filter = "(&($attribute=" . $this->getLdapEscapedString( $dn ) . ")(objectclass=$objectclass))";
+                // We actually want to search for * not \2a
+                $value = $dn;
+                if ( $value != "*" )
+                        $value = $this->getLdapEscapedString( $value );
+		$filter = "(&($attribute=$value)(objectclass=$objectclass))";
 
 		$this->printDebug( "Search string: $filter", self::SENSITIVE );
 
@@ -1424,11 +1442,21 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @access private
 	 */
 	function setGroups( &$user ) {
-		$this->printDebug( "Pulling groups from LDAP.", self::NONSENSITIVE );
+                global $wgLDAPGroupsPrevail, $wgGroupPermissions;
+
+		$this->printDebug( "Entering setGroups.", self::NONSENSITIVE );
 
 		# add groups permissions
 		$localAvailGrps = $user->getAllGroups();
 		$localUserGrps = $user->getEffectiveGroups();
+
+                # Add ldap groups as local groups
+                if ( isset( $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ) && $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ) {
+			$this->printDebug( "Adding all groups to wgGroupPermissions: " . implode( ",", $this->allLDAPGroups ) . "", self::SENSITIVE );
+                        foreach ( $this->allLDAPGroups as $ldapgroup )
+                                if ( !array_key_exists( $ldapgroup, $wgGroupPermissions ) )
+                                        $wgGroupPermissions[$ldapgroup] = array();
+		}
 
 		$this->printDebug( "Available groups are: " . implode( ",", $localAvailGrps ) . "", self::NONSENSITIVE );
 		$this->printDebug( "Effective groups are: " . implode( ",", $localUserGrps ) . "", self::NONSENSITIVE );
