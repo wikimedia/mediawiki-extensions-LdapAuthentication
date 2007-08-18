@@ -138,6 +138,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$this->printDebug( "Entering Connect", self::NONSENSITIVE );
 
+                if ( !extension_loaded( 'ldap' ) ) {
+			$this->printDebug( "Missing LDAP support; please ensure you have either compiled LDAP support in, or have enabled the module.", self::SENSITIVE );
+                        return;
+                }
+
 		//If the admin didn't set an encryption type, we default to tls
 		if ( isset( $wgLDAPEncryptionType[$_SESSION['wsDomain']] ) ) {
 			$encryptionType = $wgLDAPEncryptionType[$_SESSION['wsDomain']];
