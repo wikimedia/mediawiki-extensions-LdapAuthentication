@@ -672,7 +672,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	}
 
 	/**
-	 * Can the wiki change passwords in LDAP?
+	 * Can the wiki change passwords in LDAP, or can the user
+	 * change passwords locally?
 	 * Return true if yes.
 	 *
 	 * @return bool
@@ -680,11 +681,12 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 */	
 	function allowPasswordChange() {
 		global $wgLDAPUpdateLDAP, $wgLDAPMailPassword;
+		global $wgLDAPUseLocal;
 
 		$retval = false;
 
 		// Local domains need to be able to change passwords
-		if ( 'local' == $_SESSION['wsDomain'] ) {
+		if ( (isset($wgLDAPUseLocal) && $wgLDAPUseLocal) && 'local' == $_SESSION['wsDomain'] ) {
 			$retval = true;
 		}
 
