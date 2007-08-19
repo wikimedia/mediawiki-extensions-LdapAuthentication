@@ -135,6 +135,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	function connect() {
 		global $wgLDAPServerNames;
 		global $wgLDAPEncryptionType;
+		global $wgLDAPOptions;
 
 		$this->printDebug( "Entering Connect", self::NONSENSITIVE );
 
@@ -178,6 +179,15 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$ldapconn = @ldap_connect( $servers );
 		ldap_set_option( $ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 		ldap_set_option( $ldapconn, LDAP_OPT_REFERRALS, 0);
+
+		if ( isset( $wgLDAPOptions[$_SESSION['wsDomain']] ) ) {
+			$options = $wgLDAPOptions[$_SESSION['wsDomain']];
+			foreach ( $options as $key => $value ) {
+				if ( !ldap_set_option( $ldapconn, constant( $key ), $value ) ) {
+					$this->printDebug( "Can't set option to LDAP! Option code and value: " . $key . "=" . $value, 1 );
+				}
+			}
+		}
 
 		//TLS needs to be started after the connection is made
 		if ( $encryptionType == "tls" ) {
