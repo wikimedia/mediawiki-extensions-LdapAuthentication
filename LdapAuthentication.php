@@ -979,6 +979,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @access public
 	 */
 	function getCanonicalName( $username ) {
+		global $wgLDAPUseLocal;
 		$this->printDebug( "Entering getCanonicalName", self::NONSENSITIVE );
 
 		if ( $username != '' ) {
@@ -991,9 +992,12 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$username = $this->LDAPUsername;
 			}
 
-			//Change username to lowercase so that multiple user accounts
-			//won't be created for the same user.
-			$username = strtolower( $username );
+			//Don't lowercase usernames if we are using the local database
+			if ( !isset( $wgLDAPUseLocal ) || !$wgLDAPUseLocal ) {
+				//Change username to lowercase so that multiple user accounts
+				//won't be created for the same user.
+				$username = strtolower( $username );
+			}
 
 			//The wiki considers an all lowercase name to be invalid; need to
 			//uppercase the first letter
