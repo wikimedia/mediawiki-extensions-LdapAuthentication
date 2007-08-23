@@ -992,10 +992,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$username = $this->LDAPUsername;
 			}
 
-			//Don't lowercase usernames if we are using the local database
-			if ( !isset( $wgLDAPUseLocal ) || !$wgLDAPUseLocal ) {
+			if ( isset($_SESSION['wsDomain']) && 'local' != $_SESSION['wsDomain']) {
 				//Change username to lowercase so that multiple user accounts
 				//won't be created for the same user.
+				//But don't do it for the local domain!
 				$username = strtolower( $username );
 			}
 
