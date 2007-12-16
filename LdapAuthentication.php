@@ -22,7 +22,7 @@
  * Password authentication, and Smartcard Authentication support are currently
  * available. All forms of authentication, current and future, should support
  * group, and attribute based restrictions; preference pulling; and group
- * syncronization. All forms of authentication should have basic support for
+ * syncronization. All forms of authentication should have basic support for 
  * adding users, changing passwords, and updating preferences in LDAP.
  *
  * Password authentication has a number of configurations, including straight binds,
@@ -38,7 +38,7 @@
 # and at http://www.mediawiki.org/wiki/Extension:LDAP_Authentication/Configuration_Examples
 # and at http://www.mediawiki.org/wiki/Extension:LDAP_Authentication/Smartcard_Configuration_Examples
 #
-# Support is available at http://www.mediawiki.org/wiki/Extension_talk:LDAP_Authentication
+# Support is available at http://www.mediawiki.org/wiki/Extension_talk:LDAP_Authentication 
 #
 
 require_once( 'AuthPlugin.php' );
@@ -126,7 +126,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$this->printDebug( "Failed to connect", NONSENSITIVE );
 			return false;
 		}
-
+		
 	}
 
 	/**
@@ -297,7 +297,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				}
 				$this->printDebug( "Bound successfully", NONSENSITIVE );
 
-				if ( isset( $wgLDAPSearchStrings[$_SESSION['wsDomain']] ) ) {
+				if ( isset( $wgLDAPSearchStrings[$_SESSION['wsDomain']] ) ) { 
 					$ss = $wgLDAPSearchStrings[$_SESSION['wsDomain']];
 					if ( strstr( $ss, "@" ) || strstr( $ss, '\\' ) ) {
 						//We are most likely configured using USER-NAME@DOMAIN, or
@@ -351,7 +351,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				if ( isset( $wgLDAPGroupUseFullDN[$_SESSION['wsDomain']] ) && $wgLDAPGroupUseFullDN[$_SESSION['wsDomain']] ) {
 					$inGroup = $this->isMemberOfRequiredLdapGroup( $ldapconn, $userdn );
 				} else {
-					if ( ( isset( $wgLDAPGroupUseRetrievedUsername[$_SESSION['wsDomain']] )
+					if ( ( isset( $wgLDAPGroupUseRetrievedUsername[$_SESSION['wsDomain']] ) 
 						&& $wgLDAPGroupUseRetrievedUsername[$_SESSION['wsDomain']] )
 						&& $this->LDAPUsername != '' ) {
 
@@ -467,7 +467,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 							require( 'Renameuser/SpecialRenameuser_body.php' );
 						}
 
-						// Make a new rename user object with: from, to, uid of from
+						// Make a new rename user object with: from, to, uid of from	
 						$rename = new RenameuserSQL( $retrievedusername, $username, $uid );
 						$rename->rename();
 
@@ -575,7 +575,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$this->printDebug( "User is using a local domain", NONSENSITIVE );
 
 			//We don't set local passwords, but we don't want the wiki
-			//to send the user a failure.
+			//to send the user a failure.		
 			return true;
 		} else if ( !isset( $wgLDAPUpdateLDAP[$_SESSION['wsDomain']] ) || !$wgLDAPUpdateLDAP[$_SESSION['wsDomain']] ) {
 			$this->printDebug( "Wiki is set to not allow updates", NONSENSITIVE );
@@ -635,7 +635,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param User $user
 	 * @return bool
 	 * @access public
-	 */
+	 */	
 	function updateExternalDB( $user ) {
 		global $wgLDAPUpdateLDAP;
 		global $wgLDAPWriterDN, $wgLDAPWriterPassword;
@@ -701,7 +701,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 *
 	 * @return bool
 	 * @access public
-	 */
+	 */	
 	function canCreateAccounts() {
 		global $wgLDAPAddLDAPUsers;
 
@@ -719,7 +719,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 *
 	 * @return bool
 	 * @access public
-	 */
+	 */	
 	function allowPasswordChange() {
 		global $wgLDAPUpdateLDAP, $wgLDAPMailPassword;
 		global $wgLDAPUseLocal;
@@ -850,7 +850,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * Set the domain this plugin is supposed to use when authenticating.
 	 *
 	 * @param string $domain
-	 * @access public
+	 * @access public	
 	 */
 	function setDomain( $domain ) {
 		$this->printDebug( "Setting domain as: $domain", NONSENSITIVE );
@@ -1083,7 +1083,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$this->printDebug( "Doing an anonymous bind", NONSENSITIVE );
 				$bind = $this->bindAs( $ldapconn );
 			}
-
+	
 			if ( !$bind ) {
 				$this->printDebug( "Failed to bind", NONSENSITIVE );
 				return '';
@@ -1269,7 +1269,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$checkedgroups = array_unique( array_merge( $groups, $checkedgroups ) );
 
 		//Mmmmmm. Tail recursion. Tasty.
-		return $this->searchNestedGroups( $ldapconn, $groupstocheck, $checkedgroups );
+		return $this->searchNestedGroups( $ldapconn, $groupstocheck, $checkedgroups ); 
 	}
 
 	/**
@@ -1495,18 +1495,18 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		# add groups permissions
 		$localAvailGrps = $user->getAllGroups();
 		$localUserGrps = $user->getEffectiveGroups();
-
+		
 		$defaultLocallyManagedGrps = array( 'bot', 'sysop', 'bureaucrat' );
 
 		if ( isset( $wgLDAPLocallyManagedGroups[$_SESSION['wsDomain']] ) ) {
 			$locallyManagedGrps = $wgLDAPLocallyManagedGroups[$_SESSION['wsDomain']];
-			$locallyManagedGrps = array_unique( array_merge( $defaultLocallyManagedGrps, $locallyManagedGrps ) );
+			$locallyManagedGrps = array_unique( array_merge( $defaultLocallyManagedGrps, $locallyManagedGrps ) );		
 			$this->printDebug( "Locally managed groups: " . implode( ",", $locallyManagedGrps ) . "", SENSITIVE );
 		} else {
 			$locallyManagedGrps = $defaultLocallyManagedGrps;
 			$this->printDebug( "Locally managed groups is unset, using defaults: " . implode( ",", $locallyManagedGrps ) . "", SENSITIVE );
 		}
-
+			
 
                 # Add ldap groups as local groups
                 if ( isset( $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ) && $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ) {
@@ -1637,7 +1637,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * Returns a string which has the chars *, (, ), \ & NUL escaped to LDAP compliant
 	 * syntax as per RFC 2254
 	 * Thanks and credit to Iain Colledge for the research and function.
-	 *
+	 * 
 	 * @param string $string
 	 * @return string
 	 * @access private
@@ -1653,7 +1653,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Returns a basedn by the type of entry we are searching for.
-	 *
+	 * 
 	 * @param int $type
 	 * @return string
 	 * @access private
@@ -1709,7 +1709,7 @@ $wgExtensionCredits['other'][] = array(
 	'author' => 'Ryan Lane',
 	'description' => 'LDAP Authentication plugin with support for multiple LDAP authentication methods',
 	'url' => 'http://www.mediawiki.org/wiki/Extension:LDAP_Authentication',
-);
+	);
 
 // The following was derived from the SSL Authentication plugin
 // http://www.mediawiki.org/wiki/SSL_authentication
@@ -1845,3 +1845,4 @@ function SSLAuth( &$user ) {
 
 	return true;
 }
+
