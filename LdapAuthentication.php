@@ -453,6 +453,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 						$this->printDebug( "Usernames do not match, renaming user in database.", SENSITIVE );
 
+						global $wgVersion;
 						if ( version_compare( $wgVersion, '1.7.0', '<' ) ) {
 							$this->printDebug( "Renaming users is only supported in MediaWiki 1.7+, please upgrade.", SENSITIVE );
 							$this->cleanupFailedAuth();
