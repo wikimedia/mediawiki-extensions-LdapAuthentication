@@ -1592,7 +1592,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		global $wgLDAPDebug;
 
 		if ( $wgLDAPDebug > $debugVal ) {
-			echo $debugText . "<br>";
+			echo $debugText . "<br />";
 		}
 	}
 
