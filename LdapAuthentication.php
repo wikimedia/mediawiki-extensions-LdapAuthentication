@@ -41,8 +41,6 @@
 # Support is available at http://www.mediawiki.org/wiki/Extension_talk:LDAP_Authentication 
 #
 
-require_once( 'AuthPlugin.php' );
-
 //constants for search base
 define("GROUPDN", 0);
 define("USERDN", 1);
@@ -1812,9 +1810,6 @@ function SSLAuth( &$user ) {
 		return true;
 	}
 	$wgAuth->printDebug( "User does not exist in local database; creating.", NONSENSITIVE );
-
-	//Require SpecialUserlogin so that we can get a loginForm
-	require_once( 'SpecialUserlogin.php' );
 
 	//This section contains a silly hack for MW
 	global $wgLang;
