@@ -87,8 +87,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		//If we can't add LDAP users, we don't really need to check
 		//if the user exists, the authenticate method will do this for
 		//us. This will decrease hits to the LDAP server.
-		//We do however, need to use this if we are using smartcard authentication.
-		if ( ( !isset( $wgLDAPAddLDAPUsers[$_SESSION['wsDomain']] ) || !$wgLDAPAddLDAPUsers[$_SESSION['wsDomain']]) && !$this->useSmartcardAuth() ) {
+		//We do however, need to use this if we are using auto authentication.
+		if ( ( !isset( $wgLDAPAddLDAPUsers[$_SESSION['wsDomain']] ) || !$wgLDAPAddLDAPUsers[$_SESSION['wsDomain']]) && !$this->useAutoAuth() ) {
 			return true;
 		}
 
@@ -98,9 +98,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 			$searchstring = $this->getSearchString( $ldapconn, $username );
 
-			//If we are using smartcard authentication, and we got
+			//If we are using auto authentication, and we got
 			//anything back, then the user exists.
-			if ( $this->useSmartcardAuth() && $searchstring != '' ) {
+			if ( $this->useAutoAuth() && $searchstring != '' ) {
 				//getSearchString is going to bind, but will not unbind
 				//Let's clean up
 				@ldap_unbind();
@@ -219,7 +219,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		global $wgLDAPGroupUseFullDN, $wgLDAPGroupUseRetrievedUsername;
 		global $wgLDAPUseLDAPGroups;
 		global $wgLDAPRequireAuthAttribute, $wgLDAPAuthAttribute;
-		global $wgLDAPSSLUsername;
+		global $wgLDAPAutoAuthUsername;
 		global $wgLDAPLowerCaseUsername;
 		global $wgLDAPSearchStrings;
 		global $wgLDAPUniqueAttribute, $wgLDAPUniqueBlockLogin, $wgLDAPUniqueRenameUser;
@@ -234,11 +234,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return false;
 		}
 
-		//If the user is using smartcard authentication, we need to ensure
+		//If the user is using auto authentication, we need to ensure
 		//that he/she isn't trying to fool us by sending a username other
-		//than the one the web server got from the smartcard.
-		if ( $this->useSmartcardAuth() && $wgLDAPSSLUsername != $username ) {
-			$this->printDebug( "The username provided doesn't match the username on the smartcard. The user is probably trying to log in to the smartcard domain with password authentication. Denying access.", SENSITIVE );
+		//than the one the web server got from the auto-authentication method.
+		if ( $this->useAutoAuth() && $wgLDAPAutoAuthUsername != $username ) {
+			$this->printDebug( "The username provided ($username) doesn't match the username provided by the webserver ($wgLDAPAutoAuthUsername). The user is probably trying to log in to the auto-authentication domain with password authentication via the wiki. Denying access.", SENSITIVE );
 			$this->cleanupFailedAuth();
 			return false;
 		}
@@ -248,7 +248,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		//tricked if someone is supplying one when using password auth.
 		//Smartcard authentication uses a pin, and does not require
 		//a password to be given; a blank password here is wanted.
-		if ( '' == $password && !$this->useSmartcardAuth() ) {
+		if ( '' == $password && !$this->useAutoAuth() ) {
 			$this->printDebug( "User used a blank password", NONSENSITIVE );
 			$this->cleanupFailedAuth();
 			return false;
@@ -282,7 +282,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 			//If we are using password authentication, we need to bind as the
 			//user to make sure the password is correct.
-			if ( !$this->useSmartcardAuth() ) {
+			if ( !$this->useAutoAuth() ) {
 				$this->printDebug( "Binding as the user", NONSENSITIVE );
 
 				//Let's see if the user can authenticate.
@@ -508,7 +508,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	function modifyUITemplate( &$template ) {
 		global $wgLDAPDomainNames, $wgLDAPUseLocal;
 		global $wgLDAPAddLDAPUsers;
-		global $wgLDAPUseSmartcardAuth, $wgLDAPSmartcardDomain;
+		global $wgLDAPAutoAuthDomain;
 
 		$this->printDebug( "Entering modifyUITemplate", NONSENSITIVE );
 
@@ -525,12 +525,12 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			array_push( $tempDomArr, 'local' );
 		}
 
-		if ( $wgLDAPUseSmartcardAuth ) {
-			$this->printDebug( "Allowing smartcard login, removing the domain from the list.", NONSENSITIVE );
+		if ( isset( $wgLDAPAutoAutoDomain ) ) {
+			$this->printDebug( "Allowing auto-authentication login, removing the domain from the list.", NONSENSITIVE );
 
-			//There is no reason for people to log in directly to the wiki if the are using a
-			//smartcard. If they try to, they are probably up to something fishy.
-			unset( $tempDomArr[array_search( $wgLDAPSmartcardDomain, $tempDomArr )] );
+			//There is no reason for people to log in directly to the wiki if the are using an
+			//auto-authentication domain. If they try to, they are probably up to something fishy.
+			unset( $tempDomArr[array_search( $wgLDAPAutoAuthDomain, $tempDomArr )] );
 		}
 
 		$template->set( 'domainnames', $tempDomArr );
@@ -798,7 +798,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				if ( isset( $wgLDAPWriteLocation[$_SESSION['wsDomain']] ) ) {
 					$this->printDebug( "wgLDAPWriteLocation is set, using that", NONSENSITIVE );
 					$userdn = $wgLDAPSearchAttributes[$_SESSION['wsDomain']] . "=" .
-						$username . $wgLDAPWriteLocation[$_SESSION['wsDomain']];
+						$username . "," . $wgLDAPWriteLocation[$_SESSION['wsDomain']];
 				} else {
 					$this->printDebug( "wgLDAPWriteLocation is not set, failing", NONSENSITIVE );
 					//getSearchString will bind, but will not unbind
@@ -825,7 +825,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$values["userpassword"] = $pass;
 			$values["objectclass"] = "inetorgperson";
 
-			if ( $wgLDAPRequireAuthAttribute ) {
+			if ( isset ( $wgLDAPRequireAuthAttribute ) && $wgLDAPRequireAuthAttribute[$_SESSION['wsDomain']] ) {
 				$values[$wgLDAPAuthAttribute[$_SESSION['wsDomain']]] = "true";
 			}
 
@@ -1043,11 +1043,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @access public
 	 */
 	function autoAuthSetup() {
-		global $wgLDAPUseSmartcardAuth;
-		global $wgLDAPSmartcardDomain;
+		global $wgLDAPAutoAuthDomain;
 
-		$wgLDAPUseSmartcardAuth = true;
-		$this->setDomain( $wgLDAPSmartcardDomain );
+		$this->setDomain( $wgLDAPAutoAuthDomain );
 	}
 
 	/**
@@ -1114,7 +1112,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		//Smartcard auth needs to check LDAP for required attributes.
 		if ( ( isset( $wgLDAPRequireAuthAttribute[$_SESSION['wsDomain']] ) && $wgLDAPRequireAuthAttribute[$_SESSION['wsDomain']] )
-			&& $this->useSmartcardAuth() ) {
+			&& $this->useAutoAuth() ) {
 			$auth_filter = "(" . $wgLDAPAuthAttribute[$_SESSION['wsDomain']] . ")";
 			$srch_filter = "(" . $wgLDAPSearchAttributes[$_SESSION['wsDomain']] . "=" . $this->getLdapEscapedString( $username ) . ")";
 			$filter = "(&" . $srch_filter . $auth_filter . ")";
@@ -1137,7 +1135,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$info = @ldap_get_entries( $ldapconn, $entry );
 
-		//This is a pretty useful thing to have for smartcard authentication,
+		//This is a pretty useful thing to have for auto authentication,
 		//group checking, and pulling preferences.
 		wfRunHooks( 'SetUsernameAttributeFromLDAP', array( &$this->LDAPUsername, $info ) );
 		if ( !is_string( $this->LDAPUsername ) ) {
@@ -1620,16 +1618,17 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	}
 
 	/**
-	 * Returns true if smartcard authentication is allowed, and the user is
-	 * authenticating using the smartcard domain.
+	 * Returns true if auto-authentication is allowed, and the user is
+	 * authenticating using the auto-authentication domain.
 	 *
 	 * @return bool
 	 * @access private
 	 */
-	function useSmartcardAuth() {
-		global $wgLDAPUseSmartcardAuth, $wgLDAPSmartcardDomain;
+	function useAutoAuth() {
+		global $wgLDAPAutoAuthDomain;
 
-		return $wgLDAPUseSmartcardAuth && $_SESSION['wsDomain'] == $wgLDAPSmartcardDomain;
+		$this->printDebug( "", NONSENSITIVE );
+		return isset( $wgLDAPAutoAuthDomain ) && $_SESSION['wsDomain'] == $wgLDAPAutoAuthDomain;
 	}
 
 	/**
@@ -1719,126 +1718,31 @@ $wgExtensionCredits['other'][] = array(
  * @access public
  */
 function AutoAuthSetup() {
+	global $wgLDAPAutoAuthUsername;
 	global $wgLDAPSSLUsername;
+	global $wgLDAPAutoAuthDomain;
+	global $wgLDAPSmartcardDomain;
 	global $wgHooks;
 	global $wgAuth;
-	global $wgLDAPAutoAuthMethod;
 
 	$wgAuth = new LdapAuthenticationPlugin();
 
 	$wgAuth->printDebug( "Entering AutoAuthSetup.", NONSENSITIVE );
 
-	//We may add quite a few different auto authenticate methods in the
-	//future, let's make it easy to support.
-	switch( $wgLDAPAutoAuthMethod ) {
-		case "smartcard":
-			$wgAuth->printDebug( "Allowing smartcard authentication.", NONSENSITIVE );
-			$wgAuth->printDebug( "wgLDAPSSLUsername = $wgLDAPSSLUsername", SENSITIVE );
+	//Set configuration options for backwards compatibility
+	if ( isset( $wgLDAPSSLUsername ) ) {
+		$wgAuth->printDebug( 'Setting $wgLDAPAutoAuthUsername to $wgLDAPSSLUsername; please change your configuration to fix this deprecated configuration variable.', NONSENSITIVE );
+		$wgLDAPAutoAuthUsername = $wgLDAPSSLUsername;
+	}
+	if ( isset( $wgLDAPSmartcardDomain ) ) {
+		$wgAuth->printDebug( 'Setting $wgLDAPAutoAuthDomain to $wgLDAPSmartcardDomain; please change your configuration to fix this deprecated configuration variable.', NONSENSITIVE );
+		$wgLDAPAutoAuthDomain = $wgLDAPSmartcardDomain;
+	}
 
-			if( $wgLDAPSSLUsername != null ) {
-				$wgAuth->printDebug( "wgLDAPSSLUsername is not null, adding hooks.", NONSENSITIVE );
-				$wgHooks['AutoAuthenticate'][] = 'SSLAuth'; /* Hook for magical authN */
-				$wgHooks['PersonalUrls'][] = 'NoLogout'; /* Disallow logout link */
-			}
-			break;
-		default:
-			$wgAuth->printDebug( "Not using any AutoAuthentication methods.", NONSENSITIVE );
+	if( $wgLDAPAutoAuthUsername != null ) {
+		$wgAuth->printDebug( "wgLDAPAutoAuthUsername is not null, adding hooks.", NONSENSITIVE );
+
+		$wgHooks['UserLoadFromSession'][] = 'LdapAutoAuthentication::Authenticate'; /* Hook for magical authN */
+		$wgHooks['PersonalUrls'][] = 'LdapAutoAuthentication::NoLogout'; /* Disallow logout link */
 	}
 }
-
-/* No logout link in MW */
-function NoLogout( &$personal_urls, $title ) {
-	$personal_urls['logout'] = null;
-}
-
-/**
- * Does the SSL authentication piece of the LDAP plugin.
- *
- * @access public
- */
-function SSLAuth( &$user ) {
-	global $wgLDAPSSLUsername;
-	global $wgUser;
-	global $wgAuth;
-
-	$wgAuth->printDebug( "Entering SSLAuth.", NONSENSITIVE );
-
-	//Give us a user, see if we're around
-	$tmpuser = User::LoadFromSession();
-
-	//They already with us?  If so, quit this function.
-	if( $tmpuser->isLoggedIn() ) {
-		$wgAuth->printDebug( "User is already logged in.", NONSENSITIVE );
-		return true;
-	}
-
-	//Let regular authentication plugins configure themselves for auto
-	//authentication chaining
-	$wgAuth->autoAuthSetup();
-
-	//The user hasn't already been authenticated, let's check them
-	$wgAuth->printDebug( "User is not logged in, we need to authenticate", NONSENSITIVE );
-	$authenticated = $wgAuth->authenticate( $wgLDAPSSLUsername );
-	if ( !$authenticated ) {
-		//If the user doesn't exist in LDAP, there isn't much reason to
-		//go any further.
-		$wgAuth->printDebug("User wasn't found in LDAP, exiting.", NONSENSITIVE );
-		return false;
-	}
-
-	//We need the username that MediaWiki will always use, *not* the one we
-	//get from LDAP.
-	$mungedUsername = $wgAuth->getCanonicalName( $wgLDAPSSLUsername );
-
-	$wgAuth->printDebug( "User exists in LDAP; finding the user by name in MediaWiki.", NONSENSITIVE );
-
-	//Is the user already in the database?
-	$tmpuser = User::newFromName( $mungedUsername );
-
-	if ( $tmpuser == null ) {
-		$wgAuth->printDebug( "Username is not a valid MediaWiki username.", NONSENSITIVE );
-		return false;
-	}
-
-	//If exists, log them in
-	if( $tmpuser->getID() != 0 ) {
-		$wgAuth->printDebug( "User exists in local database, logging in.", NONSENSITIVE );
-		$wgUser = &$tmpuser;
-		$wgAuth->updateUser( $wgUser );
-		$wgUser->setCookies();
-		$wgUser->setupSession();
-		return true;
-	}
-	$wgAuth->printDebug( "User does not exist in local database; creating.", NONSENSITIVE );
-
-	//This section contains a silly hack for MW
-	global $wgLang;
-	global $wgContLang;
-	global $wgRequest;
-	if( !isset( $wgLang ) )
-	{
-		$wgLang = $wgContLang;
-		$wgLangUnset = true;
-	}
-
-	$wgAuth->printDebug( "Creating LoginForm.", NONSENSITIVE );
-
-	//This creates our form that'll let us create a new user in the database
-	$lf = new LoginForm( $wgRequest );
-
-	//The user we'll be creating...
-	$wgUser = &$tmpuser;
-	$wgUser->setName( $wgContLang->ucfirst( $mungedUsername ) );
-
-	$wgAuth->printDebug( "Creating User.", NONSENSITIVE );
-
-	//Create the user
-	$lf->initUser( $wgUser );
-
-	//Initialize the user
-	$wgUser->setupSession();
-	$wgUser->setCookies();
-
-	return true;
-}
-
