@@ -1703,7 +1703,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
  */
 $wgExtensionCredits['other'][] = array(
 	'name' => 'LDAP Authentication Plugin',
-	'version' => '1.1g',
+	'version' => '1.2a (beta)',
 	'author' => 'Ryan Lane',
 	'description' => 'LDAP Authentication plugin with support for multiple LDAP authentication methods',
 	'url' => 'http://www.mediawiki.org/wiki/Extension:LDAP_Authentication',
