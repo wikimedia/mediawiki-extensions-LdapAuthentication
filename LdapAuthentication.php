@@ -214,7 +214,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @access public
 	 */
 	function authenticate( $username, $password='' ) {
-		global $wgLDAPRetrievePrefs;
+		global $wgLDAPRetrievePrefs, $wgLDAPPreferences;
 		global $wgLDAPGroupDN, $wgLDAPRequiredGroups;
 		global $wgLDAPGroupUseFullDN, $wgLDAPGroupUseRetrievedUsername;
 		global $wgLDAPUseLDAPGroups;
@@ -394,8 +394,43 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			}
 
 			//Retrieve preferences
-			if ( isset( $wgLDAPRetrievePrefs[$_SESSION['wsDomain']] ) && $wgLDAPRetrievePrefs[$_SESSION['wsDomain']] ) {
+			if ( isset( $wgLDAPPreferences[$_SESSION['wsDomain']] ) ) {
 				$this->printDebug( "Retrieving preferences", NONSENSITIVE );
+				$entry = @ldap_read( $ldapconn, $userdn, "objectclass=*" );
+				$info = @ldap_get_entries( $ldapconn, $entry );
+				$prefs = $wgLDAPPreferences[$_SESSION['wsDomain']];
+				foreach ( array_keys( $prefs ) as $key ) {
+					switch ( $key ) {
+						case "email":
+							if ( isset( $info[0]["$prefs[$key]"] ) ) {
+								$this->email = $info[0]["$prefs[$key]"][0];
+								$this->printDebug( "Retrieved email ($this->email) using attribute ($prefs[$key])", NONSENSITIVE );
+							}
+							break;
+						case "language":
+							if ( isset( $info[0]["$prefs[$key]"] ) ) {
+								$this->lang = $info[0][$prefs[$key]][0];
+								$this->printDebug( "Retrieved language ($this->lang) using attribute ($prefs[$key])", NONSENSITIVE );
+							}
+							break;
+						case "nickname":
+							if ( isset( $info[0]["$prefs[$key]"] ) ) {
+								$this->nickname = $info[0]["$prefs[$key]"][0];
+								$this->printDebug( "Retrieved nickname ($this->nickname) using attribute ($prefs[$key])", NONSENSITIVE );
+							}
+							break;
+						case "realname":
+							if ( isset( $info[0]["$prefs[$key]"] ) ) {
+								$this->realname = $info[0]["$prefs[$key]"][0];
+								$this->printDebug( "Retrieved realname ($this->realname) using attribute ($prefs[$key])", NONSENSITIVE );
+							}
+							break;
+					}
+				}
+			} else if ( isset( $wgLDAPRetrievePrefs[$_SESSION['wsDomain']] ) && $wgLDAPRetrievePrefs[$_SESSION['wsDomain']] ) {
+				//DEPRECATED. Kept for backwards compatibility.
+				$this->printDebug( "Retrieving preferences", NONSENSITIVE );
+				$this->printDebug( '$wgLDAPRetrievePrefs is a DEPRECATED option, please use $wgLDAPPreferences.', NONSENSITIVE );
 
 				$entry = @ldap_read( $ldapconn, $userdn, "objectclass=*" );
 				$info = @ldap_get_entries( $ldapconn, $entry );
@@ -723,6 +758,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		global $wgLDAPUpdateLDAP, $wgLDAPMailPassword;
 		global $wgLDAPUseLocal;
 
+		$this->printDebug( "Entering allowPasswordChange", NONSENSITIVE );
+
 		$retval = false;
 
 		// Local domains need to be able to change passwords
@@ -886,7 +923,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * TODO: fix the setExternalID stuff
 	 */
 	function updateUser( &$user ) {
-		global $wgLDAPRetrievePrefs;
+		global $wgLDAPRetrievePrefs, $wgLDAPPreferences;
 		global $wgLDAPUseLDAPGroups;
 		global $wgLDAPUniqueBlockLogin, $wgLDAPUniqueRenameUser;
 
@@ -901,19 +938,24 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		//If we aren't pulling preferences, we don't want to accidentally
 		//overwrite anything.
-		if ( isset( $wgLDAPRetrievePrefs[$_SESSION['wsDomain']] ) && $wgLDAPRetrievePrefs[$_SESSION['wsDomain']] ) {
+		if ( ( isset( $wgLDAPRetrievePrefs[$_SESSION['wsDomain']] ) && $wgLDAPRetrievePrefs[$_SESSION['wsDomain']] )
+			|| isset( $wgLDAPPreferences[$_SESSION['wsDomain']] ) ) {
 			$this->printDebug( "Setting user preferences.", NONSENSITIVE );
 
 			if ( '' != $this->lang ) {
+				$this->printDebug( "Setting language.", NONSENSITIVE );
 				$user->setOption( 'language', $this->lang );
 			}
 			if ( '' != $this->nickname ) {
+				$this->printDebug( "Setting nickname.", NONSENSITIVE );
 				$user->setOption( 'nickname', $this->nickname );
 			}
 			if ( '' != $this->realname ) {
+				$this->printDebug( "Setting realname.", NONSENSITIVE );
 				$user->setRealName( $this->realname );
 			}
 			if ( '' != $this->email ) {
+				$this->printDebug( "Setting email.", NONSENSITIVE );
 				$user->setEmail( $this->email );
 			}
 			if ( ( isset( $wgLDAPUniqueBlockLogin[$_SESSION['wsDomain']] ) && $wgLDAPUniqueBlockLogin[$_SESSION['wsDomain']] )
@@ -925,6 +967,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			}
 
 			$saveSettings = true;
+		} else {
+			$this->printDebug( "WTF!?", NONSENSITIVE );
 		}
 
 		if ( isset( $wgLDAPUseLDAPGroups[$_SESSION['wsDomain']] ) && $wgLDAPUseLDAPGroups[$_SESSION['wsDomain']] ) {

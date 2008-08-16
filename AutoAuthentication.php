@@ -66,6 +66,8 @@ class LdapAutoAuthentication {
 			$user->setID( $localId );
 			$user->loadFromId();
 			$user->setCookies();
+			$wgAuth->updateUser( $user );
+			wfSetupSession();
 			$result = true;
 	        }
 
@@ -88,6 +90,7 @@ class LdapAutoAuthentication {
 
 		$wgAuth->initUser( $user, true );
 	        $user->setCookies();
+		wfSetupSession();
 
 		# Update user count
 		$ssUpdate = new SiteStatsUpdate( 0, 0, 0, 0, 1 );
