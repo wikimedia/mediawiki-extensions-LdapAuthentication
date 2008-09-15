@@ -163,7 +163,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$serverpre = "ldap://";
 		}
 
-		//Make a space seperated list of server strings with the ldap:// or ldaps://
+		//Make a space separated list of server strings with the ldap:// or ldaps://
 		//string added.
 		$servers = "";
 		$tmpservers = $wgLDAPServerNames[$_SESSION['wsDomain']];
