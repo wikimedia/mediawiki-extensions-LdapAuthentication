@@ -14,18 +14,25 @@ class LdapAutoAuthentication {
 	
 	        $wgAuth->printDebug( "Entering AutoAuthentication.", NONSENSITIVE );
 
-		//The following section is a hack to determine whether or not
-		//the user is logged in. We need a core fix to make this simpler.
-		if ( isset( $_SESSION['wsUserID'] ) ) {
-			$user->setID( $_SESSION['wsUserID'] );
-			if ( $user->loadFromId() ) {
-				if ( $_SESSION['wsToken'] == $user->mToken  && $_SESSION['wsUserName'] == $user->mName ) {
-			                $wgAuth->printDebug( "User is already logged in.", NONSENSITIVE );
-					$result = true;
-			                return true;
-			        } else {
-					$user->loadFromDefaults();
+		if ( version_compare( $wgVersion, '1.14.0', '<' ) ) {
+			//The following section is a hack to determine whether or not
+			//the user is logged in. We need a core fix to make this simpler.
+			if ( isset( $_SESSION['wsUserID'] ) ) {
+				$user->setID( $_SESSION['wsUserID'] );
+				if ( $user->loadFromId() ) {
+					if ( $_SESSION['wsToken'] == $user->mToken  && $_SESSION['wsUserName'] == $user->mName ) {
+				                $wgAuth->printDebug( "User is already logged in.", NONSENSITIVE );
+						$result = true;
+				                return true;
+				        } else {
+						$user->loadDefaults();
+					}
 				}
+			}
+		} else {
+			if ( $user->isLoggedIn() ) {
+				$wgAuth->printDebug( "User is already logged in.", NONSENSITIVE );
+				return true;
 			}
 		}
 	
