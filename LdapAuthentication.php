@@ -968,8 +968,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			}
 
 			$saveSettings = true;
-		} else {
-			$this->printDebug( "WTF!?", NONSENSITIVE );
 		}
 
 		if ( isset( $wgLDAPUseLDAPGroups[$_SESSION['wsDomain']] ) && $wgLDAPUseLDAPGroups[$_SESSION['wsDomain']] ) {
