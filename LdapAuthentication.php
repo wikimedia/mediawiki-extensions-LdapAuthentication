@@ -964,6 +964,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			if ( '' != $this->email ) {
 				$this->printDebug( "Setting email.", NONSENSITIVE );
 				$user->setEmail( $this->email );
+				$user->confirmEmail();
 			}
 			if ( ( isset( $wgLDAPUniqueBlockLogin[$_SESSION['wsDomain']] ) && $wgLDAPUniqueBlockLogin[$_SESSION['wsDomain']] )
 				|| ( isset( $wgLDAPUniqueRenameUser[$_SESSION['wsDomain']] ) && $wgLDAPUniqueRenameUser[$_SESSION['wsDomain']] ) ) {
