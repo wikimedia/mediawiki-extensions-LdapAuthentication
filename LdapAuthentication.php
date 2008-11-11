@@ -561,7 +561,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			array_push( $tempDomArr, 'local' );
 		}
 
-		if ( isset( $wgLDAPAutoAutoDomain ) ) {
+		if ( isset( $wgLDAPAutoAuthDomain ) ) {
 			$this->printDebug( "Allowing auto-authentication login, removing the domain from the list.", NONSENSITIVE );
 
 			//There is no reason for people to log in directly to the wiki if the are using an
