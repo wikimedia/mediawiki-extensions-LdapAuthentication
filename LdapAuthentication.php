@@ -154,6 +154,12 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		//Set the server string depending on whether we use ssl or not
 		switch( $encryptionType ) {
+			case "ldapi":
+				# this is a really dirty place to put this,
+				# but it is easy and avoids another config option.
+				$this->printDebug( "Using ldapi", SENSITIVE );
+				$serverpre = "ldapi://";
+				break;
 			case "ssl":
 				$this->printDebug( "Using SSL", SENSITIVE );
 				$serverpre = "ldaps://";
