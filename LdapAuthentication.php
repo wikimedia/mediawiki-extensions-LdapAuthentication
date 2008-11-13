@@ -41,6 +41,17 @@
 # Support is available at http://www.mediawiki.org/wiki/Extension_talk:LDAP_Authentication 
 #
 
+/**
+ * Add extension information to Special:Version
+ */
+$wgExtensionCredits['other'][] = array(
+	'name' => 'LDAP Authentication Plugin',
+	'version' => '1.2a (beta)',
+	'author' => 'Ryan Lane',
+	'description' => 'LDAP Authentication plugin with support for multiple LDAP authentication methods',
+	'url' => 'http://www.mediawiki.org/wiki/Extension:LDAP_Authentication',
+	);
+
 //constants for search base
 define("GROUPDN", 0);
 define("USERDN", 1);
@@ -262,6 +273,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		}
 
 		$ldapconn = $this->connect();
+			//This seems really expensive.
 		if ( $ldapconn ) {
 			$this->printDebug( "Connected successfully", NONSENSITIVE );
 
@@ -1229,7 +1241,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$searchnested = $wgLDAPGroupSearchNestedGroups[$_SESSION['wsDomain']];
 
-		$this->printDebug( "Required groups:" . implode( ",",$reqgroups ) . "", NONSENSITIVE );
+		$this->printDebug( "Required groups:", NONSENSITIVE, $reqgroups );
 
 		$groups = $this->getUserGroups( $ldapconn, $userDN );
 
@@ -1285,7 +1297,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return false;
 		}
 
-		$this->printDebug( "Checking groups:" . implode( ",", $groups ) . "", SENSITIVE );
+		$this->printDebug( "Checking groups:", SENSITIVE, $groups );
 
 		$reqgroups = $wgLDAPRequiredGroups[$_SESSION['wsDomain']];
 		for ( $i = 0; $i < count( $reqgroups ); $i++ ) {
@@ -1295,7 +1307,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$groupstocheck = array();
 		foreach ( $groups as $group ) {
 			$returnedgroups = $this->getUserGroups( $ldapconn, $group, false, false );
-			$this->printDebug( "Group $group is in the following groups:" . implode( ",", $returnedgroups ) . "", SENSITIVE );
+			$this->printDebug( "Group $group is in the following groups:", SENSITIVE, $returnedgroups );
 			foreach ( $returnedgroups as $checkme ) {
 				if ( in_array( $checkme, $checkedgroups ) ) {
 					//We already checked this, move on
@@ -1465,6 +1477,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		}
 
 		$info = @ldap_search( $ldapconn, $base, $filter );
+		//TODO: Active Directory always returns something, we need to take this into account
 		if ( !$info ) {
 			$this->printDebug( "No entries returned from search.", SENSITIVE );
 
@@ -1473,7 +1486,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return array( array(), array() );
 		}
 
-		$entries = @ldap_get_entries( $ldapconn,$info );
+		$entries = @ldap_get_entries( $ldapconn, $info );
 
 		//We need to shift because the first entry will be a count
 		array_shift( $entries );
@@ -1493,8 +1506,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		array_push( $both_groups, $groups );
 		array_push( $both_groups, $shortnamegroups );
 
-		$this->printDebug( "Returned groups:" . implode( ",", $groups ) . "", SENSITIVE );
-		$this->printDebug( "Returned groups:" . implode( ",", $shortnamegroups ) . "", SENSITIVE );
+		$this->printDebug( "Returned groups:", SENSITIVE, $groups );
+		$this->printDebug( "Returned groups:", SENSITIVE, $shortnamegroups );
 
 		return $both_groups;
 	}
@@ -1537,6 +1550,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
                 global $wgLDAPGroupsPrevail, $wgGroupPermissions;
 		global $wgLDAPLocallyManagedGroups;
 
+		//TODO: this is *really* ugly code. clean it up!
+
 		$this->printDebug( "Entering setGroups.", NONSENSITIVE );
 
 		# add groups permissions
@@ -1548,23 +1563,23 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		if ( isset( $wgLDAPLocallyManagedGroups[$_SESSION['wsDomain']] ) ) {
 			$locallyManagedGrps = $wgLDAPLocallyManagedGroups[$_SESSION['wsDomain']];
 			$locallyManagedGrps = array_unique( array_merge( $defaultLocallyManagedGrps, $locallyManagedGrps ) );		
-			$this->printDebug( "Locally managed groups: " . implode( ",", $locallyManagedGrps ) . "", SENSITIVE );
+			$this->printDebug( "Locally managed groups: ", SENSITIVE, $locallyManagedGrps );
 		} else {
 			$locallyManagedGrps = $defaultLocallyManagedGrps;
-			$this->printDebug( "Locally managed groups is unset, using defaults: " . implode( ",", $locallyManagedGrps ) . "", SENSITIVE );
+			$this->printDebug( "Locally managed groups is unset, using defaults: ", SENSITIVE, $locallyManagedGrps );
 		}
 			
 
                 # Add ldap groups as local groups
                 if ( isset( $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ) && $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ) {
-			$this->printDebug( "Adding all groups to wgGroupPermissions: " . implode( ",", $this->allLDAPGroups ) . "", SENSITIVE );
+			$this->printDebug( "Adding all groups to wgGroupPermissions: ", SENSITIVE, $this->allLDAPGroups );
                         foreach ( $this->allLDAPGroups as $ldapgroup )
                                 if ( !array_key_exists( $ldapgroup, $wgGroupPermissions ) )
                                         $wgGroupPermissions[$ldapgroup] = array();
 		}
 
-		$this->printDebug( "Available groups are: " . implode( ",", $localAvailGrps ) . "", NONSENSITIVE );
-		$this->printDebug( "Effective groups are: " . implode( ",", $localUserGrps ) . "", NONSENSITIVE );
+		$this->printDebug( "Available groups are: ", NONSENSITIVE, $localAvailGrps );
+		$this->printDebug( "Effective groups are: ", NONSENSITIVE, $localUserGrps );
 
 		# note: $localUserGrps does not need to be updated with $cGroup added,
 		#       as $localAvailGrps contains $cGroup only once.
@@ -1582,9 +1597,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$this->printDebug( "Checking to see if user is in: $cGroup", NONSENSITIVE );
 				if ( $this->hasLDAPGroup( $cGroup ) ) {
 					$this->printDebug( "Adding user to: $cGroup", NONSENSITIVE );
-					# so use the addGroup function
 					$user->addGroup( $cGroup );
-					# completed for $cGroup.
 				}
 			}
 		}
@@ -1634,11 +1647,17 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param string $debugVal
 	 * @access private
 	 */
-	function printDebug( $debugText, $debugVal ) {
+	function printDebug( $debugText, $debugVal, $debugArr = Null ) {
 		global $wgLDAPDebug;
 
-		if ( $wgLDAPDebug > $debugVal ) {
-			echo $debugText . "<br />";
+		if ( isset( $debugArr ) ) {
+			if ( $wgLDAPDebug > $debugVal ) {
+				echo $debugText . implode( ",", $debugArr ) . "<br />";
+			}
+		} else {
+			if ( $wgLDAPDebug > $debugVal ) {
+				echo $debugText . "<br />";
+			}
 		}
 	}
 
@@ -1747,17 +1766,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	}
 
 }
-
-/**
- * Add extension information to Special:Version
- */
-$wgExtensionCredits['other'][] = array(
-	'name' => 'LDAP Authentication Plugin',
-	'version' => '1.2a (beta)',
-	'author' => 'Ryan Lane',
-	'description' => 'LDAP Authentication plugin with support for multiple LDAP authentication methods',
-	'url' => 'http://www.mediawiki.org/wiki/Extension:LDAP_Authentication',
-	);
 
 // The following was derived from the SSL Authentication plugin
 // http://www.mediawiki.org/wiki/SSL_authentication
