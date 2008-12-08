@@ -11,6 +11,7 @@ class LdapAutoAuthentication {
 	        global $wgUser;
 	        global $wgAuth;
 		global $wgLDAPAutoAuthUsername;
+		global $wgVersion;
 	
 	        $wgAuth->printDebug( "Entering AutoAuthentication.", NONSENSITIVE );
 
