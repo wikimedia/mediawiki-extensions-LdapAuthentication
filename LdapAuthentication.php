@@ -1208,7 +1208,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 */
 	function checkGroups( $username ) {
 		global $wgLDAPGroupDN;
-		global $wgLDAPRequiredGroups;
+		global $wgLDAPRequiredGroups, $wgLDAPExcludedGroups;
 
 		$this->printDebug("Entering checkGroups", NONSENSITIVE);
 
@@ -1223,6 +1223,24 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return ( $info["count"] >= 1 );
 		}
 
+		if ( isset( $wgLDAPExcludedGroups[$_SESSION['wsDomain']] ) ) {
+			$this->printDebug( "Checking for excluded group membership", NONSENSITIVE );
+			$excgroups = $wgLDAPExcludedGroups[$_SESSION['wsDomain']];
+			for ( $i = 0; $i < count( $excgroups ); $i++ ) {
+				$excgroups[$i] = strtolower( $excgroups[$i] );
+			}
+
+			$this->printDebug( "Excluded groups:", NONSENSITIVE, $excgroups );
+
+			foreach ( $this->userLDAPGroups["dn"] as $group ) {
+				$this->printDebug( "Checking against: $group", NONSENSITIVE );
+				if ( in_array( $group, $excgroups ) ) {
+					$this->printDebug( "Found user in an excluded group.", NONSENSITIVE );
+					return false;
+				}
+			}
+		}
+
 		//New style group checking
 		if ( isset( $wgLDAPRequiredGroups[$_SESSION['wsDomain']] ) ) {
 			$this->printDebug( "Checking for (new style) group membership", NONSENSITIVE );
@@ -1233,25 +1251,16 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 			$this->printDebug( "Required groups:", NONSENSITIVE, $reqgroups );
 
-			if ( count( $this->userLDAPGroups ) == 0 ) {
-				$this->printDebug( "Couldn't find the user in any groups (1).", NONSENSITIVE );
-
-				//User isn't in any groups, so he/she obviously can't be in
-				//a required one
-				return false;
-			} else {
-				//User is in groups, let's see if a required group is one of them
-				foreach ( $this->userLDAPGroups["dn"] as $group ) {
-					$this->printDebug( "Checking against: $group", NONSENSITIVE );
-					if ( in_array( $group, $reqgroups ) ) {
-						$this->printDebug( "Found user in a group.", NONSENSITIVE );
-						return true;
-					}
+			foreach ( $this->userLDAPGroups["dn"] as $group ) {
+				$this->printDebug( "Checking against: $group", NONSENSITIVE );
+				if ( in_array( $group, $reqgroups ) ) {
+					$this->printDebug( "Found user in a group.", NONSENSITIVE );
+					return true;
 				}
-
-				$this->printDebug("Couldn't find the user in any groups (2).", NONSENSITIVE );
-				return false;
 			}
+
+			$this->printDebug("Couldn't find the user in any groups.", NONSENSITIVE );
+			return false;
 		}
 
 		// Ensure we return true if we aren't checking groups.
