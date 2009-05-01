@@ -1739,7 +1739,11 @@ function AutoAuthSetup() {
 	if( $wgLDAPAutoAuthUsername != null ) {
 		$wgAuth->printDebug( "wgLDAPAutoAuthUsername is not null, adding hooks.", NONSENSITIVE );
 		if ( version_compare( $wgVersion, '1.14.0', '<' ) ) {
-			$wgHooks['UserLoadFromSession'][] = 'LdapAutoAuthentication::Authenticate';
+			if ( version_compare( $wgVersion, '1.13.0', '<' ) ) {
+				$wgHooks['AutoAuthenticate'][] = 'LdapAutoAuthentication::Authenticate';
+			} else {
+				$wgHooks['UserLoadFromSession'][] = 'LdapAutoAuthentication::Authenticate';
+			}
 		} else {
 			$wgHooks['UserLoadAfterLoadFromSession'][] = 'LdapAutoAuthentication::Authenticate';
 		}
