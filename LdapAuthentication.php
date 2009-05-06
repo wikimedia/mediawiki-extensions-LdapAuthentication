@@ -1721,6 +1721,7 @@ function AutoAuthSetup() {
 	global $wgLDAPSmartcardDomain;
 	global $wgHooks;
 	global $wgAuth;
+	global $wgVersion;
 
 	$wgAuth = new LdapAuthenticationPlugin();
 
