@@ -376,38 +376,43 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	/**
 	 * Modify options in the login template.
 	 *
-	 * @param UserLoginTemplate $template
+	 * @param $sp SpecialUserlogin or SpecialCreateAccount object
 	 * @access public
 	 */
-	function modifyUITemplate( &$template ) {
+	public function modifyUITemplate( &$sp ) {
 		global $wgLDAPDomainNames, $wgLDAPUseLocal;
 		global $wgLDAPAddLDAPUsers;
 		global $wgLDAPAutoAuthDomain;
 
 		$this->printDebug( "Entering modifyUITemplate", NONSENSITIVE );
+		
+		if( $sp instanceof SpecialUserlogin ){
 
-		if ( !isset( $wgLDAPAddLDAPUsers[$_SESSION['wsDomain']] ) || !$wgLDAPAddLDAPUsers[$_SESSION['wsDomain']] ) {
-			$template->set( 'create', false );
+			$tempDomArr = $wgLDAPDomainNames;
+			if( $wgLDAPUseLocal ) {
+				$this->printDebug( "Allowing the local domain, adding it to the list.", NONSENSITIVE );
+				array_push( $tempDomArr, 'local' );
+			}
+	
+			if( isset( $wgLDAPAutoAuthDomain ) ) {
+				$this->printDebug( "Allowing auto-authentication login, removing the domain from the list.", NONSENSITIVE );
+	
+				//There is no reason for people to log in directly to the wiki if the are using an
+				//auto-authentication domain. If they try to, they are probably up to something fishy.
+				unset( $tempDomArr[array_search( $wgLDAPAutoAuthDomain, $tempDomArr )] );
+			}
+	
+			$sp->mDomains = $tempDomArr;
+			
+		} else { # SpecialCreateAccount
+
+			# FIXME: This achieves nothing; what is the purpose?
+			if( !isset( $wgLDAPAddLDAPUsers[$_SESSION['wsDomain']] ) || !$wgLDAPAddLDAPUsers[$_SESSION['wsDomain']] ) {
+				$sp->set( 'create', false );
+			}
+	
+			$sp->mUseEmail = false;
 		}
-
-		$template->set( 'usedomain', true );
-		$template->set( 'useemail', false );
-
-		$tempDomArr = $wgLDAPDomainNames;
-		if ( $wgLDAPUseLocal ) {
-			$this->printDebug( "Allowing the local domain, adding it to the list.", NONSENSITIVE );
-			array_push( $tempDomArr, 'local' );
-		}
-
-		if ( isset( $wgLDAPAutoAuthDomain ) ) {
-			$this->printDebug( "Allowing auto-authentication login, removing the domain from the list.", NONSENSITIVE );
-
-			//There is no reason for people to log in directly to the wiki if the are using an
-			//auto-authentication domain. If they try to, they are probably up to something fishy.
-			unset( $tempDomArr[array_search( $wgLDAPAutoAuthDomain, $tempDomArr )] );
-		}
-
-		$template->set( 'domainnames', $tempDomArr );
 	}
 
 	/**
