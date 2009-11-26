@@ -45,12 +45,17 @@
  * Add extension information to Special:Version
  */
 $wgExtensionCredits['other'][] = array(
+	'path' => __FILE__,
 	'name' => 'LDAP Authentication Plugin',
 	'version' => '1.2b (alpha)',
 	'author' => 'Ryan Lane',
 	'description' => 'LDAP Authentication plugin with support for multiple LDAP authentication methods',
+	'descriptionmsg' => 'ldapauthentication-desc',
 	'url' => 'http://www.mediawiki.org/wiki/Extension:LDAP_Authentication',
-	);
+);
+
+$dir = dirname(__FILE__) . '/';
+$wgExtensionMessagesFiles['LdapAuthentication'] = $dir . 'LdapAuthentication.i18n.php';
 
 //constants for search base
 define("GROUPDN", 0);
