@@ -382,9 +382,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * Modify options in the login template.
 	 *
 	 * @param UserLoginTemplate $template
+	 * @param $type String 'signup' or 'login'.
 	 * @access public
 	 */
-	function modifyUITemplate( &$template ) {
+	public function modifyUITemplate( &$template, &$type ) {
 		global $wgLDAPDomainNames, $wgLDAPUseLocal;
 		global $wgLDAPAddLDAPUsers;
 		global $wgLDAPAutoAuthDomain;
@@ -444,7 +445,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return bool
 	 * @access public
 	 */
-	function setPassword( $user, &$password ) {
+	public function setPassword( $user, $password ) {
 		global $wgLDAPUpdateLDAP, $wgLDAPWriterDN, $wgLDAPWriterPassword;
 
 		$this->printDebug( "Entering setPassword", NONSENSITIVE );
@@ -631,7 +632,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return bool
 	 * @access public
 	 */
-	function addUser( $user, $password ) {
+	public function addUser( $user, $password ) {
 		global $wgLDAPAddLDAPUsers, $wgLDAPWriterDN, $wgLDAPWriterPassword;
 		global $wgLDAPSearchAttributes;
 		global $wgLDAPWriteLocation;
@@ -834,7 +835,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @access public
 	 * TODO: fix setExternalID stuff
 	 */
-	function initUser( &$user ) {
+	public function initUser( &$user ) {
 		global $wgLDAPUseLDAPGroups;
 
 		$this->printDebug( "Entering initUser", NONSENSITIVE );
