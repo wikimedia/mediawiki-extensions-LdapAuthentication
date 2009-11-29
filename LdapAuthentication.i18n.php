@@ -84,6 +84,13 @@ $messages['ja'] = array(
 	'ldapauthentication-desc' => '複数のLDAP認証方式をサポートするLDAP認証プラグイン',
 );
 
+/** Ripoarisch (Ripoarisch)
+ * @author Purodha
+ */
+$messages['ksh'] = array(
+	'ldapauthentication-desc' => 'Dat Zohsatzprojramm för et Enlogge övver <i lang="en">LDAP</i> löht ungerscheidlijje Mettoohde zoh, för et Prööfe, wä wä es.',
+);
+
 /** Luxembourgish (Lëtzebuergesch)
  * @author Robby
  */
