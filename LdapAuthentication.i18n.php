@@ -35,6 +35,13 @@ $messages['br'] = array(
 	'ldapauthentication-desc' => 'Adveziant gwiriekaat LDAP ennañ meur a hentenn wiriekaat LDAP',
 );
 
+/** Bosnian (Bosanski)
+ * @author CERminator
+ */
+$messages['bs'] = array(
+	'ldapauthentication-desc' => 'Proširenje LDAP autentifikacije sa podrškom za mnoge metode LDAP autentifikacije',
+);
+
 /** Lower Sorbian (Dolnoserbski)
  * @author Michawiki
  */
@@ -54,6 +61,13 @@ $messages['fr'] = array(
  */
 $messages['gl'] = array(
 	'ldapauthentication-desc' => 'Complemento de autenticación LDAP con soporte para varios métodos de autenticación LDAP',
+);
+
+/** Swiss German (Alemannisch)
+ * @author Als-Holder
+ */
+$messages['gsw'] = array(
+	'ldapauthentication-desc' => 'LDAP-Authentifizierigs-Plugin mit Unterstitzig fir multipli LDAP-Authentifizierigs-Merthode',
 );
 
 /** Upper Sorbian (Hornjoserbsce)
@@ -113,10 +127,11 @@ $messages['nl'] = array(
 );
 
 /** Piedmontese (Piemontèis)
+ * @author Borichèt
  * @author Dragonòt
  */
 $messages['pms'] = array(
-	'ldapauthentication-desc' => "Plugin për l'autenticassion LDAP cn apògg për vàire manere d'autenticassion LDAP",
+	'ldapauthentication-desc' => "Plugin për l'autenticassion LDAP con apògg për vàire manere d'autenticassion LDAP",
 );
 
 /** Portuguese (Português)
