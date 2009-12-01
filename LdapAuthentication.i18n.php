@@ -141,3 +141,10 @@ $messages['pt'] = array(
 	'ldapauthentication-desc' => "''Plugin'' de autenticação LDAP, com suporte para vários métodos de autenticação",
 );
 
+/** Russian (Русский)
+ * @author Александр Сигачёв
+ */
+$messages['ru'] = array(
+	'ldapauthentication-desc' => 'Плагин LDAP-аутентификации с поддержкой нескольких методов проверки подлинности LDAP',
+);
+
