@@ -84,6 +84,13 @@ $messages['hu'] = array(
 	'ldapauthentication-desc' => 'LDAP hitelesítési bővítmény többféle LDAP azonosítási módszer támogatásával',
 );
 
+/** Interlingua (Interlingua)
+ * @author McDutchie
+ */
+$messages['ia'] = array(
+	'ldapauthentication-desc' => 'Plugin pro authentication LDAP con supporto pro multiple methodos de authentication LDAP',
+);
+
 /** Indonesian (Bahasa Indonesia)
  * @author IvanLanin
  */
