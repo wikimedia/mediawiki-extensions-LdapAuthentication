@@ -28,6 +28,13 @@ $messages['af'] = array(
 	'ldapauthentication-desc' => 'Uitbreiding vir LDAP-outentisiteit wat die meeste LDAP-outentisiteitsmetodes ondersteun',
 );
 
+/** Belarusian (Taraškievica orthography) (Беларуская (тарашкевіца))
+ * @author EugeneZelenko
+ */
+$messages['be-tarask'] = array(
+	'ldapauthentication-desc' => 'Дапаўненьне LDAP-аўтэнтыфікацыі з падтрымкай некалькіх мэтадаў аўтэнтыфікацыі LDAP',
+);
+
 /** Breton (Brezhoneg)
  * @author Fulup
  */
