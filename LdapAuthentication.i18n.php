@@ -155,6 +155,13 @@ $messages['pt'] = array(
 	'ldapauthentication-desc' => "''Plugin'' de autenticação LDAP, com suporte para vários métodos de autenticação",
 );
 
+/** Tarandíne (Tarandíne)
+ * @author Joetaras
+ */
+$messages['roa-tara'] = array(
+	'ldapauthentication-desc' => "plugin de autendicazione LDAP cu 'u supporte pe autendicaziune multeple de metode LDAP",
+);
+
 /** Russian (Русский)
  * @author Александр Сигачёв
  */
