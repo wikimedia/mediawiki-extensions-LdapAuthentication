@@ -140,6 +140,13 @@ $messages['nl'] = array(
 	'ldapauthentication-desc' => 'LDAP-authenticatieplug-in met ondersteuning voor meerdere LDAP-authenticatiemethoden',
 );
 
+/** Occitan (Occitan)
+ * @author Cedric31
+ */
+$messages['oc'] = array(
+	'ldapauthentication-desc' => "Plugin d'autentificacion LDAP amb supòrt de metòdes d'autentificacion LDAP multiples",
+);
+
 /** Piedmontese (Piemontèis)
  * @author Borichèt
  * @author Dragonòt
