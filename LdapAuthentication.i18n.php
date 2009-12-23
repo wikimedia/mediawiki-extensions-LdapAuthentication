@@ -28,6 +28,13 @@ $messages['af'] = array(
 	'ldapauthentication-desc' => 'Uitbreiding vir LDAP-outentisiteit wat die meeste LDAP-outentisiteitsmetodes ondersteun',
 );
 
+/** Arabic (العربية)
+ * @author Meno25
+ */
+$messages['ar'] = array(
+	'ldapauthentication-desc' => 'إضافة تحقيق LDAP بدعم لوسائل تحقيق LDAP متعددة',
+);
+
 /** Belarusian (Taraškievica orthography) (Беларуская (тарашкевіца))
  * @author EugeneZelenko
  */
@@ -174,5 +181,12 @@ $messages['roa-tara'] = array(
  */
 $messages['ru'] = array(
 	'ldapauthentication-desc' => 'Плагин LDAP-аутентификации с поддержкой нескольких методов проверки подлинности LDAP',
+);
+
+/** Slovak (Slovenčina)
+ * @author Helix84
+ */
+$messages['sk'] = array(
+	'ldapauthentication-desc' => 'Zásuvný modul na autentifikáciu prostredníctvom LDAP s podporou viacerých metód LDAP',
 );
 
