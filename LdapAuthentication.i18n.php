@@ -56,6 +56,13 @@ $messages['bs'] = array(
 	'ldapauthentication-desc' => 'Proširenje LDAP autentifikacije sa podrškom za mnoge metode LDAP autentifikacije',
 );
 
+/** German (Deutsch)
+ * @author Imre
+ */
+$messages['de'] = array(
+	'ldapauthentication-desc' => 'Plug-in für LDAP-Authentifizierung mit Unterstützung einiger LDAP-Authentifizierungsmethoden',
+);
+
 /** Lower Sorbian (Dolnoserbski)
  * @author Michawiki
  */
@@ -154,6 +161,13 @@ $messages['oc'] = array(
 	'ldapauthentication-desc' => "Plugin d'autentificacion LDAP amb supòrt de metòdes d'autentificacion LDAP multiples",
 );
 
+/** Polish (Polski)
+ * @author Sp5uhe
+ */
+$messages['pl'] = array(
+	'ldapauthentication-desc' => 'Wtyczka autoryzacji użytkowników z użyciem LDAP ze wsparciem dla wielu metod autoryzacji',
+);
+
 /** Piedmontese (Piemontèis)
  * @author Borichèt
  * @author Dragonòt
@@ -188,5 +202,12 @@ $messages['ru'] = array(
  */
 $messages['sk'] = array(
 	'ldapauthentication-desc' => 'Zásuvný modul na autentifikáciu prostredníctvom LDAP s podporou viacerých metód LDAP',
+);
+
+/** Turkish (Türkçe)
+ * @author Vito Genovese
+ */
+$messages['tr'] = array(
+	'ldapauthentication-desc' => 'Birden çok LDAP kimlik doğrulama yöntemini destekleyen LDAP kimlik doğrulama eklentisi',
 );
 
