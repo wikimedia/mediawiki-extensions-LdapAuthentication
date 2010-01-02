@@ -137,7 +137,7 @@ $messages['ksh'] = array(
  * @author Robby
  */
 $messages['lb'] = array(
-	'ldapauthentication-desc' => 'Authentifikatiouns-Plugin fir LDAP mat Ënnerstetzung fir multipel LDAP Authentifikatiouns-Methoden',
+	'ldapauthentication-desc' => 'Authentifikatiouns-Plugin fir LDAP mat Ënnerstëtzung fir multipel LDAP Authentifikatiouns-Methoden',
 );
 
 /** Macedonian (Македонски)
