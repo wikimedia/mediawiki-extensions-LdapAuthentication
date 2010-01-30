@@ -211,6 +211,13 @@ $messages['sk'] = array(
 	'ldapauthentication-desc' => 'Zásuvný modul na autentifikáciu prostredníctvom LDAP s podporou viacerých metód LDAP',
 );
 
+/** Swedish (Svenska)
+ * @author Boivie
+ */
+$messages['sv'] = array(
+	'ldapauthentication-desc' => 'LDAP-autentiseringsplugin med stöd för flera LDAP-autentiseringsmetoder',
+);
+
 /** Turkish (Türkçe)
  * @author Vito Genovese
  */
