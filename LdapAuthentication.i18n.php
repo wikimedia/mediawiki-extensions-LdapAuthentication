@@ -77,6 +77,13 @@ $messages['es'] = array(
 	'ldapauthentication-desc' => 'Complemento de autentificación LDAP con apoyo de múltiples métodos de autentificación LDAP',
 );
 
+/** Finnish (Suomi)
+ * @author Centerlink
+ */
+$messages['fi'] = array(
+	'ldapauthentication-desc' => 'LDAP-todentamisliitännäinen useiden LDAP-todennustapojen tuella',
+);
+
 /** French (Français)
  * @author IAlex
  */
