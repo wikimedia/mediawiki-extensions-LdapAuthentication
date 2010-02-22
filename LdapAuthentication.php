@@ -49,7 +49,6 @@ $wgExtensionCredits['other'][] = array(
 	'name' => 'LDAP Authentication Plugin',
 	'version' => '1.2b (alpha)',
 	'author' => 'Ryan Lane',
-	'description' => 'LDAP Authentication plugin with support for multiple LDAP authentication methods',
 	'descriptionmsg' => 'ldapauthentication-desc',
 	'url' => 'http://www.mediawiki.org/wiki/Extension:LDAP_Authentication',
 );
