@@ -168,6 +168,13 @@ $messages['nl'] = array(
 	'ldapauthentication-desc' => 'LDAP-authenticatieplug-in met ondersteuning voor meerdere LDAP-authenticatiemethoden',
 );
 
+/** Norwegian (bokmål)‬ (‪Norsk (bokmål)‬)
+ * @author Nghtwlkr
+ */
+$messages['no'] = array(
+	'ldapauthentication-desc' => 'Programutvidelse for LDAP-autentisering med støtte for flere LDAP-autentiseringsmetoder',
+);
+
 /** Occitan (Occitan)
  * @author Cedric31
  */
