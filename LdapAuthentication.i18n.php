@@ -86,9 +86,10 @@ $messages['fi'] = array(
 
 /** French (Français)
  * @author IAlex
+ * @author Urhixidur
  */
 $messages['fr'] = array(
-	'ldapauthentication-desc' => "Plugin d'authentification LDAP avec support de multiples méthodes d'authentification LDAP",
+	'ldapauthentication-desc' => 'Extension d’authentification LDAP prenant en charge de multiples méthodes d’authentification LDAP',
 );
 
 /** Galician (Galego)
