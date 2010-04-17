@@ -150,8 +150,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		} else {
 			$this->printDebug( "Failed to connect", NONSENSITIVE );
 			return false;
-		}
-		
+		}	
 	}
 
 	/**
@@ -165,11 +164,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		global $wgLDAPOptions;
 
 		$this->printDebug( "Entering Connect", NONSENSITIVE );
-
-                if ( !function_exists( 'ldap_connect' ) ) {
+		
+		if ( !function_exists( 'ldap_connect' ) ) {
 			$this->printDebug( "It looks like you are issing LDAP support; please ensure you have either compiled LDAP support in, or have enabled the module. If the authentication is working for you, the plugin isn't properly detecting the LDAP module, and you can safely ignore this message.", NONSENSITIVE );
 			return false;
-                }
+		}
 
 		// If the admin didn't set an encryption type, we default to tls
 		if ( isset( $wgLDAPEncryptionType[$_SESSION['wsDomain']] ) ) {
@@ -427,11 +426,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	function autoCreate() {
 		global $wgLDAPDisableAutoCreate;
 
-		if ( isset( $wgLDAPDisableAutoCreate[$_SESSION['wsDomain']] ) && $wgLDAPDisableAutoCreate[$_SESSION['wsDomain']] ) {
-			return false;
-		} else {
-			return true;
-		}
+		return !( isset( $wgLDAPDisableAutoCreate[$_SESSION['wsDomain']] ) && $wgLDAPDisableAutoCreate[$_SESSION['wsDomain']] );
 	}
 
 	/**
@@ -582,11 +577,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	function canCreateAccounts() {
 		global $wgLDAPAddLDAPUsers;
 
-		if ( isset( $wgLDAPAddLDAPUsers[$_SESSION['wsDomain']] ) && $wgLDAPAddLDAPUsers[$_SESSION['wsDomain']] ) {
-			return true;
-		} else {
-			return false;
-		}
+		return ( isset( $wgLDAPAddLDAPUsers[$_SESSION['wsDomain']] ) && $wgLDAPAddLDAPUsers[$_SESSION['wsDomain']] );
 	}
 
 	/**
@@ -1330,7 +1321,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 			// Only find all groups if the user has any groups; otherwise, we are
 			// just wasting a search.
-			if ( ( isset( $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ) && $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ) && count( $this->userLDAPGroups ) != 0 ) {
+			if ( ( isset( $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ).
+				&& $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ) && count( $this->userLDAPGroups ) != 0 ) {
 				$this->allLDAPGroups = $this->searchGroups( '*' );
 			}
 		}
@@ -1490,8 +1482,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @access private
 	 */
 	function setGroups( &$user ) {
-                global $wgLDAPGroupsPrevail, $wgGroupPermissions;
-		global $wgLDAPLocallyManagedGroups;
+		global $wgLDAPGroupsPrevail, $wgGroupPermissions, $wgLDAPLocallyManagedGroups;
 
 		// TODO: this is *really* ugly code. clean it up!
 
@@ -1513,12 +1504,14 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		}
 			
 
-                # Add ldap groups as local groups
-                if ( isset( $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ) && $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ) {
+		# Add ldap groups as local groups
+		if ( isset( $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ) && $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ) {
 			$this->printDebug( "Adding all groups to wgGroupPermissions: ", SENSITIVE, $this->allLDAPGroups );
-                        foreach ( $this->allLDAPGroups["short"] as $ldapgroup )
-                                if ( !array_key_exists( $ldapgroup, $wgGroupPermissions ) )
-                                        $wgGroupPermissions[$ldapgroup] = array();
+			
+			foreach ( $this->allLDAPGroups["short"] as $ldapgroup ) {
+				if ( !array_key_exists( $ldapgroup, $wgGroupPermissions ) )
+						$wgGroupPermissions[$ldapgroup] = array();
+			}
 		}
 
 		$this->printDebug( "Available groups are: ", NONSENSITIVE, $localAvailGrps );
@@ -1707,7 +1700,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return $ret;
 		}
 	}
-
 }
 
 // The following was derived from the SSL Authentication plugin
