@@ -16,8 +16,8 @@ class LdapAutoAuthentication {
 	        $wgAuth->printDebug( "Entering AutoAuthentication.", NONSENSITIVE );
 
 		if ( version_compare( $wgVersion, '1.14.0', '<' ) ) {
-			//The following section is a hack to determine whether or not
-			//the user is logged in. We need a core fix to make this simpler.
+			// The following section is a hack to determine whether or not
+			// the user is logged in. We need a core fix to make this simpler.
 			if ( isset( $_SESSION['wsUserID'] ) ) {
 				$user->setID( $_SESSION['wsUserID'] );
 				if ( $user->loadFromId() ) {
@@ -39,22 +39,22 @@ class LdapAutoAuthentication {
 	
 	        $wgAuth->printDebug( "User isn't logged in, calling setup.", NONSENSITIVE );
 	
-	        //Let regular authentication plugins configure themselves for auto
-	        //authentication chaining
+	        // Let regular authentication plugins configure themselves for auto
+	        // authentication chaining
 	        $wgAuth->autoAuthSetup();
 	
 	        $wgAuth->printDebug( "Calling authenticate with username ($wgLDAPAutoAuthUsername).", NONSENSITIVE );
-	        //The user hasn't already been authenticated, let's check them
+	        // The user hasn't already been authenticated, let's check them
 	        $authenticated = $wgAuth->authenticate( $wgLDAPAutoAuthUsername );
 	        if ( !$authenticated ) {
-	                //If the user doesn't exist in LDAP, there isn't much reason to
-	                //go any further.
-	                $wgAuth->printDebug("User wasn't found in LDAP, exiting.", NONSENSITIVE );
+	                // If the user doesn't exist in LDAP, there isn't much reason to
+	                // go any further.
+	                $wgAuth->printDebug( "User wasn't found in LDAP, exiting.", NONSENSITIVE );
 	                return false;
 	        }
 	
-	        //We need the username that MediaWiki will always use, *not* the one we
-	        //get from LDAP.
+	        // We need the username that MediaWiki will always use, *not* the one we
+	        // get from LDAP.
 	        $mungedUsername = $wgAuth->getCanonicalName( $wgLDAPAutoAuthUsername );
 	
 	        $wgAuth->printDebug( "User exists in LDAP; finding the user by name ($mungedUsername) in MediaWiki.", NONSENSITIVE );
@@ -62,8 +62,8 @@ class LdapAutoAuthentication {
 		$localId = User::idFromName( $mungedUsername );
 	        $wgAuth->printDebug( "Got id ($localId).", NONSENSITIVE );
 	
-	        //Is the user already in the database?
-	        if( !$localId ) {
+	        // Is the user already in the database?
+	        if ( !$localId ) {
 			$userAdded = self::attemptAddUser( $user, $mungedUsername );
 			if ( !$userAdded ) {
 				$result = false;
