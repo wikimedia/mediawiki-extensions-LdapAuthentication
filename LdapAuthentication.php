@@ -1321,7 +1321,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 			// Only find all groups if the user has any groups; otherwise, we are
 			// just wasting a search.
-			if ( ( isset( $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ).
+			if ( ( isset( $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] )
 				&& $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ) && count( $this->userLDAPGroups ) != 0 ) {
 				$this->allLDAPGroups = $this->searchGroups( '*' );
 			}
