@@ -166,7 +166,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$this->printDebug( "Entering Connect", NONSENSITIVE );
 		
 		if ( !function_exists( 'ldap_connect' ) ) {
-			$this->printDebug( "It looks like you are issing LDAP support; please ensure you have either compiled LDAP support in, or have enabled the module. If the authentication is working for you, the plugin isn't properly detecting the LDAP module, and you can safely ignore this message.", NONSENSITIVE );
+			$this->printDebug( "It looks like you are missing LDAP support; please ensure you have either compiled LDAP support in, or have enabled the module. If the authentication is working for you, the plugin isn't properly detecting the LDAP module, and you can safely ignore this message.", NONSENSITIVE );
 			return false;
 		}
 
