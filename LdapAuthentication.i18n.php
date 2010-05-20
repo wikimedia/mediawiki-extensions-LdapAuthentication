@@ -28,6 +28,13 @@ $messages['af'] = array(
 	'ldapauthentication-desc' => 'Uitbreiding vir LDAP-outentisiteit wat die meeste LDAP-outentisiteitsmetodes ondersteun',
 );
 
+/** Gheg Albanian (Gegë)
+ * @author Mdupont
+ */
+$messages['aln'] = array(
+	'ldapauthentication-desc' => 'plugin LDAP vertetimi me mbështetje për metoda të shumta tek LDAP',
+);
+
 /** Arabic (العربية)
  * @author Meno25
  */
