@@ -247,6 +247,13 @@ $messages['sv'] = array(
 	'ldapauthentication-desc' => 'LDAP-autentiseringsplugin med stöd för flera LDAP-autentiseringsmetoder',
 );
 
+/** Tagalog (Tagalog)
+ * @author AnakngAraw
+ */
+$messages['tl'] = array(
+	'ldapauthentication-desc' => 'Pampasak na pangpagpapatotoo ng LDAP na may suporta para sa maramihang mga pamamaraan ng pagpapatotoo ng LDAP',
+);
+
 /** Turkish (Türkçe)
  * @author Vito Genovese
  */
