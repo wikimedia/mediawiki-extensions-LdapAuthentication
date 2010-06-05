@@ -240,6 +240,13 @@ $messages['sk'] = array(
 	'ldapauthentication-desc' => 'Zásuvný modul na autentifikáciu prostredníctvom LDAP s podporou viacerých metód LDAP',
 );
 
+/** Serbian Cyrillic ekavian (Српски (ћирилица))
+ * @author Михајло Анђелковић
+ */
+$messages['sr-ec'] = array(
+	'ldapauthentication-desc' => 'Плагин за LDAP ауторизацију, са подршком за више метода LDAP ауторизације',
+);
+
 /** Swedish (Svenska)
  * @author Boivie
  */
