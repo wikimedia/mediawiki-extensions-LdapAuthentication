@@ -2,7 +2,8 @@
 /**
  * Internationalisation file for extension LdapAuthentication.
  *
- * @addtogroup Extensions
+ * @file
+ * @ingroup Extensions
  */
 
 $messages = array();

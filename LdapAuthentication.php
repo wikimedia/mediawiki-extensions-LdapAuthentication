@@ -28,7 +28,8 @@
  * Password authentication has a number of configurations, including straight binds,
  * proxy based authentication, and anonymous-search based authentication.
  *
- * @package MediaWiki
+ * @file
+ * @ingroup MediaWiki
  */
 
 #
