@@ -149,6 +149,13 @@ $messages['id'] = array(
 	'ldapauthentication-desc' => 'Pengaya otentikasi LDAP dengan dukungan untuk berbagai metode otentikasi LDAP',
 );
 
+/** Italian (Italiano)
+ * @author HalphaZ
+ */
+$messages['it'] = array(
+	'ldapauthentication-desc' => 'Plugin di autenticazione LDAP con supporto a diversi metodi di autenticazione LDAP',
+);
+
 /** Japanese (日本語)
  * @author Aotake
  */
