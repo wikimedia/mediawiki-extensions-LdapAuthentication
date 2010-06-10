@@ -255,6 +255,11 @@ $messages['sr-ec'] = array(
 	'ldapauthentication-desc' => 'Плагин за LDAP ауторизацију, са подршком за више метода LDAP ауторизације',
 );
 
+/** Serbian Latin ekavian (Srpski (latinica)) */
+$messages['sr-el'] = array(
+	'ldapauthentication-desc' => 'Plagin za LDAP autorizaciju, sa podrškom za više metoda LDAP autorizacije',
+);
+
 /** Swedish (Svenska)
  * @author Boivie
  */
