@@ -227,6 +227,13 @@ $messages['pt'] = array(
 	'ldapauthentication-desc' => "''Plugin'' de autenticação LDAP, com suporte para vários métodos de autenticação",
 );
 
+/** Brazilian Portuguese (Português do Brasil)
+ * @author Giro720
+ */
+$messages['pt-br'] = array(
+	'ldapauthentication-desc' => "''Plugin'' de autenticação LDAP, com suporte para vários métodos de autenticação",
+);
+
 /** Tarandíne (Tarandíne)
  * @author Joetaras
  */
