@@ -387,6 +387,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		global $wgLDAPDomainNames, $wgLDAPUseLocal;
 		global $wgLDAPAddLDAPUsers;
 		global $wgLDAPAutoAuthDomain;
+		global $wgLDAPMailPassword;
 
 		$this->printDebug( "Entering modifyUITemplate", NONSENSITIVE );
 
@@ -395,7 +396,12 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		}
 
 		$template->set( 'usedomain', true );
-		$template->set( 'useemail', false );
+		
+		if ( isset( $wgLDAPMailPassword ) && $wgLDAPMailPassword[$_SESSION['wsDomain']] ) {
+			$template->set( 'useemail', true );
+		} else {
+			$template->set( 'useemail', false );
+		}
 
 		$tempDomArr = $wgLDAPDomainNames;
 		if ( $wgLDAPUseLocal ) {
