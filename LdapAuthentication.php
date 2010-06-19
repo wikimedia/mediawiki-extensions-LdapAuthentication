@@ -1304,10 +1304,21 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 					# The first entry is always a count
 					$memberOfMembers = $this->userInfo[0]["memberof"];
 					array_shift( $memberOfMembers );
-					$groups = array( "dn" => array(), "short" => array() );
-					foreach ( $memberOfMembers as $mem ) {
+					$groups = array( "dn"=> array(), "short"=>array() );
+
+					foreach( $memberOfMembers as $mem ) {
 						array_push( $groups["dn"], strtolower( $mem ) );
+
+						// Get short name of group
+						$memAttrs = explode( ',', strtolower( $mem ) );
+						if ( isset( $memAttrs[0] ) ) {
+							$memAttrs = explode( '=', $memAttrs[0] );
+							if ( isset( $memAttrs[0] ) ) {
+								array_push( $groups["short"], strtolower( $memAttrs[1] ) );
+							}
+						}
 					}
+
 					$this->userLDAPGroups = $groups;
 				}
 			} else {
@@ -1393,7 +1404,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		global $wgLDAPGroupObjectclass, $wgLDAPGroupAttribute, $wgLDAPGroupNameAttribute;
 		global $wgLDAPProxyAgent, $wgLDAPProxyAgentPassword;
 		global $wgUser;
-
+		global $wgLDAPGroupsUseMemberOf;
+		
 		$this->printDebug( "Entering searchGroups", NONSENSITIVE );
 
 		$base = $this->getBaseDN( GROUPDN );
@@ -1402,14 +1414,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$attribute = $wgLDAPGroupAttribute[$_SESSION['wsDomain']];
 		$nameattribute = $wgLDAPGroupNameAttribute[$_SESSION['wsDomain']];
 
-                // We actually want to search for * not \2a
-                $value = $dn;
-                if ( $value != "*" )
-                        $value = $this->getLdapEscapedString( $value );
-
-		$filter = "(&($attribute=$value)(objectclass=$objectclass))";
-
-		$this->printDebug( "Search string: $filter", SENSITIVE );
+		// We actually want to search for * not \2a, ensure we don't escape *
+		$value = $dn;
+		if ( $value != "*" )
+			$value = $this->getLdapEscapedString( $value );
 
 		if ( isset( $wgLDAPProxyAgent[$_SESSION['wsDomain']] ) ) {
 			// We'll try to bind as the proxyagent as the proxyagent should normally have more
@@ -1418,6 +1426,61 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$this->printDebug( "Binding as the proxyagent", NONSENSITIVE );
 			$bind = $this->bindAs( $wgLDAPProxyAgent[$_SESSION['wsDomain']], $wgLDAPProxyAgentPassword[$_SESSION['wsDomain']] );
 		}
+
+		$groups = array( "short" => array(), "dn" => array() );
+		
+		// AD does not include the primary group in the list of groups, we have to find it ourselves.
+		// TODO: find a way to only do this search for AD domains.
+		if ( $dn != "*" ) {
+			$PGfilter = "(&(distinguishedName=$value)(objectclass=user))";
+			$this->printDebug( "User Filter: $PGfilter", SENSITIVE );
+			$PGinfo = @ldap_search( $ldapconn, $base, $PGfilter );
+			$PGentries = @ldap_get_entries( $ldapconn, $PGinfo );
+			if ( $PGentries ) {
+				$Usid = $PGentries[0]['objectsid'][0];
+				$PGrid = $PGentries[0]['primarygroupid'][0];
+				$PGsid = bin2hex( $Usid );
+				for ( $i=0; $i < 56; $i += 2 ) {
+					$PGSID[] = substr( $PGsid, $i, 2 );
+				}
+				$dPGrid = dechex( $PGrid );
+				$dPGrid = str_pad( $dPGrid, 8, '0', STR_PAD_LEFT );
+				$PGRID = array();
+				for ( $i = 0; $i < 8; $i += 2 ) {
+					array_push( $PGRID, substr( $dPGrid, $i, 2 ) );
+				}
+				for ( $i = 24; $i < 28; $i++ ) {
+					$PGSID[$i] = array_pop( $PGRID );
+				}
+				foreach ( $PGSID as $PGsid_bit ) {
+					$PGsid_string .= "\\" . $PGsid_bit;
+				}
+				$PGfilter = "(&(objectSid=$PGsid_string)(objectclass=$objectclass))";
+				$this->printDebug( "Primary Group Filter: $PGfilter", SENSITIVE );
+				$info = @ldap_search( $ldapconn, $base, $PGfilter );
+				$PGentries = @ldap_get_entries( $ldapconn, $info );
+				array_shift( $PGentries );
+				$dnMember = strtolower( $PGentry[0]['dn'] );
+				$groups["dn"][] = $dnMember;
+				// Get short name of group
+				$memAttrs = explode( ',', strtolower( $dnMember ) );
+				if ( isset( $memAttrs[0] ) ) {
+					$memAttrs = explode( '=', $memAttrs[0] );
+					if ( isset( $memAttrs[0] ) ) {
+						$groups["short"][] = strtolower( $memAttrs[1] );
+					}
+				}
+				
+			}
+		}
+
+		$filter = "(&($attribute=$value)(objectclass=$objectclass))";
+
+		$this->printDebug( "Search string: $filter", SENSITIVE );
+		
+		$filter = "(&($attribute=$value)(objectclass=$objectclass))";
+
+		$this->printDebug( "Search string: $filter", SENSITIVE );
 
 		$info = @ldap_search( $this->ldapconn, $base, $filter );
 		# if ( $info["count"] < 1 ) {
@@ -1435,7 +1498,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		array_shift( $entries );
 
 		// Let's get a list of both full dn groups and shortname groups
-		$groups = array( "short" => array(), "dn" => array() );
 		foreach ( $entries as $entry ) {
 			$shortMember = strtolower( $entry[$nameattribute][0] );
 			$dnMember = strtolower( $entry['dn'] );
@@ -1489,6 +1551,16 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$this->printDebug( "Entering setGroups.", NONSENSITIVE );
 
+		# Add ldap groups as local groups
+		if ( isset( $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ) && $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ) {
+			$this->printDebug( "Adding all groups to wgGroupPermissions: ", SENSITIVE, $this->allLDAPGroups );
+			
+			foreach ( $this->allLDAPGroups["short"] as $ldapgroup ) {
+				if ( !array_key_exists( $ldapgroup, $wgGroupPermissions ) )
+						$wgGroupPermissions[$ldapgroup] = array();
+			}
+		}
+
 		# add groups permissions
 		$localAvailGrps = $user->getAllGroups();
 		$localUserGrps = $user->getEffectiveGroups();
@@ -1504,17 +1576,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$this->printDebug( "Locally managed groups is unset, using defaults: ", SENSITIVE, $locallyManagedGrps );
 		}
 			
-
-		# Add ldap groups as local groups
-		if ( isset( $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ) && $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ) {
-			$this->printDebug( "Adding all groups to wgGroupPermissions: ", SENSITIVE, $this->allLDAPGroups );
-			
-			foreach ( $this->allLDAPGroups["short"] as $ldapgroup ) {
-				if ( !array_key_exists( $ldapgroup, $wgGroupPermissions ) )
-						$wgGroupPermissions[$ldapgroup] = array();
-			}
-		}
-
 		$this->printDebug( "Available groups are: ", NONSENSITIVE, $localAvailGrps );
 		$this->printDebug( "Effective groups are: ", NONSENSITIVE, $localUserGrps );
 
