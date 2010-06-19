@@ -1477,13 +1477,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$filter = "(&($attribute=$value)(objectclass=$objectclass))";
 
 		$this->printDebug( "Search string: $filter", SENSITIVE );
-		
-		$filter = "(&($attribute=$value)(objectclass=$objectclass))";
-
-		$this->printDebug( "Search string: $filter", SENSITIVE );
 
 		$info = @ldap_search( $this->ldapconn, $base, $filter );
-		# if ( $info["count"] < 1 ) {
 		if ( !$info ) {
 			$this->printDebug( "No entries returned from search.", SENSITIVE );
 
@@ -1494,15 +1489,17 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$entries = @ldap_get_entries( $this->ldapconn, $info );
 
-		// We need to shift because the first entry will be a count
-		array_shift( $entries );
+		if ( $entries ){
+			// We need to shift because the first entry will be a count
+			array_shift( $entries );
 
-		// Let's get a list of both full dn groups and shortname groups
-		foreach ( $entries as $entry ) {
-			$shortMember = strtolower( $entry[$nameattribute][0] );
-			$dnMember = strtolower( $entry['dn'] );
-			$groups["short"][] = $shortMember;
-			$groups["dn"][] = $dnMember;
+			// Let's get a list of both full dn groups and shortname groups
+			foreach ( $entries as $entry ) {
+				$shortMember = strtolower( $entry[$nameattribute][0] );
+				$dnMember = strtolower( $entry['dn'] );
+				$groups["short"][] = $shortMember;
+				$groups["dn"][] = $dnMember;
+			}
 		}
 
 		$this->printDebug( "Returned groups:", SENSITIVE, $groups["dn"] );
