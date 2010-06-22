@@ -161,6 +161,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 */
 	function connect() {
 		global $wgLDAPServerNames;
+		global $wgLDAPPort;
 		global $wgLDAPEncryptionType;
 		global $wgLDAPOptions;
 
@@ -201,7 +202,12 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$tmpservers = $wgLDAPServerNames[$_SESSION['wsDomain']];
 		$tok = strtok( $tmpservers, " " );
 		while ( $tok ) {
-			$servers = $servers . " " . $serverpre . $tok;
+			if ( isset( $wgLDAPPort[$_SESSION['wsDomain']] ) ) {
+				$this->printDebug( "Using non-standard port: " . $wgLDAPPort[$_SESSION['wsDomain']], SENSITIVE );
+				$servers = $servers . " " . $serverpre . $tok . ":" . $wgLDAPPort[$_SESSION['wsDomain']];
+			} else {
+				$servers = $servers . " " . $serverpre . $tok;
+			}
 			$tok = strtok( " " );
 		}
 		$servers = rtrim( $servers );
