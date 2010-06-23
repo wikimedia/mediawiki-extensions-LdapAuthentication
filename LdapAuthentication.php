@@ -36,11 +36,57 @@
 # LdapAuthentication.php
 #
 # Info available at http://www.mediawiki.org/wiki/Extension:LDAP_Authentication
-# and at http://www.mediawiki.org/wiki/Extension:LDAP_Authentication/Configuration_Examples
-# and at http://www.mediawiki.org/wiki/Extension:LDAP_Authentication/Smartcard_Configuration_Examples
-#
 # Support is available at http://www.mediawiki.org/wiki/Extension_talk:LDAP_Authentication 
 #
+
+if ( !defined( 'MEDIAWIKI' ) ) exit;
+
+$wgLDAPDomainNames = array();
+$wgLDAPServerNames = array();
+$wgLDAPUseLocal = false;
+$wgLDAPEncryptionType = array();
+$wgLDAPOptions = array();
+$wgLDAPPort = array();
+$wgLDAPSearchStrings = array();
+$wgLDAPProxyAgent = array();
+$wgLDAPProxyAgentPassword = array();
+$wgLDAPSearchAttributes = array();
+$wgLDAPBaseDNs = array();
+$wgLDAPGroupBaseDNs = array();
+$wgLDAPUserBaseDNs = array();
+$wgLDAPWriterDN = array();
+$wgLDAPWriterPassword = array();
+$wgLDAPWriteLocation = array();
+$wgLDAPAddLDAPUsers = array();
+$wgLDAPUpdateLDAP = array();
+$wgLDAPPasswordHash = array();
+$wgLDAPMailPassword = array();
+$wgLDAPRetrievePrefs = array();
+$wgLDAPPreferences = array();
+$wgLDAPDisableAutoCreate = array();
+$wgLDAPDebug = 0;
+$wgLDAPGroupDN = ""; //Deprecated
+$wgLDAPGroupUseFullDN = array();
+$wgLDAPLowerCaseUsername = array();
+$wgLDAPGroupUseRetrievedUsername = array();
+$wgLDAPGroupObjectclass = array();
+$wgLDAPGroupAttribute = array();
+$wgLDAPGroupNameAttribute = array();
+$wgLDAPGroupsUseMemberOf = array();
+$wgLDAPUseLDAPGroups = array();
+$wgLDAPLocallyManagedGroups = array();
+$wgLDAPGroupsPrevail = array();
+$wgLDAPRequiredGroups = array();
+$wgLDAPExcludedGroups = array();
+$wgLDAPGroupSearchNestedGroups = array();
+$wgLDAPSmartcardDomain = ""; //Deprecated
+$wgLDAPSSLUsername = ""; //Deprecated
+$wgLDAPAuthAttribute = array();
+$wgLDAPAutoAuthUsername = "";
+$wgLDAPAutoAuthDomain = "";
+$wgLDAPUniqueAttribute = array(); //Currently unused
+$wgLDAPUniqueBlockLogin = array(); //Currently unused
+$wgLDAPUniqueRenameUser = array(); //Currently unused
 
 /**
  * Add extension information to Special:Version
@@ -402,12 +448,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		}
 
 		$template->set( 'usedomain', true );
-		
-		if ( isset( $wgLDAPMailPassword ) && $wgLDAPMailPassword[$_SESSION['wsDomain']] ) {
-			$template->set( 'useemail', true );
-		} else {
-			$template->set( 'useemail', false );
-		}
+		$template->set( 'useemail', isset( $wgLDAPMailPassword[$_SESSION['wsDomain']] ) && $wgLDAPMailPassword[$_SESSION['wsDomain']] );	
 
 		$tempDomArr = $wgLDAPDomainNames;
 		if ( $wgLDAPUseLocal ) {
