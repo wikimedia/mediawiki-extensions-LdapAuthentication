@@ -39,7 +39,7 @@
 # Support is available at http://www.mediawiki.org/wiki/Extension_talk:LDAP_Authentication 
 #
 
-if ( !defined( 'MEDIAWIKI' ) ) exit;
+//if ( !defined( 'MEDIAWIKI' ) ) exit;
 
 $wgLDAPDomainNames = array();
 $wgLDAPServerNames = array();
@@ -94,7 +94,7 @@ $wgLDAPUniqueRenameUser = array(); //Currently unused
 $wgExtensionCredits['other'][] = array(
 	'path' => __FILE__,
 	'name' => 'LDAP Authentication Plugin',
-	'version' => '1.2b',
+	'version' => '1.2c',
 	'author' => 'Ryan Lane',
 	'descriptionmsg' => 'ldapauthentication-desc',
 	'url' => 'http://www.mediawiki.org/wiki/Extension:LDAP_Authentication',
@@ -456,7 +456,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			array_push( $tempDomArr, 'local' );
 		}
 
-		if ( isset( $wgLDAPAutoAuthDomain ) ) {
+		if ( isset( $wgLDAPAutoAuthDomain ) && $wgLDAPAutoAuthDomain != "" ) {
 			$this->printDebug( "Allowing auto-authentication login, removing the domain from the list.", NONSENSITIVE );
 
 			// There is no reason for people to log in directly to the wiki if the are using an
@@ -919,7 +919,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$this->printDebug( "Entering strict.", NONSENSITIVE );
 
-		if ( $wgLDAPUseLocal || $wgLDAPMailPassword ) {
+		if ( $wgLDAPUseLocal || ( isset( $wgLDAPMailPassword[$_SESSION['wsDomain']] ) && $wgLDAPMailPassword[$_SESSION['wsDomain']] ) ) {
 			$this->printDebug( "Returning false in strict().", NONSENSITIVE );
 			return false;
 		} else {
@@ -1836,16 +1836,16 @@ function AutoAuthSetup() {
 	$wgAuth->printDebug( "Entering AutoAuthSetup.", NONSENSITIVE );
 
 	// Set configuration options for backwards compatibility
-	if ( isset( $wgLDAPSSLUsername ) ) {
+	if ( isset( $wgLDAPSSLUsername ) && $wgLDAPSSLUsername != "" ) {
 		$wgAuth->printDebug( 'Setting $wgLDAPAutoAuthUsername to $wgLDAPSSLUsername; please change your configuration to fix this deprecated configuration variable.', NONSENSITIVE );
 		$wgLDAPAutoAuthUsername = $wgLDAPSSLUsername;
 	}
-	if ( isset( $wgLDAPSmartcardDomain ) ) {
+	if ( isset( $wgLDAPSmartcardDomain ) && $wgLDAPSmartcardDomain != "" ) {
 		$wgAuth->printDebug( 'Setting $wgLDAPAutoAuthDomain to $wgLDAPSmartcardDomain; please change your configuration to fix this deprecated configuration variable.', NONSENSITIVE );
 		$wgLDAPAutoAuthDomain = $wgLDAPSmartcardDomain;
 	}
 
-	if ( $wgLDAPAutoAuthUsername != null ) {
+	if ( $wgLDAPAutoAuthUsername != "" ) {
 		$wgAuth->printDebug( "wgLDAPAutoAuthUsername is not null, adding hooks.", NONSENSITIVE );
 		if ( version_compare( $wgVersion, '1.14.0', '<' ) ) {
 			if ( version_compare( $wgVersion, '1.13.0', '<' ) ) {
