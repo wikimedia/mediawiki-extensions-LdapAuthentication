@@ -39,7 +39,7 @@
 # Support is available at http://www.mediawiki.org/wiki/Extension_talk:LDAP_Authentication 
 #
 
-//if ( !defined( 'MEDIAWIKI' ) ) exit;
+if ( !defined( 'MEDIAWIKI' ) ) exit;
 
 $wgLDAPDomainNames = array();
 $wgLDAPServerNames = array();
@@ -1845,7 +1845,7 @@ function AutoAuthSetup() {
 		$wgLDAPAutoAuthDomain = $wgLDAPSmartcardDomain;
 	}
 
-	if ( $wgLDAPAutoAuthUsername != "" ) {
+	if ( $wgLDAPAutoAuthUsername !== "" ) {
 		$wgAuth->printDebug( "wgLDAPAutoAuthUsername is not null, adding hooks.", NONSENSITIVE );
 		if ( version_compare( $wgVersion, '1.14.0', '<' ) ) {
 			if ( version_compare( $wgVersion, '1.13.0', '<' ) ) {
