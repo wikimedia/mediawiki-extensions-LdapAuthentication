@@ -288,3 +288,10 @@ $messages['tr'] = array(
 	'ldapauthentication-desc' => 'Birden çok LDAP kimlik doğrulama yöntemini destekleyen LDAP kimlik doğrulama eklentisi',
 );
 
+/** Ukrainian (Українська)
+ * @author Ytsukeng Fyvaprol
+ */
+$messages['uk'] = array(
+	'ldapauthentication-desc' => 'Плагін LDAP-аутентифікації з підтримкою декількох методів перевірки автентичності LDAP',
+);
+
