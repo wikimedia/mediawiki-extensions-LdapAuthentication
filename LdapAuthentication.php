@@ -140,7 +140,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	// the user's entry and all attributes
 	var $userInfo;
 
-	function LdapAuthenticationPlugin() {
+	function __construct() {
 	}
 
 	/**
