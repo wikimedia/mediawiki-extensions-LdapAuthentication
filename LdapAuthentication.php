@@ -1487,8 +1487,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		if ( $dn != "*" ) {
 			$PGfilter = "(&(distinguishedName=$value)(objectclass=user))";
 			$this->printDebug( "User Filter: $PGfilter", SENSITIVE );
-			$PGinfo = @ldap_search( $ldapconn, $base, $PGfilter );
-			$PGentries = @ldap_get_entries( $ldapconn, $PGinfo );
+			$PGinfo = @ldap_search( $this->ldapconn, $base, $PGfilter );
+			$PGentries = @ldap_get_entries( $this->ldapconn, $PGinfo );
 			if ( $PGentries ) {
 				$Usid = $PGentries[0]['objectsid'][0];
 				$PGrid = $PGentries[0]['primarygroupid'][0];
@@ -1510,8 +1510,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				}
 				$PGfilter = "(&(objectSid=$PGsid_string)(objectclass=$objectclass))";
 				$this->printDebug( "Primary Group Filter: $PGfilter", SENSITIVE );
-				$info = @ldap_search( $ldapconn, $base, $PGfilter );
-				$PGentries = @ldap_get_entries( $ldapconn, $info );
+				$info = @ldap_search( $this->ldapconn, $base, $PGfilter );
+				$PGentries = @ldap_get_entries( $this->ldapconn, $info );
 				array_shift( $PGentries );
 				$dnMember = strtolower( $PGentry[0]['dn'] );
 				$groups["dn"][] = $dnMember;
