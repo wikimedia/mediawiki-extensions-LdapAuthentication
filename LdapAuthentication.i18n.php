@@ -71,6 +71,13 @@ $messages['ca'] = array(
 	'ldapauthentication-desc' => "Connector d'autentificació LDAP amb suport per a diversos mètodes d'autenticació LDAP",
 );
 
+/** Czech (Česky)
+ * @author Mormegil
+ */
+$messages['cs'] = array(
+	'ldapauthentication-desc' => 'Autentizační modul pro LDAP podporující několik autentizačních metod LDAP',
+);
+
 /** German (Deutsch)
  * @author Imre
  */
