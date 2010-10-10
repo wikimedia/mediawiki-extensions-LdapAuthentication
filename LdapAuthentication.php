@@ -140,9 +140,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	// the user's entry and all attributes
 	var $userInfo;
 
-	function __construct() {
-	}
-
 	/**
 	 * Check whether there exists a user account with the given name.
 	 * The name will be normalized to MediaWiki's requirements, so
@@ -588,7 +585,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$this->email = $user->getEmail();
 		$this->realname = $user->getRealName();
 		$this->nickname = $user->getOption( 'nickname' );
-		$this->language = $user->getOption( 'language' );
+		$this->lang = $user->getOption( 'language' );
 
 		$this->connect();
 		if ( $this->ldapconn ) {
@@ -604,7 +601,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			if ( '' != $this->email ) { $values["mail"] = $this->email; }
 			if ( '' != $this->nickname ) { $values["displayname"] = $this->nickname; }
 			if ( '' != $this->realname ) { $values["cn"] = $this->realname; }
-			if ( '' != $this->language ) { $values["preferredlanguage"] = $this->language; }
+			if ( '' != $this->lang ) { $values["preferredlanguage"] = $this->lang; }
 
 			if ( 0 != sizeof( $values ) && @ldap_modify( $this->ldapconn, $this->userdn, $values ) ) {
 				$this->printDebug( "Successfully modified the user's attributes", NONSENSITIVE );
@@ -879,8 +876,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * TODO: fix setExternalID stuff
 	 */
 	function initUser( &$user ) {
-		global $wgLDAPUseLDAPGroups;
-
 		$this->printDebug( "Entering initUser", NONSENSITIVE );
 
 		if ( $this->authFailed ) {
@@ -937,7 +932,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @access public
 	 */
 	function getCanonicalName( $username ) {
-		global $wgLDAPUseLocal;
 		$this->printDebug( "Entering getCanonicalName", NONSENSITIVE );
 
 		if ( $username != '' ) {
@@ -1456,8 +1450,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	function searchGroups( $dn ) {
 		global $wgLDAPGroupObjectclass, $wgLDAPGroupAttribute, $wgLDAPGroupNameAttribute;
 		global $wgLDAPProxyAgent, $wgLDAPProxyAgentPassword;
-		global $wgUser;
-		global $wgLDAPGroupsUseMemberOf;
 		
 		$this->printDebug( "Entering searchGroups", NONSENSITIVE );
 
@@ -1477,7 +1469,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			// rights than the user. If the proxyagent fails to bind, we will still be able
 			// to search as the normal user (which is why we don't return on fail).
 			$this->printDebug( "Binding as the proxyagent", NONSENSITIVE );
-			$bind = $this->bindAs( $wgLDAPProxyAgent[$_SESSION['wsDomain']], $wgLDAPProxyAgentPassword[$_SESSION['wsDomain']] );
+			$this->bindAs( $wgLDAPProxyAgent[$_SESSION['wsDomain']], $wgLDAPProxyAgentPassword[$_SESSION['wsDomain']] );
 		}
 
 		$groups = array( "short" => array(), "dn" => array() );
@@ -1513,7 +1505,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$info = @ldap_search( $this->ldapconn, $base, $PGfilter );
 				$PGentries = @ldap_get_entries( $this->ldapconn, $info );
 				array_shift( $PGentries );
-				$dnMember = strtolower( $PGentry[0]['dn'] );
+				$dnMember = strtolower( $PGentries[0]['dn'] );
 				$groups["dn"][] = $dnMember;
 				// Get short name of group
 				$memAttrs = explode( ',', strtolower( $dnMember ) );

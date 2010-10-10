@@ -8,10 +8,7 @@ class LdapAutoAuthentication {
 	 * @access public
 	 */
 	static function Authenticate( $user, &$result = null ) {
-		global $wgUser;
-		global $wgAuth;
-		global $wgLDAPAutoAuthUsername;
-		global $wgVersion;
+		global $wgAuth, $wgLDAPAutoAuthUsername, $wgVersion;
 
 		$wgAuth->printDebug( "Entering AutoAuthentication.", NONSENSITIVE );
 
