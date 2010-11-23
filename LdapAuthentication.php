@@ -88,13 +88,15 @@ $wgLDAPUniqueAttribute = array(); //Currently unused
 $wgLDAPUniqueBlockLogin = array(); //Currently unused
 $wgLDAPUniqueRenameUser = array(); //Currently unused
 
+define( "LDAPAUTHVERSION", "1.2d" );
+
 /**
  * Add extension information to Special:Version
  */
 $wgExtensionCredits['other'][] = array(
 	'path' => __FILE__,
 	'name' => 'LDAP Authentication Plugin',
-	'version' => '1.2d',
+	'version' => LDAPAUTHVERSION,
 	'author' => 'Ryan Lane',
 	'descriptionmsg' => 'ldapauthentication-desc',
 	'url' => 'http://www.mediawiki.org/wiki/Extension:LDAP_Authentication',
@@ -1699,7 +1701,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			if ( isset( $debugArr ) ) {
 				$debugText = $debugText . " " . implode( "::", $debugArr );
 			}
-			wfDebugLog( 'ldap', $debugText, false );
+			wfDebugLog( 'ldap', LDAPAUTHVERSION . ' ' . $debugText, false );
 		}
 	}
 
