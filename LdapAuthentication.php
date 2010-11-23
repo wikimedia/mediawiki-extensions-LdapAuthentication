@@ -1688,15 +1688,19 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @access private
 	 */
 	function printDebug( $debugText, $debugVal, $debugArr = null ) {
+		if ( !function_exists( 'wfDebugLog' ) ) {
+			return;
+		}
+
 		global $wgLDAPDebug;
 
 		if ( isset( $debugArr ) ) {
-			if ( $wgLDAPDebug > $debugVal ) {
+			if ( $wgLDAPDebug >= $debugVal ) {
 				$text = $debugText . " " . implode( "::", $debugArr );
 				wfDebugLog( 'ldap', $text, false );
 			}
 		} else {
-			if ( $wgLDAPDebug > $debugVal ) {
+			if ( $wgLDAPDebug >= $debugVal ) {
 				wfDebugLog( 'ldap', $debugText, false );
 			}
 		}
