@@ -1685,6 +1685,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 *
 	 * @param string $debugText
 	 * @param string $debugVal
+	 * @param Array|null $debugArr
 	 * @access private
 	 */
 	function printDebug( $debugText, $debugVal, $debugArr = null ) {
@@ -1694,15 +1695,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		global $wgLDAPDebug;
 
-		if ( isset( $debugArr ) ) {
-			if ( $wgLDAPDebug >= $debugVal ) {
-				$text = $debugText . " " . implode( "::", $debugArr );
-				wfDebugLog( 'ldap', $text, false );
+		if ( $wgLDAPDebug >= $debugVal ) {
+			if ( isset( $debugArr ) ) {
+				$debugText = $debugText . " " . implode( "::", $debugArr );
 			}
-		} else {
-			if ( $wgLDAPDebug >= $debugVal ) {
-				wfDebugLog( 'ldap', $debugText, false );
-			}
+			wfDebugLog( 'ldap', $debugText, false );
 		}
 	}
 
