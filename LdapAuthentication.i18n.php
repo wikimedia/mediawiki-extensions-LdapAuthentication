@@ -128,6 +128,13 @@ $messages['gsw'] = array(
 	'ldapauthentication-desc' => 'LDAP-Authentifizierigs-Plugin mit Unterstitzig fir multipli LDAP-Authentifizierigs-Merthode',
 );
 
+/** Hebrew (עברית)
+ * @author YaronSh
+ */
+$messages['he'] = array(
+	'ldapauthentication-desc' => 'תוסף אימות LDAP עם תמיכה במספר שיטות LDAP לאימות',
+);
+
 /** Upper Sorbian (Hornjoserbsce)
  * @author Michawiki
  */
