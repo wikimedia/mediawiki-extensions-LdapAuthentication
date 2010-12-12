@@ -718,11 +718,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 			$this->userdn = $this->getSearchString( $username );
 			if ( '' == $this->userdn ) {
-				$this->printDebug( "$this->userdn is blank, attempting to use wgLDAPWriteLocation", NONSENSITIVE );
+				$this->printDebug( "userdn is blank, attempting to use wgLDAPWriteLocation", NONSENSITIVE );
 				if ( isset( $wgLDAPWriteLocation[$_SESSION['wsDomain']] ) ) {
 					$this->printDebug( "wgLDAPWriteLocation is set, using that", NONSENSITIVE );
 					$this->userdn = $wgLDAPSearchAttributes[$_SESSION['wsDomain']] . "=" .
-						$username . "," . $wgLDAPWriteLocation[$_SESSION['wsDomain']];
+						strtolower( $username ) . "," . $wgLDAPWriteLocation[$_SESSION['wsDomain']];
 				} else {
 					$this->printDebug( "wgLDAPWriteLocation is not set, failing", NONSENSITIVE );
 					// getSearchString will bind, but will not unbind
@@ -747,7 +747,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			if ( '' != $this->realname ) { $values["cn"] = $this->realname; }
 				else { $values["cn"] = $username; }
 			$values["userpassword"] = $pass;
-			$values["objectclass"] = "inetorgperson";
+			$values["objectclass"] = array( "inetorgperson" );
+
+			# Let other extensions modify the user object before creation
+			wfRunHooks( 'LDAPSetCreationValues', array( $this, &$values ) );
 
 			if ( isset ( $wgLDAPAuthAttribute[$_SESSION['wsDomain']] ) ) {
 				$values[$wgLDAPAuthAttribute[$_SESSION['wsDomain']]] = "true";
@@ -1752,7 +1755,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return string
 	 * @access private
 	 */
-	function getLdapEscapedString ( $string ) {
+	function getLdapEscapedString( $string ) {
 		// Make the string LDAP compliant by escaping *, (, ) , \ & NUL
 		return str_replace(
 			array( "*", "(", ")", "\\", "\x00" ), // replace this
@@ -1768,7 +1771,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return string
 	 * @access private
 	 */
-	function getBaseDN ( $type ) {
+	function getBaseDN( $type ) {
 		global $wgLDAPBaseDNs, $wgLDAPGroupBaseDNs, $wgLDAPUserBaseDNs;
 
 		$this->printDebug( "Entering getBaseDN", NONSENSITIVE );
