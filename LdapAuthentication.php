@@ -749,8 +749,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$values["userpassword"] = $pass;
 			$values["objectclass"] = array( "inetorgperson" );
 
+			$result = true;
 			# Let other extensions modify the user object before creation
-			wfRunHooks( 'LDAPSetCreationValues', array( $this, &$values, &$result ) );
+			wfRunHooks( 'LDAPSetCreationValues', array( $this, $username, &$values, &$result ) );
 			if ( ! $result ) {
 				$this->printDebug( "Failed to add user because LDAPSetCreationValues returned false", NONSENSITIVE );
 				@ldap_unbind();
