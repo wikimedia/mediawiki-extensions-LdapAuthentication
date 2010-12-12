@@ -708,7 +708,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$this->email = $user->getEmail();
 		$this->realname = $user->getRealName();
-		$username = $user->getName();
+		$username = strtolower( $user->getName() );
 
 		$pass = $this->getPasswordHash( $password );
 
@@ -722,7 +722,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				if ( isset( $wgLDAPWriteLocation[$_SESSION['wsDomain']] ) ) {
 					$this->printDebug( "wgLDAPWriteLocation is set, using that", NONSENSITIVE );
 					$this->userdn = $wgLDAPSearchAttributes[$_SESSION['wsDomain']] . "=" .
-						strtolower( $username ) . "," . $wgLDAPWriteLocation[$_SESSION['wsDomain']];
+						$username . "," . $wgLDAPWriteLocation[$_SESSION['wsDomain']];
 				} else {
 					$this->printDebug( "wgLDAPWriteLocation is not set, failing", NONSENSITIVE );
 					// getSearchString will bind, but will not unbind
@@ -750,7 +750,12 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$values["objectclass"] = array( "inetorgperson" );
 
 			# Let other extensions modify the user object before creation
-			wfRunHooks( 'LDAPSetCreationValues', array( $this, &$values ) );
+			wfRunHooks( 'LDAPSetCreationValues', array( $this, &$values, &$result ) );
+			if ( ! $result ) {
+				$this->printDebug( "Failed to add user because LDAPSetCreationValues returned false", NONSENSITIVE );
+				@ldap_unbind();
+				return false;
+			}
 
 			if ( isset ( $wgLDAPAuthAttribute[$_SESSION['wsDomain']] ) ) {
 				$values[$wgLDAPAuthAttribute[$_SESSION['wsDomain']]] = "true";
