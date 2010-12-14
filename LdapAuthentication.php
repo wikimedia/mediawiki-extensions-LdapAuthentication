@@ -1089,7 +1089,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return $this->userInfo;
 		}
 
-		$entry = @ldap_read( $this->ldapconn, $this->userdn, "objectclass=*" );
+		$entry = @ldap_read( $this->ldapconn, $this->userdn, "objectclass=*", array( '*', 'memberof' ) );
 		$userInfo = @ldap_get_entries( $this->ldapconn, $entry );
 		if ( $userInfo["count"] < 1 ) {
 			$this->fetchedUserInfo = false;
