@@ -1128,7 +1128,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			foreach ( array_keys( $prefs ) as $key ) {
 				$attr = strtolower( $prefs[$key] );
 				if ( isset( $this->userInfo[0][$attr] ) ) {
-					$value = $this->userInfo[0][$attr];
+					$value = $this->userInfo[0][$attr][0];
 				} else {
 					continue;
 				}
@@ -1147,7 +1147,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 						break;
 					case "realname":
 						$this->realname = $value;
-						$this->printDebug( "Retrieved realname ($this->realname) using attribute ($attr)", NONSENSITIVE );
+						$this->printDebug( "Retrieved realname ($this->realname) using attribute ($prefs[$key])", NONSENSITIVE );
 						break;
 				}
 			}
