@@ -165,7 +165,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return true;
 		}
 
-		$this->ldapconn = $this->connect();
+		$this->connect();
 		if ( $this->ldapconn ) {
 			$this->printDebug( "Successfully connected", NONSENSITIVE );
 
