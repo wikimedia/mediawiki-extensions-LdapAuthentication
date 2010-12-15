@@ -1126,30 +1126,28 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$this->printDebug( "Retrieving preferences", NONSENSITIVE );
 			$prefs = $wgLDAPPreferences[$_SESSION['wsDomain']];
 			foreach ( array_keys( $prefs ) as $key ) {
+				$attr = strtolower( $prefs[$key] );
+				if ( isset( $this->userInfo[0][$attr] ) ) {
+					$value = $this->userInfo[0][$attr];
+				} else {
+					continue;
+				}
 				switch ( $key ) {
 					case "email":
-						if ( isset( $this->userInfo[0]["$prefs[$key]"] ) ) {
-							$this->email = $this->userInfo[0]["$prefs[$key]"][0];
-							$this->printDebug( "Retrieved email ($this->email) using attribute ($prefs[$key])", NONSENSITIVE );
-						}
+						$this->email = $value;
+						$this->printDebug( "Retrieved email ($this->email) using attribute ($attr)", NONSENSITIVE );
 						break;
 					case "language":
-						if ( isset( $this->userInfo[0]["$prefs[$key]"] ) ) {
-							$this->lang = $this->userInfo[0][$prefs[$key]][0];
-							$this->printDebug( "Retrieved language ($this->lang) using attribute ($prefs[$key])", NONSENSITIVE );
-						}
+						$this->lang = $value;
+						$this->printDebug( "Retrieved language ($this->lang) using attribute ($attr)", NONSENSITIVE );
 						break;
 					case "nickname":
-						if ( isset( $this->userInfo[0]["$prefs[$key]"] ) ) {
-							$this->nickname = $this->userInfo[0]["$prefs[$key]"][0];
-							$this->printDebug( "Retrieved nickname ($this->nickname) using attribute ($prefs[$key])", NONSENSITIVE );
-						}
+						$this->nickname = $value;
+						$this->printDebug( "Retrieved nickname ($this->nickname) using attribute ($attr)", NONSENSITIVE );
 						break;
 					case "realname":
-						if ( isset( $this->userInfo[0]["$prefs[$key]"] ) ) {
-							$this->realname = $this->userInfo[0]["$prefs[$key]"][0];
-							$this->printDebug( "Retrieved realname ($this->realname) using attribute ($prefs[$key])", NONSENSITIVE );
-						}
+						$this->realname = $value;
+						$this->printDebug( "Retrieved realname ($this->realname) using attribute ($attr)", NONSENSITIVE );
 						break;
 				}
 			}
@@ -1384,7 +1382,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 					$this->userLDAPGroups = $groups;
 				} else {
-					$this->printDebug( "memberOf attribute isn't set:", NONSENSITIVE );
+					$this->printDebug( "memberOf attribute isn't set", NONSENSITIVE );
 				}
 			} else {
 				$this->printDebug( "Searching for the groups", NONSENSITIVE );
