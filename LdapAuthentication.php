@@ -1060,7 +1060,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$this->printDebug( "Created a regular filter: $filter", SENSITIVE );
 		}
 
-		$attributes = array( "*" );
+		$attributes = array( "*", "memberof" );
 		$base = $this->getBaseDN( USERDN );
 
 		$this->printDebug( "Using base: $base", SENSITIVE );
