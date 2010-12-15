@@ -204,11 +204,15 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 *
 	 * @access private
 	 */
-	function connect() {
+	function connect( $domain='' ) {
 		global $wgLDAPServerNames;
 		global $wgLDAPPort;
 		global $wgLDAPEncryptionType;
 		global $wgLDAPOptions;
+
+		if ( $domain == '' ) {
+			$domain = $_SESSION['wsDomain'];
+		}
 
 		$this->printDebug( "Entering Connect", NONSENSITIVE );
 		
@@ -218,8 +222,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		}
 
 		// If the admin didn't set an encryption type, we default to tls
-		if ( isset( $wgLDAPEncryptionType[$_SESSION['wsDomain']] ) ) {
-			$encryptionType = $wgLDAPEncryptionType[$_SESSION['wsDomain']];
+		if ( isset( $wgLDAPEncryptionType[$domain] ) ) {
+			$encryptionType = $wgLDAPEncryptionType[$domain];
 		} else {
 			$encryptionType = "tls";
 		}
@@ -244,12 +248,12 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		// Make a space separated list of server strings with the ldap:// or ldaps://
 		// string added.
 		$servers = "";
-		$tmpservers = $wgLDAPServerNames[$_SESSION['wsDomain']];
+		$tmpservers = $wgLDAPServerNames[$domain];
 		$tok = strtok( $tmpservers, " " );
 		while ( $tok ) {
-			if ( isset( $wgLDAPPort[$_SESSION['wsDomain']] ) ) {
-				$this->printDebug( "Using non-standard port: " . $wgLDAPPort[$_SESSION['wsDomain']], SENSITIVE );
-				$servers = $servers . " " . $serverpre . $tok . ":" . $wgLDAPPort[$_SESSION['wsDomain']];
+			if ( isset( $wgLDAPPort[$domain] ) ) {
+				$this->printDebug( "Using non-standard port: " . $wgLDAPPort[$domain], SENSITIVE );
+				$servers = $servers . " " . $serverpre . $tok . ":" . $wgLDAPPort[$domain];
 			} else {
 				$servers = $servers . " " . $serverpre . $tok;
 			}
@@ -264,8 +268,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		ldap_set_option( $this->ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3 );
 		ldap_set_option( $this->ldapconn, LDAP_OPT_REFERRALS, 0 );
 
-		if ( isset( $wgLDAPOptions[$_SESSION['wsDomain']] ) ) {
-			$options = $wgLDAPOptions[$_SESSION['wsDomain']];
+		if ( isset( $wgLDAPOptions[$domain] ) ) {
+			$options = $wgLDAPOptions[$domain];
 			foreach ( $options as $key => $value ) {
 				if ( !ldap_set_option( $this->ldapconn, constant( $key ), $value ) ) {
 					$this->printDebug( "Can't set option to LDAP! Option code and value: " . $key . "=" . $value, 1 );
@@ -1376,8 +1380,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 							}
 						}
 					}
+					$this->printDebug( "Got the following groups:", SENSITIVE, $groups["dn"] );
 
 					$this->userLDAPGroups = $groups;
+				} else {
+					$this->printDebug( "memberOf attribute isn't set:", NONSENSITIVE );
 				}
 			} else {
 				$this->printDebug( "Searching for the groups", NONSENSITIVE );
