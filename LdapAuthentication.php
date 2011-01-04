@@ -468,6 +468,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		}
 
 		$template->set( 'domainnames', $tempDomArr );
+		wfRunHooks( 'LDAPModifyUITemplate', array( &$template ) );
 	}
 
 	/**
