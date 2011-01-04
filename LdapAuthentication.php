@@ -1136,15 +1136,15 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				switch ( $key ) {
 					case "email":
 						$this->email = $value;
-						$this->printDebug( "Retrieved email ($this->email) using attribute ($attr)", NONSENSITIVE );
+						$this->printDebug( "Retrieved email ($this->email) using attribute ($prefs[$key])", NONSENSITIVE );
 						break;
 					case "language":
 						$this->lang = $value;
-						$this->printDebug( "Retrieved language ($this->lang) using attribute ($attr)", NONSENSITIVE );
+						$this->printDebug( "Retrieved language ($this->lang) using attribute ($prefs[$key])", NONSENSITIVE );
 						break;
 					case "nickname":
 						$this->nickname = $value;
-						$this->printDebug( "Retrieved nickname ($this->nickname) using attribute ($attr)", NONSENSITIVE );
+						$this->printDebug( "Retrieved nickname ($this->nickname) using attribute ($prefs[$key])", NONSENSITIVE );
 						break;
 					case "realname":
 						$this->realname = $value;
