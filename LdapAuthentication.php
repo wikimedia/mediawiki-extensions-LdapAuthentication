@@ -169,7 +169,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		if ( $this->ldapconn ) {
 			$this->printDebug( "Successfully connected", NONSENSITIVE );
 
-			$searchstring = $this->getSearchString( $this->ldapconn, $username );
+			$searchstring = $this->getSearchString( $username );
 
 			// If we are using auto authentication, and we got
 			// anything back, then the user exists.
@@ -809,10 +809,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$this->printDebug( "Entering validDomain", NONSENSITIVE );
 
 		if ( in_array( $domain, $wgLDAPDomainNames ) || ( $wgLDAPUseLocal && 'local' == $domain ) ) {
-			$this->printDebug( "User is using a valid domain.", NONSENSITIVE );
+			$this->printDebug( "User is using a valid domain ($domain).", NONSENSITIVE );
 			return true;
 		} else {
-			$this->printDebug( "User is not using a valid domain.", NONSENSITIVE );
+			$this->printDebug( "User is not using a valid domain ($domain).", NONSENSITIVE );
 			return false;
 		}
 	}
