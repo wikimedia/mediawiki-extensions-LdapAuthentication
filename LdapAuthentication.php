@@ -1224,13 +1224,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 					$this->printDebug( "Usernames do not match, renaming user in database.", SENSITIVE );
 
-					global $wgVersion;
-					if ( version_compare( $wgVersion, '1.7.0', '<' ) ) {
-						$this->printDebug( "Renaming users is only supported in MediaWiki 1.7+, please upgrade.", SENSITIVE );
-						$this->markAuthFailed();
-						return false;
-					}
-
 					$olduser = User::newFromName( $retrievedusername );
 					$uid = $olduser->idForName();
 
@@ -1515,6 +1508,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				for ( $i = 24; $i < 28; $i++ ) {
 					$PGSID[$i] = array_pop( $PGRID );
 				}
+				$PGsid_string = '';
 				foreach ( $PGSID as $PGsid_bit ) {
 					$PGsid_string .= "\\" . $PGsid_bit;
 				}
@@ -1840,8 +1834,6 @@ function AutoAuthSetup() {
 	global $wgLDAPSmartcardDomain;
 	global $wgHooks;
 	global $wgAuth;
-	global $wgVersion;
-
 	$wgAuth = new LdapAuthenticationPlugin();
 
 	$wgAuth->printDebug( "Entering AutoAuthSetup.", NONSENSITIVE );
@@ -1858,15 +1850,8 @@ function AutoAuthSetup() {
 
 	if ( $wgLDAPAutoAuthUsername !== "" ) {
 		$wgAuth->printDebug( "wgLDAPAutoAuthUsername is not null, adding hooks.", NONSENSITIVE );
-		if ( version_compare( $wgVersion, '1.14.0', '<' ) ) {
-			if ( version_compare( $wgVersion, '1.13.0', '<' ) ) {
-				$wgHooks['AutoAuthenticate'][] = 'LdapAutoAuthentication::Authenticate';
-			} else {
-				$wgHooks['UserLoadFromSession'][] = 'LdapAutoAuthentication::Authenticate';
-			}
-		} else {
-			$wgHooks['UserLoadAfterLoadFromSession'][] = 'LdapAutoAuthentication::Authenticate';
-		}
+		$wgHooks['UserLoadAfterLoadFromSession'][] = 'LdapAutoAuthentication::Authenticate';
+
 		$wgHooks['PersonalUrls'][] = 'LdapAutoAuthentication::NoLogout'; /* Disallow logout link */
 	}
 }
