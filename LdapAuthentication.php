@@ -1068,7 +1068,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$this->printDebug( "Using base: $base", SENSITIVE );
 
 		$entry = @ldap_search( $this->ldapconn, $base, $filter, $attributes );
-		if ( !$entry ) {
+		if ( @ldap_count_entries($this->ldapconn,$entry)==0 ) {
 			$this->printDebug( "Couldn't find an entry", NONSENSITIVE );
 			$this->fetchedUserInfo = false;
 			return '';
