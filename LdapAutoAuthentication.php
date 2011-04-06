@@ -95,7 +95,7 @@ class LdapAutoAuthentication {
 		global $wgAuth;
 		$wgAuth->printDebug( "Entering NoLogout.", NONSENSITIVE );
 
-		$personal_urls['logout'] = null;
+		unset( $personal_urls['logout'] );
 
 		return true;
 	}

@@ -88,7 +88,7 @@ $wgLDAPUniqueAttribute = array(); //Currently unused
 $wgLDAPUniqueBlockLogin = array(); //Currently unused
 $wgLDAPUniqueRenameUser = array(); //Currently unused
 
-define( "LDAPAUTHVERSION", "1.2d" );
+define( "LDAPAUTHVERSION", "1.2e" );
 
 /**
  * Add extension information to Special:Version
