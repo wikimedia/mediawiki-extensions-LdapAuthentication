@@ -383,7 +383,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 				if ( isset( $wgLDAPAuthAttribute[$_SESSION['wsDomain']] ) ) {
 
-					$this->printDebug( "Checking for auth attributes", NONSENSITIVE );
+					$this->printDebug( "Checking for auth attributes: " . $wgLDAPAuthAttribute[$_SESSION['wsDomain']], NONSENSITIVE );
 
 					$filter = "(" . $wgLDAPAuthAttribute[$_SESSION['wsDomain']] . ")";
 					$attributes = array( "dn" );
