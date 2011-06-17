@@ -22,7 +22,7 @@
  * Password authentication, and Smartcard Authentication support are currently
  * available. All forms of authentication, current and future, should support
  * group, and attribute based restrictions; preference pulling; and group
- * syncronization. All forms of authentication should have basic support for 
+ * syncronization. All forms of authentication should have basic support for
  * adding users, changing passwords, and updating preferences in LDAP.
  *
  * Password authentication has a number of configurations, including straight binds,
@@ -36,7 +36,7 @@
 # LdapAuthentication.php
 #
 # Info available at http://www.mediawiki.org/wiki/Extension:LDAP_Authentication
-# Support is available at http://www.mediawiki.org/wiki/Extension_talk:LDAP_Authentication 
+# Support is available at http://www.mediawiki.org/wiki/Extension_talk:LDAP_Authentication
 #
 
 if ( !defined( 'MEDIAWIKI' ) ) exit;
@@ -196,7 +196,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		} else {
 			$this->printDebug( "Failed to connect", NONSENSITIVE );
 			return false;
-		}	
+		}
 	}
 
 	/**
@@ -215,7 +215,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		}
 
 		$this->printDebug( "Entering Connect", NONSENSITIVE );
-		
+
 		if ( !function_exists( 'ldap_connect' ) ) {
 			$this->printDebug( "It looks like you are missing LDAP support; please ensure you have either compiled LDAP support in, or have enabled the module. If the authentication is working for you, the plugin isn't properly detecting the LDAP module, and you can safely ignore this message.", NONSENSITIVE );
 			return false;
@@ -506,9 +506,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$this->printDebug( "User is using a local domain", NONSENSITIVE );
 
 			// We don't set local passwords, but we don't want the wiki
-			// to send the user a failure.		
+			// to send the user a failure.
 			return true;
-		} else if ( !isset( $wgLDAPUpdateLDAP[$_SESSION['wsDomain']] ) || !$wgLDAPUpdateLDAP[$_SESSION['wsDomain']] ) {
+		} elseif ( !isset( $wgLDAPUpdateLDAP[$_SESSION['wsDomain']] ) || !$wgLDAPUpdateLDAP[$_SESSION['wsDomain']] ) {
 			$this->printDebug( "Wiki is set to not allow updates", NONSENSITIVE );
 
 			// We aren't allowing the user to change his/her own password
@@ -788,7 +788,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * Set the domain this plugin is supposed to use when authenticating.
 	 *
 	 * @param string $domain
-	 * @access public	
+	 * @access public
 	 */
 	function setDomain( $domain ) {
 		$this->printDebug( "Setting domain as: $domain", NONSENSITIVE );
@@ -1021,7 +1021,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$this->printDebug( "Doing an anonymous bind", NONSENSITIVE );
 				$bind = $this->bindAs();
 			}
-	
+
 			if ( !$bind ) {
 				$this->printDebug( "Failed to bind", NONSENSITIVE );
 				return '';
@@ -1153,7 +1153,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 						break;
 				}
 			}
-		} else if ( isset( $wgLDAPRetrievePrefs[$_SESSION['wsDomain']] ) && $wgLDAPRetrievePrefs[$_SESSION['wsDomain']] ) {
+		} elseif ( isset( $wgLDAPRetrievePrefs[$_SESSION['wsDomain']] ) && $wgLDAPRetrievePrefs[$_SESSION['wsDomain']] ) {
 			// DEPRECATED. Kept for backwards compatibility.
 			$this->printDebug( "Retrieving preferences", NONSENSITIVE );
 			$this->printDebug( '$wgLDAPRetrievePrefs is a DEPRECATED option, please use $wgLDAPPreferences.', NONSENSITIVE );
@@ -1219,7 +1219,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 					$this->printDebug( "Usernames do not match, blocking login.", SENSITIVE );
 					return false;
-				} else if ( isset( $wgLDAPUniqueRenameUser[$_SESSION['wsDomain']] )
+				} elseif ( isset( $wgLDAPUniqueRenameUser[$_SESSION['wsDomain']] )
 					&& $wgLDAPUniqueRenameUser[$_SESSION['wsDomain']] ) {
 
 					$this->printDebug( "Usernames do not match, renaming user in database.", SENSITIVE );
@@ -1232,7 +1232,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 						require( 'Renameuser/SpecialRenameuser_body.php' );
 					}
 
-					// Make a new rename user object with: from, to, uid of from	
+					// Make a new rename user object with: from, to, uid of from
 					$rename = new RenameuserSQL( $retrievedusername, $username, $uid );
 					$rename->rename();
 
@@ -1461,7 +1461,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	function searchGroups( $dn ) {
 		global $wgLDAPGroupObjectclass, $wgLDAPGroupAttribute, $wgLDAPGroupNameAttribute;
 		global $wgLDAPProxyAgent, $wgLDAPProxyAgentPassword;
-		
+
 		$this->printDebug( "Entering searchGroups", NONSENSITIVE );
 
 		$base = $this->getBaseDN( GROUPDN );
@@ -1484,7 +1484,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		}
 
 		$groups = array( "short" => array(), "dn" => array() );
-		
+
 		// AD does not include the primary group in the list of groups, we have to find it ourselves.
 		// TODO: find a way to only do this search for AD domains.
 		if ( $dn != "*" ) {
@@ -1527,7 +1527,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 						$groups["short"][] = strtolower( $memAttrs[1] );
 					}
 				}
-				
+
 			}
 		}
 
@@ -1608,7 +1608,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		# Add ldap groups as local groups
 		if ( isset( $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ) && $wgLDAPGroupsPrevail[$_SESSION['wsDomain']] ) {
 			$this->printDebug( "Adding all groups to wgGroupPermissions: ", SENSITIVE, $this->allLDAPGroups );
-			
+
 			foreach ( $this->allLDAPGroups["short"] as $ldapgroup ) {
 				if ( !array_key_exists( $ldapgroup, $wgGroupPermissions ) )
 						$wgGroupPermissions[$ldapgroup] = array();
@@ -1618,7 +1618,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		# add groups permissions
 		$localAvailGrps = $user->getAllGroups();
 		$localUserGrps = $user->getEffectiveGroups();
-		
+
 		$defaultLocallyManagedGrps = array( 'bot', 'sysop', 'bureaucrat' );
 
 		if ( isset( $wgLDAPLocallyManagedGroups[$_SESSION['wsDomain']] ) ) {
@@ -1629,7 +1629,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$locallyManagedGrps = $defaultLocallyManagedGrps;
 			$this->printDebug( "Locally managed groups is unset, using defaults: ", SENSITIVE, $locallyManagedGrps );
 		}
-			
+
 		$this->printDebug( "Available groups are: ", NONSENSITIVE, $localAvailGrps );
 		$this->printDebug( "Effective groups are: ", NONSENSITIVE, $localUserGrps );
 
@@ -1757,7 +1757,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * Returns a string which has the chars *, (, ), \ & NUL escaped to LDAP compliant
 	 * syntax as per RFC 2254
 	 * Thanks and credit to Iain Colledge for the research and function.
-	 * 
+	 *
 	 * @param string $string
 	 * @return string
 	 * @access private
@@ -1773,7 +1773,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Returns a basedn by the type of entry we are searching for.
-	 * 
+	 *
 	 * @param int $type
 	 * @return string
 	 * @access private
