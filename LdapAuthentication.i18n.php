@@ -198,6 +198,13 @@ $messages['mk'] = array(
 	'ldapauthentication-desc' => 'LDAP приклучок за потврдување со поддршка за повеќе методи на LDAP потврдување',
 );
 
+/** Malay (Bahasa Melayu)
+ * @author Anakmalaysia
+ */
+$messages['ms'] = array(
+	'ldapauthentication-desc' => 'Pemalam pengesahan LDAP dengan sokongan untuk berbilang kaedah pengesahan LDAP',
+);
+
 /** Dutch (Nederlands)
  * @author Siebrand
  */
