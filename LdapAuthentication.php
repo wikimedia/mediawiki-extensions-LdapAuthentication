@@ -660,11 +660,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$retval = true;
 		}
 
-		if ( isset( $wgLDAPUpdateLDAP[$_SESSION['wsDomain']] ) && $wgLDAPUpdateLDAP[$_SESSION['wsDomain']] ) {
+		if ( isset( $_SESSION['wsDomain'] ) && isset( $wgLDAPUpdateLDAP[$_SESSION['wsDomain']] ) && $wgLDAPUpdateLDAP[$_SESSION['wsDomain']] ) {
 			$retval = true;
 		}
 
-		if ( isset( $wgLDAPMailPassword[$_SESSION['wsDomain']] ) && $wgLDAPMailPassword[$_SESSION['wsDomain']] ) {
+		if ( isset( $_SESSION['wsDomain'] ) && isset( $wgLDAPMailPassword[$_SESSION['wsDomain']] ) && $wgLDAPMailPassword[$_SESSION['wsDomain']] ) {
 			$retval = true;
 		}
 
