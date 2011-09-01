@@ -1105,14 +1105,39 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return $this->userInfo;
 		}
 
-		$entry = @ldap_read( $this->ldapconn, $this->userdn, "objectclass=*", array( '*', 'memberof' ) );
-		$userInfo = @ldap_get_entries( $this->ldapconn, $entry );
-		if ( $userInfo["count"] < 1 ) {
+		$userInfo = $this->getUserInfoStateless( $this->usernn );
+		if ( is_null( $userInfo ) ) {
 			$this->fetchedUserInfo = false;
 			return;
 		} else {
 			$this->fetchedUserInfo = true;
 			return $userInfo;
+		}
+	}
+
+	function getUserInfoStateless( $userdn ) {
+		// Don't fetch the same data more than once
+		// TODO: use memcached here
+
+		$entry = @ldap_read( $this->ldapconn, $userdn, "objectclass=*", array( '*', 'memberof' ) );
+		$userInfo = @ldap_get_entries( $this->ldapconn, $entry );
+		if ( $userInfo["count"] < 1 ) {
+			return;
+		} else {
+			return $userInfo;
+		}
+	}
+
+	function getSearchAttribute() {
+		global $wgLDAPSearchAttributes;
+
+		// Return the search attribute configured, mainly for use in other
+		// extensions
+		// TODO: make function to pull any configuration item
+		if ( isset( $wgLDAPSearchAttributes[$_SESSION['wsDomain']] ) ) {
+			return $wgLDAPSearchAttributes[$_SESSION['wsDomain']];
+		} else {
+			return '';
 		}
 	}
 
