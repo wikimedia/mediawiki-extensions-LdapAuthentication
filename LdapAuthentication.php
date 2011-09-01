@@ -756,8 +756,15 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$values["objectclass"] = array( "inetorgperson" );
 
 			$result = true;
+			# Set a write location for the creation hook to use, in case it
+			# wants to modify the user's dn
+			if ( isset( $wgLDAPWriteLocation[$_SESSION['wsDomain']] ) ) {
+				$writeloc = $wgLDAPWriteLocation[$_SESSION['wsDomain']];
+			} else {
+				$writeloc = '';
+			}
 			# Let other extensions modify the user object before creation
-			wfRunHooks( 'LDAPSetCreationValues', array( $this, $username, &$values, &$result ) );
+			wfRunHooks( 'LDAPSetCreationValues', array( $this, $username, &$values, $writeloc, &$result ) );
 			if ( ! $result ) {
 				$this->printDebug( "Failed to add user because LDAPSetCreationValues returned false", NONSENSITIVE );
 				@ldap_unbind();
