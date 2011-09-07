@@ -87,8 +87,9 @@ $wgLDAPAutoAuthDomain = "";
 $wgLDAPUniqueAttribute = array(); //Currently unused
 $wgLDAPUniqueBlockLogin = array(); //Currently unused
 $wgLDAPUniqueRenameUser = array(); //Currently unused
+$wgLDAPUseFetchedUsername = array();
 
-define( "LDAPAUTHVERSION", "1.2e" );
+define( "LDAPAUTHVERSION", "1.2f" );
 
 /**
  * Add extension information to Special:Version
@@ -305,7 +306,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		global $wgLDAPLowerCaseUsername;
 		global $wgLDAPSearchStrings;
 
-		$this->printDebug( "Entering authenticate", NONSENSITIVE );
+		$this->printDebug( "Entering authenticate for username $username", NONSENSITIVE );
 
 		// We don't handle local authentication
 		if ( 'local' == $_SESSION['wsDomain'] ) {
@@ -959,16 +960,34 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @access public
 	 */
 	function getCanonicalName( $username ) {
+		global $wgLDAPUseFetchedUsername;
 		$this->printDebug( "Entering getCanonicalName", NONSENSITIVE );
 
 		if ( $username != '' ) {
 			$this->printDebug( "Username isn't empty.", NONSENSITIVE );
 
+			# Fetch username, so that we can possibly use it.
+			# Only do it if we haven't already fetched it.
+			if ( !$this->userdn ) {
+				$this->connect();
+				if ( $this->ldapconn ) {
+					$this->printDebug( "Successfully connected", NONSENSITIVE );
+					$this->userdn = $this->getSearchString( $username );
+					wfRunHooks( 'SetUsernameAttributeFromLDAP', array( &$this->LDAPUsername, $this->userInfo ) );
+				} else {
+					$this->printDebug( "Failed to connect in getCanonicalName, this is non-critical, but may indicate a misconfiguration.", NONSENSITIVE );
+				}
+			}
+
 			// We want to use the username returned by LDAP
 			// if it exists
 			if ( $this->LDAPUsername != '' ) {
-				$this->printDebug( "Using LDAPUsername.", NONSENSITIVE );
 				$username = $this->LDAPUsername;
+				if ( isset( $wgLDAPUseFetchedUsername[$_SESSION['wsDomain']] ) && $wgLDAPUseFetchedUsername[$_SESSION['wsDomain']] ) {
+					$username[0] = strtoupper( $username[0] );
+					return $username;
+				}
+				$this->printDebug( "Using LDAPUsername: $username", NONSENSITIVE );
 			}
 
 			if ( isset( $_SESSION['wsDomain'] ) && 'local' != $_SESSION['wsDomain'] ) {
@@ -1086,6 +1105,12 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$this->userInfo = @ldap_get_entries( $this->ldapconn, $entry );
 		$this->fetchedUserInfo = true;
+		$searchattr = $wgLDAPSearchAttributes[$_SESSION['wsDomain']];
+		if ( isset( $this->userInfo[0][$searchattr] ) ) {
+			$username = $this->userInfo[0][$searchattr][0];
+			$this->printDebug( "Setting the LDAPUsername based on fetched wgLDAPSearchAttributes: $username", NONSENSITIVE );
+			$this->LDAPUsername = $username;
+		}
 
 		// This is a pretty useful thing to have for auto authentication,
 		// group checking, and pulling preferences.
