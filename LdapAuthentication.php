@@ -88,6 +88,7 @@ $wgLDAPUniqueAttribute = array(); //Currently unused
 $wgLDAPUniqueBlockLogin = array(); //Currently unused
 $wgLDAPUniqueRenameUser = array(); //Currently unused
 $wgLDAPUseFetchedUsername = array();
+$wgPasswordResetRoutes['domain'] = true;
 
 define( "LDAPAUTHVERSION", "1.2f" );
 
@@ -440,9 +441,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @access public
 	 */
 	function modifyUITemplate( &$template ) {
-		global $wgLDAPDomainNames, $wgLDAPUseLocal;
 		global $wgLDAPAddLDAPUsers;
-		global $wgLDAPAutoAuthDomain;
 		global $wgLDAPMailPassword;
 
 		$this->printDebug( "Entering modifyUITemplate", NONSENSITIVE );
@@ -454,6 +453,14 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$template->set( 'usedomain', true );
 		$template->set( 'useemail', isset( $wgLDAPMailPassword[$_SESSION['wsDomain']] ) && $wgLDAPMailPassword[$_SESSION['wsDomain']] );
 		$template->set( 'canreset', isset( $wgLDAPMailPassword[$_SESSION['wsDomain']] ) && $wgLDAPMailPassword[$_SESSION['wsDomain']] );
+
+
+		$template->set( 'domainnames', $this->domainList() );
+		wfRunHooks( 'LDAPModifyUITemplate', array( &$template ) );
+	}
+
+	function domainList() {
+		global $wgLDAPDomainNames, $wgLDAPUseLocal, $wgLDAPAutoAuthDomain;
 
 		$tempDomArr = $wgLDAPDomainNames;
 		if ( $wgLDAPUseLocal ) {
@@ -469,8 +476,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			unset( $tempDomArr[array_search( $wgLDAPAutoAuthDomain, $tempDomArr )] );
 		}
 
-		$template->set( 'domainnames', $tempDomArr );
-		wfRunHooks( 'LDAPModifyUITemplate', array( &$template ) );
+		$domains = array();
+		foreach ( $tempDomArr as $tempDom ) {
+			$domains["$tempDom"] = $tempDom;
+		}
+		return $domains;
 	}
 
 	/**
