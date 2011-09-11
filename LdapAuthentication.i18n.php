@@ -43,6 +43,13 @@ $messages['ar'] = array(
 	'ldapauthentication-desc' => 'إضافة تحقيق LDAP بدعم لوسائل تحقيق LDAP متعددة',
 );
 
+/** Asturian (Asturianu)
+ * @author Xuacu
+ */
+$messages['ast'] = array(
+	'ldapauthentication-desc' => "Complemento p'autenticación LDAP con sofitu pa dellos métodos d'autenticación LDAP",
+);
+
 /** Belarusian (Taraškievica orthography) (‪Беларуская (тарашкевіца)‬)
  * @author EugeneZelenko
  */
