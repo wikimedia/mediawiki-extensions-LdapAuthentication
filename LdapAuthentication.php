@@ -90,7 +90,7 @@ $wgLDAPUniqueRenameUser = array(); //Currently unused
 $wgLDAPUseFetchedUsername = array();
 $wgPasswordResetRoutes['domain'] = true;
 
-define( "LDAPAUTHVERSION", "1.2f" );
+define( "LDAPAUTHVERSION", "1.2g" );
 
 /**
  * Add extension information to Special:Version
