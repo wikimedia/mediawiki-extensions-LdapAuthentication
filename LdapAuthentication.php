@@ -1839,8 +1839,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	function getLdapEscapedString( $string ) {
 		// Make the string LDAP compliant by escaping *, (, ) , \ & NUL
 		return str_replace(
-			array( "*", "(", ")", "\\", "\x00" ), // replace this
-			array( "\\2a", "\\28", "\\29", "\\5c", "\\00" ), // with this
+			array( "\\", "(", ")", "*", "\x00" ), // replace this
+			array( "\\5c", "\\28", "\\29", "\\2a", "\\00" ), // with this
 			$string // in this
 			);
 	}
