@@ -5,9 +5,10 @@ class LdapAutoAuthentication {
 	/**
 	 * Does the web server authentication piece of the LDAP plugin.
 	 *
-	 * @access public
+	 * @param $user User
+	 * @param $result
 	 */
-	static function Authenticate( $user, &$result = null ) {
+	public static function Authenticate( $user, &$result = null ) {
 		global $wgAuth, $wgLDAPAutoAuthUsername;
 
 		$wgAuth->printDebug( "Entering AutoAuthentication.", NONSENSITIVE );
@@ -62,7 +63,12 @@ class LdapAutoAuthentication {
 		return true;
 	}
 
-	static function attemptAddUser( $user, $mungedUsername ) {
+	/**
+	 * @param $user User
+	 * @param $mungedUsername String
+	 * @return bool
+	 */
+	public static function attemptAddUser( $user, $mungedUsername ) {
 		global $wgAuth;
 
 		if ( !$wgAuth->autoCreate() ) {
@@ -90,8 +96,13 @@ class LdapAutoAuthentication {
 		return true;
 	}
 
-	/* No logout link in MW */
-	static function NoLogout( &$personal_urls, $title ) {
+	/**
+	 * No logout link in MW
+	 * @param $personal_urls array
+	 * @param $title Title
+	 * @return bool
+	 */
+	public static function NoLogout( &$personal_urls, $title ) {
 		global $wgAuth;
 		$wgAuth->printDebug( "Entering NoLogout.", NONSENSITIVE );
 

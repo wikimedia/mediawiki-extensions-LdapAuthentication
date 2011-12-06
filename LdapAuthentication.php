@@ -152,9 +152,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 *
 	 * @param string $username
 	 * @return bool
-	 * @access public
 	 */
-	function userExists( $username ) {
+	public function userExists( $username ) {
 		global $wgLDAPAddLDAPUsers;
 
 		$this->printDebug( "Entering userExists", NONSENSITIVE );
@@ -299,9 +298,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param string $username
 	 * @param string $password
 	 * @return bool
-	 * @access public
 	 */
-	function authenticate( $username, $password = '' ) {
+	public function authenticate( $username, $password = '' ) {
 		global $wgLDAPAuthAttribute;
 		global $wgLDAPAutoAuthUsername;
 		global $wgLDAPLowerCaseUsername;
@@ -438,9 +436,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * Modify options in the login template.
 	 *
 	 * @param UserLoginTemplate $template
-	 * @access public
 	 */
-	function modifyUITemplate( &$template, &$type ) {
+	public function modifyUITemplate( &$template, &$type ) {
 		global $wgLDAPAddLDAPUsers;
 		global $wgLDAPMailPassword;
 
@@ -491,9 +488,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * This is just a question, and shouldn't perform any actions.
 	 *
 	 * @return bool
-	 * @access public
 	 */
-	function autoCreate() {
+	public function autoCreate() {
 		global $wgLDAPDisableAutoCreate;
 
 		return !( isset( $wgLDAPDisableAutoCreate[$_SESSION['wsDomain']] ) && $wgLDAPDisableAutoCreate[$_SESSION['wsDomain']] );
@@ -506,9 +502,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param User $user
 	 * @param string $password
 	 * @return bool
-	 * @access public
 	 */
-	function setPassword( $user, $password ) {
+	public function setPassword( $user, $password ) {
 		global $wgLDAPUpdateLDAP, $wgLDAPWriterDN, $wgLDAPWriterPassword;
 
 		$this->printDebug( "Entering setPassword", NONSENSITIVE );
@@ -576,9 +571,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 *
 	 * @param User $user
 	 * @return bool
-	 * @access public
 	 */
-	function updateExternalDB( $user ) {
+	public function updateExternalDB( $user ) {
 		global $wgLDAPUpdateLDAP;
 		global $wgLDAPWriterDN, $wgLDAPWriterPassword;
 
@@ -642,9 +636,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * Return true if yes.
 	 *
 	 * @return bool
-	 * @access public
 	 */
-	function canCreateAccounts() {
+	public function canCreateAccounts() {
 		global $wgLDAPAddLDAPUsers;
 
 		return ( isset( $wgLDAPAddLDAPUsers[$_SESSION['wsDomain']] ) && $wgLDAPAddLDAPUsers[$_SESSION['wsDomain']] );
@@ -656,9 +649,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * Return true if yes.
 	 *
 	 * @return bool
-	 * @access public
 	 */
-	function allowPasswordChange() {
+	public function allowPasswordChange() {
 		global $wgLDAPUpdateLDAP, $wgLDAPMailPassword;
 		global $wgLDAPUseLocal;
 
@@ -689,9 +681,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param User $user
 	 * @param string $password
 	 * @return bool
-	 * @access public
 	 */
-	function addUser( $user, $password, $email = '', $realname = '' ) {
+	public function addUser( $user, $password, $email = '', $realname = '' ) {
 		global $wgLDAPAddLDAPUsers, $wgLDAPWriterDN, $wgLDAPWriterPassword;
 		global $wgLDAPSearchAttributes;
 		global $wgLDAPWriteLocation;
@@ -806,9 +797,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * Set the domain this plugin is supposed to use when authenticating.
 	 *
 	 * @param string $domain
-	 * @access public
 	 */
-	function setDomain( $domain ) {
+	public function setDomain( $domain ) {
 		$this->printDebug( "Setting domain as: $domain", NONSENSITIVE );
 		$_SESSION['wsDomain'] = $domain;
 	}
@@ -819,9 +809,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 *
 	 * @param string $domain
 	 * @return bool
-	 * @access public
 	 */
-	function validDomain( $domain ) {
+	public function validDomain( $domain ) {
 		global $wgLDAPDomainNames, $wgLDAPUseLocal;
 
 		$this->printDebug( "Entering validDomain", NONSENSITIVE );
@@ -838,11 +827,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	/**
 	 * When a user logs in, update user with information from LDAP.
 	 *
-	 * @param User $user
-	 * @access public
+	 * @param $user User
 	 * TODO: fix the setExternalID stuff
 	 */
-	function updateUser( &$user ) {
+	public function updateUser( &$user ) {
 		global $wgLDAPRetrievePrefs, $wgLDAPPreferences;
 		global $wgLDAPUseLDAPGroups;
 		global $wgLDAPUniqueBlockLogin, $wgLDAPUniqueRenameUser;
@@ -910,10 +898,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * When creating a user account, initialize user with information from LDAP.
 	 *
 	 * @param User $user
-	 * @access public
 	 * TODO: fix setExternalID stuff
 	 */
-	function initUser( &$user, $autocreate = false ) {
+	public function initUser( &$user, $autocreate = false ) {
 		$this->printDebug( "Entering initUser", NONSENSITIVE );
 
 		if ( $this->authFailed ) {
@@ -945,9 +932,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * This is just a question, and shouldn't perform any actions.
 	 *
 	 * @return bool
-	 * @access public
 	 */
-	function strict() {
+	public function strict() {
 		global $wgLDAPUseLocal, $wgLDAPMailPassword;
 
 		$this->printDebug( "Entering strict.", NONSENSITIVE );
@@ -967,9 +953,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 *
 	 * @param string $username
 	 * @return string
-	 * @access public
 	 */
-	function getCanonicalName( $username ) {
+	public function getCanonicalName( $username ) {
 		global $wgLDAPUseFetchedUsername;
 		$this->printDebug( "Entering getCanonicalName", NONSENSITIVE );
 
@@ -1020,10 +1005,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	/**
 	 * Configures the authentication plugin for use with auto-authentication
 	 * plugins.
-	 *
-	 * @access public
 	 */
-	function autoAuthSetup() {
+	public function autoAuthSetup() {
 		global $wgLDAPAutoAuthDomain;
 
 		$this->setDomain( $wgLDAPAutoAuthDomain );
