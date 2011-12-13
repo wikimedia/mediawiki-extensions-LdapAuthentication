@@ -101,7 +101,7 @@ $wgExtensionCredits['other'][] = array(
 	'version' => LDAPAUTHVERSION,
 	'author' => 'Ryan Lane',
 	'descriptionmsg' => 'ldapauthentication-desc',
-	'url' => 'http://www.mediawiki.org/wiki/Extension:LDAP_Authentication',
+	'url' => 'https://www.mediawiki.org/wiki/Extension:LDAP_Authentication',
 );
 
 $dir = dirname( __FILE__ ) . '/';
