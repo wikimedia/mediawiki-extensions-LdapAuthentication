@@ -144,6 +144,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	// the user's entry and all attributes
 	var $userInfo;
 
+	// the user we are currently bound as
+	var $boundAs;
+
 	/**
 	 * Check whether there exists a user account with the given name.
 	 * The name will be normalized to MediaWiki's requirements, so
