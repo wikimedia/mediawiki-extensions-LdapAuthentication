@@ -955,15 +955,25 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return string
 	 */
 	public function getCanonicalName( $username ) {
-		global $wgLDAPUseFetchedUsername;
+		global $wgLDAPUseFetchedUsername, $wgMemc;
+
 		$this->printDebug( "Entering getCanonicalName", NONSENSITIVE );
 
+		$key = wfMemcKey( 'ldapauthentication', 'canonicalname', $username );
+		$canonicalname = $username;
 		if ( $username != '' ) {
 			$this->printDebug( "Username isn't empty.", NONSENSITIVE );
 
 			# Fetch username, so that we can possibly use it.
 			# Only do it if we haven't already fetched it.
-			if ( !$this->userdn ) {
+			$userInfo = $wgMemc->get( $key );
+			if ( is_array( $userInfo ) ) {
+				$this->printDebug( "Fetched userInfo from memcache.", NONSENSITIVE );
+				if ( $userInfo["username"] == $username ) {
+					$this->printDebug( "Username matched a key in memcache, using the fetched name: " . $userInfo["canonicalname"] );
+					return $userInfo["canonicalname"];
+				}
+			} else {
 				$this->connect();
 				if ( $this->ldapconn ) {
 					$this->printDebug( "Successfully connected", NONSENSITIVE );
@@ -977,29 +987,31 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			// We want to use the username returned by LDAP
 			// if it exists
 			if ( $this->LDAPUsername != '' ) {
-				$username = $this->LDAPUsername;
+				$canonicalname = $this->LDAPUsername;
 				if ( isset( $wgLDAPUseFetchedUsername[$_SESSION['wsDomain']] ) && $wgLDAPUseFetchedUsername[$_SESSION['wsDomain']] ) {
-					$username[0] = strtoupper( $username[0] );
-					return $username;
+					$canonicalname[0] = strtoupper( $canonicalname[0] );
+					$wgMemc->set( $key, array( "username" => $username, "canonicalname" => $canonicalname ), 3600 * 24 );
+					return $canonicalname;
 				}
-				$this->printDebug( "Using LDAPUsername: $username", NONSENSITIVE );
+				$this->printDebug( "Using LDAPUsername: $canonicalname", NONSENSITIVE );
 			}
 
 			if ( isset( $_SESSION['wsDomain'] ) && 'local' != $_SESSION['wsDomain'] ) {
 				// Change username to lowercase so that multiple user accounts
 				// won't be created for the same user.
 				// But don't do it for the local domain!
-				$username = strtolower( $username );
+				$canonicalname = strtolower( $username );
 			}
 
 			// The wiki considers an all lowercase name to be invalid; need to
 			// uppercase the first letter
-			$username[0] = strtoupper( $username[0] );
+			$canonicalname[0] = strtoupper( $canonicalname[0] );
 		}
 
-		$this->printDebug( "Munged username: $username", NONSENSITIVE );
+		$this->printDebug( "Munged username: $canonicalname", NONSENSITIVE );
 
-		return $username;
+		$wgMemc->set( $key, array( "username" => $username, "canonicalname" => $canonicalname ), 3600 * 24 );
+		return $canonicalname;
 	}
 
 	/**
