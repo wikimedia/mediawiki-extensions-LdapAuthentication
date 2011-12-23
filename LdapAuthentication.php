@@ -973,7 +973,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			if ( is_array( $userInfo ) ) {
 				$this->printDebug( "Fetched userInfo from memcache.", NONSENSITIVE );
 				if ( $userInfo["username"] == $username ) {
-					$this->printDebug( "Username matched a key in memcache, using the fetched name: " . $userInfo["canonicalname"] );
+					$this->printDebug( "Username matched a key in memcache, using the fetched name: " . $userInfo["canonicalname"], NONSENSITIVE );
 					return $userInfo["canonicalname"];
 				}
 			} else {
