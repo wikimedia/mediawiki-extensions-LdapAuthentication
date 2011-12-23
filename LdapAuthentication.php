@@ -1805,6 +1805,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$this->printDebug( "with password: $password", HIGHLYSENSITIVE );
 			return false;
 		}
+		$this->boundAs = $userdn;
 		return true;
 	}
 
