@@ -9,7 +9,7 @@ class LdapAutoAuthentication {
 	 * @param $result
 	 */
 	public static function Authenticate( $user, &$result = null ) {
-		global $wgAuth, $wgLDAPAutoAuthUsername;
+		global $wgAuth;
 
 		$wgAuth->printDebug( "Entering AutoAuthentication.", NONSENSITIVE );
 
@@ -24,9 +24,10 @@ class LdapAutoAuthentication {
 		// authentication chaining
 		$wgAuth->autoAuthSetup();
 
-		$wgAuth->printDebug( "Calling authenticate with username ($wgLDAPAutoAuthUsername).", NONSENSITIVE );
+		$autoauthname = $wgAuth->getConf( 'wgLDAPAutoAuthUsername' );
+		$wgAuth->printDebug( "Calling authenticate with username ($autoauthname).", NONSENSITIVE );
 		// The user hasn't already been authenticated, let's check them
-		$authenticated = $wgAuth->authenticate( $wgLDAPAutoAuthUsername );
+		$authenticated = $wgAuth->authenticate( $autoauthname );
 		if ( !$authenticated ) {
 			// If the user doesn't exist in LDAP, there isn't much reason to
 			// go any further.
@@ -36,7 +37,7 @@ class LdapAutoAuthentication {
 
 		// We need the username that MediaWiki will always use, *not* the one we
 		// get from LDAP.
-		$mungedUsername = $wgAuth->getCanonicalName( $wgLDAPAutoAuthUsername );
+		$mungedUsername = $wgAuth->getCanonicalName( $autoauthname );
 
 		$wgAuth->printDebug( "User exists in LDAP; finding the user by name ($mungedUsername) in MediaWiki.", NONSENSITIVE );
 
