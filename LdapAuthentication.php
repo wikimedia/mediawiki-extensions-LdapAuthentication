@@ -785,7 +785,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	public function setPassword( $user, $password ) {
 		$this->printDebug( "Entering setPassword", NONSENSITIVE );
 
-		if ( $_SESSION['wsDomain'] == 'local' ) {
+		if ( isset( $_SESSION['wsDomain'] ) && $_SESSION['wsDomain'] == 'local' ) {
 			$this->printDebug( "User is using a local domain", NONSENSITIVE );
 
 			// We don't set local passwords, but we don't want the wiki
