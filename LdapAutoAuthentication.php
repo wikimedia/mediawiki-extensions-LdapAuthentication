@@ -24,7 +24,7 @@ class LdapAutoAuthentication {
 		// authentication chaining
 		$wgAuth->autoAuthSetup();
 
-		$autoauthname = $wgAuth->getConf( 'wgLDAPAutoAuthUsername' );
+		$autoauthname = $wgAuth->getConf( 'AutoAuthUsername' );
 		$wgAuth->printDebug( "Calling authenticate with username ($autoauthname).", NONSENSITIVE );
 		// The user hasn't already been authenticated, let's check them
 		$authenticated = $wgAuth->authenticate( $autoauthname );
