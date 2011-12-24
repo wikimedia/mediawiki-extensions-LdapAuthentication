@@ -145,12 +145,16 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	// the user we are currently bound as
 	var $boundAs;
 
-	public function getConf( $preference ) {
+	public function getSessionDomain() {
 		if ( isset( $_SESSION['wsDomain'] ) ) {
-			$domain = $_SESSION['wsDomain'];
+			return $_SESSION['wsDomain'];
 		} else {
-			$domain = 'invaliddomain';
+			return '';
 		}
+	}
+
+	public function getConf( $preference ) {
+		$domain = $this->getSessionDomain();
 		switch ( $preference ) {
 		case 'ServerNames':
 			global $wgLDAPServerNames;
@@ -514,7 +518,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 */
 	function connect( $domain='' ) {
 		if ( $domain == '' ) {
-			$domain = $_SESSION['wsDomain'];
+			$domain = $this->getSessionDomain();
 		}
 
 		$this->printDebug( "Entering Connect", NONSENSITIVE );
@@ -591,7 +595,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$this->printDebug( "Entering authenticate for username $username", NONSENSITIVE );
 
 		// We don't handle local authentication
-		if ( 'local' == $_SESSION['wsDomain'] ) {
+		if ( 'local' == $this->getSessionDomain() ) {
 			$this->printDebug( "User is using a local domain", SENSITIVE );
 			return false;
 		}
@@ -785,7 +789,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	public function setPassword( $user, $password ) {
 		$this->printDebug( "Entering setPassword", NONSENSITIVE );
 
-		if ( isset( $_SESSION['wsDomain'] ) && $_SESSION['wsDomain'] == 'local' ) {
+		if ( $this->getSessionDomain() == 'local' ) {
 			$this->printDebug( "User is using a local domain", NONSENSITIVE );
 
 			// We don't set local passwords, but we don't want the wiki
@@ -853,7 +857,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	public function updateExternalDB( $user ) {
 		$this->printDebug( "Entering updateExternalDB", NONSENSITIVE );
 
-		if ( !$this->getConf( 'UpdateLDAP' ) || $_SESSION['wsDomain'] == 'local' ) {
+		if ( !$this->getConf( 'UpdateLDAP' ) || $this->getSessionDomain() == 'local' ) {
 			$this->printDebug( "Either the user is using a local domain, or the wiki isn't allowing updates", NONSENSITIVE );
 
 			// We don't handle local preferences, but we don't want the
@@ -927,7 +931,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$this->printDebug( "Entering allowPasswordChange", NONSENSITIVE );
 
 		// Local domains need to be able to change passwords
-		if ( $this->getConf( 'UseLocal' ) && 'local' == $_SESSION['wsDomain'] ) {
+		if ( $this->getConf( 'UseLocal' ) && 'local' == $this->getSessionDomain() ) {
 			return true;
 		}
 
@@ -949,7 +953,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	public function addUser( $user, $password, $email = '', $realname = '' ) {
 		$this->printDebug( "Entering addUser", NONSENSITIVE );
 
-		if ( !$this->getConf( 'AddLDAPUsers' ) || 'local' == $_SESSION['wsDomain'] ) {
+		if ( !$this->getConf( 'AddLDAPUsers' ) || 'local' == $this->getSessionDomain() ) {
 			$this->printDebug( "Either the user is using a local domain, or the wiki isn't allowing users to be added to LDAP", NONSENSITIVE );
 
 			// Tell the wiki not to return an error.
@@ -1155,7 +1159,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return;
 		}
 
-		if ( 'local' == $_SESSION['wsDomain'] ) {
+		if ( 'local' == $this->getSessionDomain() ) {
 			$this->printDebug( "User is using a local domain", NONSENSITIVE );
 			return;
 		}
@@ -2003,11 +2007,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 */
 	function useAutoAuth() {
 		$this->printDebug( "", NONSENSITIVE );
-		if ( isset( $_SESSION['wsDomain'] ) ) {
-			return $_SESSION['wsDomain'] == $this->getConf( 'AutoAuthDomain' );
-		} else {
-			return false;
-		}
+		return $this->getSessionDomain() == $this->getConf( 'AutoAuthDomain' );
 	}
 
 	/**
