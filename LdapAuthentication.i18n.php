@@ -222,7 +222,7 @@ $messages['nl'] = array(
 /** Norwegian (bokmål)‬ (‪Norsk (bokmål)‬)
  * @author Nghtwlkr
  */
-$messages['no'] = array(
+$messages['nb'] = array(
 	'ldapauthentication-desc' => 'Programutvidelse for LDAP-autentisering med støtte for flere LDAP-autentiseringsmetoder',
 );
 
