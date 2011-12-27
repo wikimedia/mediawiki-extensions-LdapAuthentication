@@ -209,27 +209,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 */
 	public static function ldap_search( $ldapconn, $basedn, $filter, $attributes=null, $attrsonly=null, $sizelimit=null, $timelimit=null, $deref=null ) {
 		wfSuppressWarnings();
-		if ( $attributes ) {
-			if ( $attrsonly ) {
-				if ( $sizelimit ) {
-					if ( $timelimit ) {
-						if ( $deref ) {
-							$ret = ldap_search( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit, $timelimit, $deref );
-						} else {
-							$ret = ldap_search( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit, $timelimit );
-						}
-					} else {
-						$ret = ldap_search( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit );
-					}
-				} else {
-					$ret = ldap_search( $ldapconn, $basedn, $filter, $attributes, $attrsonly );
-				}
-			} else {
-				$ret = ldap_search( $ldapconn, $basedn, $filter, $attributes );
-			}
-		} else {
-			$ret = ldap_search( $ldapconn, $basedn, $filter );
-		}
+		$ret = ldap_search( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit, $timelimit, $deref );
 		wfRestoreWarnings();
 		return $ret;
 	}
@@ -239,27 +219,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 */
 	public static function ldap_read( $ldapconn, $basedn, $filter, $attributes=null, $attrsonly=null, $sizelimit=null, $timelimit=null, $deref=null ) {
 		wfSuppressWarnings();
-		if ( $attributes ) {
-			if ( $attrsonly ) {
-				if ( $sizelimit ) {
-					if ( $timelimit ) {
-						if ( $deref ) {
-							$ret = ldap_read( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit, $timelimit, $deref );
-						} else {
-							$ret = ldap_read( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit, $timelimit );
-						}
-					} else {
-						$ret = ldap_read( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit );
-					}
-				} else {
-					$ret = ldap_read( $ldapconn, $basedn, $filter, $attributes, $attrsonly );
-				}
-			} else {
-				$ret = ldap_read( $ldapconn, $basedn, $filter, $attributes );
-			}
-		} else {
-			$ret = ldap_read( $ldapconn, $basedn, $filter );
-		}
+		$ret = ldap_read( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit, $timelimit, $deref );
 		wfRestoreWarnings();
 		return $ret;
 	}
@@ -269,27 +229,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 */
 	public static function ldap_list( $ldapconn, $basedn, $filter, $attributes=null, $attrsonly=null, $sizelimit=null, $timelimit=null, $deref=null ) {
 		wfSuppressWarnings();
-		if ( $attributes ) {
-			if ( $attrsonly ) {
-				if ( $sizelimit ) {
-					if ( $timelimit ) {
-						if ( $deref ) {
-							$ret = ldap_list( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit, $timelimit, $deref );
-						} else {
-							$ret = ldap_list( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit, $timelimit );
-						}
-					} else {
-						$ret = ldap_list( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit );
-					}
-				} else {
-					$ret = ldap_list( $ldapconn, $basedn, $filter, $attributes, $attrsonly );
-				}
-			} else {
-				$ret = ldap_list( $ldapconn, $basedn, $filter, $attributes );
-			}
-		} else {
-			$ret = ldap_list( $ldapconn, $basedn, $filter );
-		}
+		$ret = ldap_list( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit, $timelimit, $deref );
 		wfRestoreWarnings();
 		return $ret;
 	}
