@@ -855,6 +855,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return bool
 	 */
 	public function updateExternalDB( $user ) {
+		global $wgMemc;
+
 		$this->printDebug( "Entering updateExternalDB", NONSENSITIVE );
 
 		if ( !$this->getConf( 'UpdateLDAP' ) || $this->getSessionDomain() == 'local' ) {
@@ -896,6 +898,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			if ( '' != $this->lang ) { $values["preferredlanguage"] = $this->lang; }
 
 			if ( count( $values ) && LdapAuthenticationPlugin::ldap_modify( $this->ldapconn, $this->userdn, $values ) ) {
+				// We changed the user, we need to invalidate the memcache key
+				$key = wfMemcKey( 'ldapauthentication', 'userinfo', $this->userdn );
+				$wgMemc->delete( $key )
 				$this->printDebug( "Successfully modified the user's attributes", NONSENSITIVE );
 				LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
 				return true;
@@ -1368,7 +1373,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 */
 	function getUserInfoStateless( $userdn ) {
 		global $wgMemc;
-		$key = wfMemcKey( 'ldapauthentication', 'userdn', $userdn );
+		$key = wfMemcKey( 'ldapauthentication', 'userinfo', $userdn );
 
 		$userInfo = $wgMemc->get( $key );
 		if ( !is_array( $userInfo ) ) {
