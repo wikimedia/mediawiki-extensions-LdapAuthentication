@@ -1377,7 +1377,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			if ( $userInfo["count"] < 1 ) {
 				return null;
 			}
-			$wgMemc->set( $key, $userInfo );
+			$wgMemc->set( $key, $userInfo, 3600 * 24 );
 		}
 		return $userInfo;
 	}
