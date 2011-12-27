@@ -6,7 +6,8 @@ class LdapAutoAuthentication {
 	 * Does the web server authentication piece of the LDAP plugin.
 	 *
 	 * @param $user User
-	 * @param $result
+	 * @param $result bool
+	 * @return bool
 	 */
 	public static function Authenticate( $user, &$result = null ) {
 		global $wgAuth;
@@ -28,7 +29,7 @@ class LdapAutoAuthentication {
 		$wgAuth->printDebug( "Calling authenticate with username ($autoauthname).", NONSENSITIVE );
 
 		// The user hasn't already been authenticated, let's check them
-		$authenticated = $wgAuth->authenticate( $autoauthname );
+		$authenticated = $wgAuth->authenticate( $autoauthname, '' );
 		if ( !$authenticated ) {
 			// If the user doesn't exist in LDAP, there isn't much reason to
 			// go any further.
