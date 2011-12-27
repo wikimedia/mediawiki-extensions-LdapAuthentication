@@ -199,6 +199,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_add
+	 * @param $ldapconn
+	 * @param $dn
+	 * @param $entry
+	 * @return bool
 	 */
 	public static function ldap_add( $ldapconn, $dn, $entry ) {
 		wfSuppressWarnings();
@@ -1366,16 +1370,19 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return array|null
 	 */
 	function getUserInfoStateless( $userdn ) {
-		// Don't fetch the same data more than once
-		// TODO: use memcached here
+		global $wgMemc;
+		$key = wfMemcKey( 'ldapauthentication', 'userdn', $userdn );
 
-		$entry = LdapAuthenticationPlugin::ldap_read( $this->ldapconn, $userdn, "objectclass=*", array( '*', 'memberof' ) );
-		$userInfo = LdapAuthenticationPlugin::ldap_get_entries( $this->ldapconn, $entry );
-		if ( $userInfo["count"] < 1 ) {
-			return null;
-		} else {
-			return $userInfo;
+		$userInfo = $wgMemc->get( $key );
+		if ( !is_array( $userInfo ) ) {
+			$entry = LdapAuthenticationPlugin::ldap_read( $this->ldapconn, $userdn, "objectclass=*", array( '*', 'memberof' ) );
+			$userInfo = LdapAuthenticationPlugin::ldap_get_entries( $this->ldapconn, $entry );
+			if ( $userInfo["count"] < 1 ) {
+				return null;
+			}
+			$wgMemc->set( $key, $userInfo );
 		}
+		return $userInfo;
 	}
 
 	/**
@@ -1477,6 +1484,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Function to get the user's groups.
+	 * @param string $username
 	 */
 	private function getGroups( $username ) {
 		$this->printDebug( "Entering getGroups", NONSENSITIVE );
@@ -1550,12 +1558,12 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * $searchedgroups is used for tail recursion and shouldn't be provided
 	 * when called externally.
 	 *
-	 * @param string $userDN
+	 * @param $groups
 	 * @param array $searchedgroups
 	 * @return bool
 	 * @access private
 	 */
-	function searchNestedGroups( $groups, $searchedgroups = array( "dn" => Array(), "short" => Array() ) ) {
+	function searchNestedGroups( $groups, $searchedgroups = array( "dn" => array(), "short" => array() ) ) {
 		$this->printDebug( "Entering searchNestedGroups", NONSENSITIVE );
 
 		// base case, no more groups left to check
