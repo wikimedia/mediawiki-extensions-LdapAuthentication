@@ -142,6 +142,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_connect
+	 * @param null $hostname
+	 * @param int $port
+	 * @return resource|false
 	 */
 	public static function ldap_connect( $hostname=null, $port=389 ) {
 		wfSuppressWarnings();
@@ -152,6 +155,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_bind
+	 * @param $ldapconn
+	 * @param null $dn
+	 * @param null $password
+	 * @return bool
 	 */
 	public static function ldap_bind( $ldapconn, $dn=null, $password=null ) {
 		wfSuppressWarnings();
@@ -162,6 +169,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_unbind
+	 * @param $ldapconn
+	 * @return bool
 	 */
 	public static function ldap_unbind( $ldapconn ) {
 		if ( $ldapconn ) {
@@ -176,6 +185,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_modify
+	 * @param $ldapconn
+	 * @param $dn
+	 * @param $entry
+	 * @return bool
 	 */
 	public static function ldap_modify( $ldapconn, $dn, $entry ) {
 		wfSuppressWarnings();
@@ -196,6 +209,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_delete
+	 * @param $ldapconn
+	 * @param $dn
+	 * @return bool
 	 */
 	public static function ldap_delete( $ldapconn, $dn ) {
 		wfSuppressWarnings();
@@ -206,6 +222,15 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_search
+	 * @param $ldapconn
+	 * @param $basedn
+	 * @param $filter
+	 * @param null $attributes
+	 * @param null $attrsonly
+	 * @param null $sizelimit
+	 * @param null $timelimit
+	 * @param null $deref
+	 * @return resource
 	 */
 	public static function ldap_search( $ldapconn, $basedn, $filter, $attributes=null, $attrsonly=null, $sizelimit=null, $timelimit=null, $deref=null ) {
 		wfSuppressWarnings();
@@ -216,6 +241,15 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_read
+	 * @param $ldapconn
+	 * @param $basedn
+	 * @param $filter
+	 * @param null $attributes
+	 * @param null $attrsonly
+	 * @param null $sizelimit
+	 * @param null $timelimit
+	 * @param null $deref
+	 * @return resource
 	 */
 	public static function ldap_read( $ldapconn, $basedn, $filter, $attributes=null, $attrsonly=null, $sizelimit=null, $timelimit=null, $deref=null ) {
 		wfSuppressWarnings();
@@ -226,6 +260,15 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_list
+	 * @param $ldapconn
+	 * @param $basedn
+	 * @param $filter
+	 * @param null $attributes
+	 * @param null $attrsonly
+	 * @param null $sizelimit
+	 * @param null $timelimit
+	 * @param null $deref
+	 * @return \resource
 	 */
 	public static function ldap_list( $ldapconn, $basedn, $filter, $attributes=null, $attrsonly=null, $sizelimit=null, $timelimit=null, $deref=null ) {
 		wfSuppressWarnings();
@@ -236,6 +279,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_get_entries
+	 * @param $ldapconn
+	 * @param $resultid
+	 * @return array
 	 */
 	public static function ldap_get_entries( $ldapconn, $resultid ) {
 		wfSuppressWarnings();
@@ -246,6 +292,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_count_entries
+	 * @param $ldapconn
+	 * @param $resultid
+	 * @return int
 	 */
 	public static function ldap_count_entries( $ldapconn, $resultid ) {
 		wfSuppressWarnings();
@@ -475,6 +524,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Connect to LDAP
+	 * @param string $domain
+	 * @return bool
 	 */
 	public function connect( $domain='' ) {
 		// FIXME: $domain isn't used
@@ -536,9 +587,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$this->printDebug( "Using TLS", SENSITIVE );
 			if ( !ldap_start_tls( $this->ldapconn ) ) {
 				$this->printDebug( "Failed to start TLS.", SENSITIVE );
-				return;
+				return false;
 			}
 		}
+		return true;
 	}
 
 	/**
@@ -836,12 +888,13 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				return false;
 			}
 
+			$values = array();
 			if ( '' != $this->email ) { $values["mail"] = $this->email; }
 			if ( '' != $this->nickname ) { $values["displayname"] = $this->nickname; }
 			if ( '' != $this->realname ) { $values["cn"] = $this->realname; }
 			if ( '' != $this->lang ) { $values["preferredlanguage"] = $this->lang; }
 
-			if ( 0 != sizeof( $values ) && LdapAuthenticationPlugin::ldap_modify( $this->ldapconn, $this->userdn, $values ) ) {
+			if ( count( $values ) && LdapAuthenticationPlugin::ldap_modify( $this->ldapconn, $this->userdn, $values ) ) {
 				$this->printDebug( "Successfully modified the user's attributes", NONSENSITIVE );
 				LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
 				return true;
@@ -1078,9 +1131,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * When creating a user account, initialize user with information from LDAP.
+	 * TODO: fix setExternalID stuff
 	 *
 	 * @param User $user
-	 * TODO: fix setExternalID stuff
+	 * @param bool $autocreate
 	 */
 	public function initUser( &$user, $autocreate = false ) {
 		$this->printDebug( "Entering initUser", NONSENSITIVE );

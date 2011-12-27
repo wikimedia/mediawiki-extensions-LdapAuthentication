@@ -10,6 +10,9 @@ class LdapAutoAuthentication {
 	 * @return bool
 	 */
 	public static function Authenticate( $user, &$result = null ) {
+		/**
+		 * @var $wgAuth LdapAuthenticationPlugin
+		 */
 		global $wgAuth;
 
 		$wgAuth->printDebug( "Entering AutoAuthentication.", NONSENSITIVE );
@@ -72,6 +75,9 @@ class LdapAutoAuthentication {
 	 * @return bool
 	 */
 	public static function attemptAddUser( $user, $mungedUsername ) {
+		/**
+		 * @var $wgAuth LdapAuthenticationPlugin
+		 */
 		global $wgAuth;
 
 		if ( !$wgAuth->autoCreate() ) {
@@ -106,6 +112,9 @@ class LdapAutoAuthentication {
 	 * @return bool
 	 */
 	public static function NoLogout( &$personal_urls, $title ) {
+		/**
+		 * @var $wgAuth LdapAuthenticationPlugin
+		 */
 		global $wgAuth;
 		$wgAuth->printDebug( "Entering NoLogout.", NONSENSITIVE );
 
