@@ -280,9 +280,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			global $wgLDAPServerNames;
 			if ( isset( $wgLDAPServerNames[$domain] ) ) {
 				return $wgLDAPServerNames[$domain];
-			} else {
-				return array();
 			}
+			return array();
 		case 'UseLocal':
 			global $wgLDAPUseLocal;
 			return $wgLDAPUseLocal;
@@ -290,112 +289,86 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			global $wgLDAPEncryptionType;
 			if ( isset( $wgLDAPEncryptionType[$domain] ) ) {
 				return $wgLDAPEncryptionType[$domain];
-			} else {
-				return 'tls';
 			}
+			return 'tls';
 		case 'Options':
 			global $wgLDAPOptions;
 			if ( isset( $wgLDAPOptions[$domain] ) ) {
 				return $wgLDAPOptions[$domain];
-			} else {
-				return array();
 			}
+			return array();
 		case 'Port':
 			global $wgLDAPPort;
 			if ( isset( $wgLDAPPort[$domain] ) ) {
 				$this->printDebug( "Using non-standard port: " . $wgLDAPPort[$domain], SENSITIVE );
 				return (string)$wgLDAPPort[$domain];
+			} elseif ( $this->getConf( 'EncryptionType' ) == 'ssl' ) {
+				return "636";
 			} else {
-				if ( $this->getConf( 'EncryptionType' ) == 'ssl' ) {
-					return "636";
-				} else {
-					return "389";
-				}
+				return "389";
 			}
 		case 'SearchString':
 			global $wgLDAPSearchStrings;
 			if ( isset( $wgLDAPSearchStrings[$domain] ) ) {
 				return $wgLDAPSearchStrings[$domain];
-			} else {
-				return '';
 			}
 		case 'ProxyAgent':
 			global $wgLDAPProxyAgent;
 			if ( isset( $wgLDAPProxyAgent[$domain] ) ) {
 				return $wgLDAPProxyAgent[$domain];
-			} else {
-				return '';
 			}
 		case 'ProxyAgentPassword':
 			global $wgLDAPProxyAgentPassword;
 			if ( isset( $wgLDAPProxyAgentPassword[$domain] ) ) {
 				return $wgLDAPProxyAgentPassword[$domain];
-			} else {
-				return '';
 			}
 		case 'SearchAttribute':
 			global $wgLDAPSearchAttributes;
 			if ( isset( $wgLDAPSearchAttributes[$domain] ) ) {
 				return $wgLDAPSearchAttributes[$domain];
-			} else {
-				return '';
 			}
 		case 'BaseDN':
 			global $wgLDAPBaseDNs;
 			if ( isset( $wgLDAPBaseDNs[$domain] ) ) {
 				return $wgLDAPBaseDNs[$domain];
-			} else {
-				return '';
 			}
 		case 'GroupBaseDN':
 			global $wgLDAPGroupBaseDNs;
 			if ( isset( $wgLDAPGroupBaseDNs[$domain] ) ) {
 				return $wgLDAPGroupBaseDNs[$domain];
-			} else {
-				return '';
 			}
 		case 'UserBaseDN':
 			global $wgLDAPUserBaseDNs;
 			if ( isset( $wgLDAPUserBaseDNs[$domain] ) ) {
 				return $wgLDAPUserBaseDNs[$domain];
-			} else {
-				return '';
 			}
 		case 'WriterDN':
 			global $wgLDAPWriterDN;
 			if ( isset( $wgLDAPWriterDN[$domain] ) ) {
 				return $wgLDAPWriterDN[$domain];
-			} else {
-				return '';
 			}
 		case 'WriterPassword':
 			global $wgLDAPWriterPassword;
 			if ( isset( $wgLDAPWriterPassword[$domain] ) ) {
 				return $wgLDAPWriterPassword[$domain];
-			} else {
-				return '';
 			}
 		case 'WriteLocation':
 			global $wgLDAPWriteLocation;
 			if ( isset( $wgLDAPWriteLocation[$domain] ) ) {
 				return $wgLDAPWriteLocation[$domain];
-			} else {
-				return '';
 			}
 		case 'AddLDAPUsers':
 			global $wgLDAPAddLDAPUsers;
 			if ( isset( $wgLDAPAddLDAPUsers[$domain] ) ) {
 				return $wgLDAPAddLDAPUsers[$domain];
-			} else {
-				return false;
 			}
+			return false;
 		case 'UpdateLDAP':
 			global $wgLDAPUpdateLDAP;
 			if ( isset( $wgLDAPUpdateLDAP[$domain] ) ) {
 				return $wgLDAPUpdateLDAP[$domain];
-			} else {
-				return false;
 			}
+			return false;
 		case 'PasswordHash':
 			global $wgLDAPPasswordHash;
 			if ( isset( $wgLDAPPasswordHash[$domain] ) ) {
@@ -407,38 +380,33 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			global $wgLDAPMailPassword;
 			if ( isset( $wgLDAPMailPassword[$domain] ) ) {
 				return $wgLDAPMailPassword[$domain];
-			} else {
-				return false;
 			}
+			return false;
 		case 'Preferences':
 			global $wgLDAPPreferences;
 			if ( isset( $wgLDAPPreferences[$domain] ) ) {
 				return $wgLDAPPreferences[$domain];
-			} else {
-				return array();
 			}
+			return array();
 		case 'DisableAutoCreate':
 			global $wgLDAPDisableAutoCreate;
 			if ( isset( $wgLDAPDisableAutoCreate[$domain] ) ) {
 				return $wgLDAPDisableAutoCreate[$domain];
-			} else {
-				return false;
 			}
+			return false;
 		case 'GroupUseFullDN':
 			global $wgLDAPGroupUseFullDN;
 			if ( isset( $wgLDAPGroupUseFullDN[$domain] ) ) {
 				return $wgLDAPGroupUseFullDN[$domain];
-			} else {
-				return false;
 			}
+			return false;
 		case 'LowerCaseUsername':
 			global $wgLDAPLowerCaseUsername;
 			if ( isset( $wgLDAPLowerCaseUsername[$domain] ) ) {
 				$this->printDebug( "Configuration set to lowercase username.", NONSENSITIVE );
 				return $wgLDAPLowerCaseUsername[$domain];
-			} else {
-				return false;
 			}
+			return false;
 		case 'LowerCaseUsernameScheme':
 			global $wgLDAPLowerCaseUsernameScheme;
 			if ( isset( $wgLDAPLowerCaseUsernameScheme[$domain] ) ) {
@@ -452,85 +420,69 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			global $wgLDAPGroupUseRetrievedUsername;
 			if ( isset( $wgLDAPGroupUseRetrievedUsername[$domain] ) ) {
 				return $wgLDAPGroupUseRetrievedUsername[$domain];
-			} else {
-				return false;
 			}
+			return false;
 		case 'GroupObjectclass':
 			global $wgLDAPGroupObjectclass;
 			if ( isset( $wgLDAPGroupObjectclass[$domain] ) ) {
 				return $wgLDAPGroupObjectclass[$domain];
-			} else {
-				return '';
 			}
 		case 'GroupAttribute':
 			global $wgLDAPGroupAttribute;
 			if ( isset( $wgLDAPGroupAttribute[$domain] ) ) {
 				return $wgLDAPGroupAttribute[$domain];
-			} else {
-				return '';
 			}
 		case 'GroupNameAttribute':
 			global $wgLDAPGroupNameAttribute;
 			if ( isset( $wgLDAPGroupNameAttribute[$domain] ) ) {
 				return $wgLDAPGroupNameAttribute[$domain];
-			} else {
-				return '';
 			}
 		case 'GroupsUseMemberOf':
 			global $wgLDAPGroupsUseMemberOf;
 			if ( isset( $wgLDAPGroupsUseMemberOf[$domain] ) ) {
 				return $wgLDAPGroupsUseMemberOf[$domain];
-			} else {
-				return false;
 			}
+			return false;
 		case 'UseLDAPGroups':
 			global $wgLDAPUseLDAPGroups;
 			if ( isset( $wgLDAPUseLDAPGroups[$domain] ) ) {
 				return $wgLDAPUseLDAPGroups[$domain];
-			} else {
-				return false;
 			}
+			return false;
 		case 'LocallyManagedGroups':
 			global $wgLDAPLocallyManagedGroups;
 			if ( isset( $wgLDAPLocallyManagedGroups[$domain] ) ) {
 				return $wgLDAPLocallyManagedGroups[$domain];
-			} else {
-				return array();
 			}
+			return array();
 		case 'GroupsPrevail':
 			global $wgLDAPGroupsPrevail;
 			if ( isset( $wgLDAPGroupsPrevail[$domain] ) ) {
 				return $wgLDAPGroupsPrevail[$domain];
-			} else {
-				return false;
 			}
+			return false;
 		case 'RequiredGroups':
 			global $wgLDAPRequiredGroups;
 			if ( isset( $wgLDAPRequiredGroups[$domain] ) ) {
 				return $wgLDAPRequiredGroups[$domain];
-			} else {
-				return array();
 			}
+			return array();
 		case 'ExcludedGroups':
 			global $wgLDAPExcludedGroups;
 			if ( isset( $wgLDAPExcludedGroups[$domain] ) ) {
 				return $wgLDAPExcludedGroups[$domain];
-			} else {
-				return array();
 			}
+			return array();
 		case 'GroupSearchNestedGroups':
 			global $wgLDAPGroupSearchNestedGroups;
 			if ( isset( $wgLDAPGroupSearchNestedGroups[$domain] ) ) {
 				return $wgLDAPGroupSearchNestedGroups[$domain];
-			} else {
-				return false;
 			}
+			return false;
 		case 'AuthAttribute':
 			global $wgLDAPAuthAttribute;
 			if ( isset( $wgLDAPAuthAttribute[$domain] ) ) {
 				return $wgLDAPAuthAttribute[$domain];
-			} else {
-				return '';
 			}
 		case 'AutoAuthUsername':
 			global $wgLDAPAutoAuthUsername;
@@ -539,6 +491,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			global $wgLDAPAutoAuthDomain;
 			return $wgLDAPAutoAuthDomain;
 		}
+		return '';
 	}
 
 	/**
