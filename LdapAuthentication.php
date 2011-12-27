@@ -1351,7 +1351,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return $this->userInfo;
 		}
 
-		$userInfo = $this->getUserInfoStateless( $this->usernn );
+		$userInfo = $this->getUserInfoStateless( $this->userdn );
 		if ( is_null( $userInfo ) ) {
 			$this->fetchedUserInfo = false;
 			return null;
