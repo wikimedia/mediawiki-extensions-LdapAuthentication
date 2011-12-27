@@ -110,7 +110,7 @@ define( "NONSENSITIVE", 1 );
 define( "SENSITIVE", 2 );
 define( "HIGHLYSENSITIVE", 3 );
 
-class LdapAuthenticationextends AuthPlugin {
+class LdapAuthenticationPlugin extends AuthPlugin {
 
 	// ldap connection resource
 	var $ldapconn;
