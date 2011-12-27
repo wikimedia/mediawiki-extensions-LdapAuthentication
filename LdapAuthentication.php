@@ -278,25 +278,16 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		switch ( $preference ) {
 		case 'ServerNames':
 			global $wgLDAPServerNames;
-			if ( isset( $wgLDAPServerNames[$domain] ) ) {
-				return $wgLDAPServerNames[$domain];
-			}
-			return array();
+			return self::setOrDefault( $wgLDAPServerNames, $domain, array() );
 		case 'UseLocal':
 			global $wgLDAPUseLocal;
 			return $wgLDAPUseLocal;
 		case 'EncryptionType':
 			global $wgLDAPEncryptionType;
-			if ( isset( $wgLDAPEncryptionType[$domain] ) ) {
-				return $wgLDAPEncryptionType[$domain];
-			}
-			return 'tls';
+			return self::setOrDefault( $wgLDAPEncryptionType, $domain, 'tls' );
 		case 'Options':
 			global $wgLDAPOptions;
-			if ( isset( $wgLDAPOptions[$domain] ) ) {
-				return $wgLDAPOptions[$domain];
-			}
-			return array();
+			return self::setOrDefault( $wgLDAPOptions, $domain, array() );
 		case 'Port':
 			global $wgLDAPPort;
 			if ( isset( $wgLDAPPort[$domain] ) ) {
@@ -309,181 +300,104 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			}
 		case 'SearchString':
 			global $wgLDAPSearchStrings;
-			if ( isset( $wgLDAPSearchStrings[$domain] ) ) {
-				return $wgLDAPSearchStrings[$domain];
-			}
+			return self::setOrDefault( $wgLDAPSearchStrings, $domain );
 		case 'ProxyAgent':
 			global $wgLDAPProxyAgent;
-			if ( isset( $wgLDAPProxyAgent[$domain] ) ) {
-				return $wgLDAPProxyAgent[$domain];
-			}
+			return self::setOrDefault( $wgLDAPProxyAgent, $domain );
 		case 'ProxyAgentPassword':
 			global $wgLDAPProxyAgentPassword;
-			if ( isset( $wgLDAPProxyAgentPassword[$domain] ) ) {
-				return $wgLDAPProxyAgentPassword[$domain];
-			}
+			return self::setOrDefault( $wgLDAPProxyAgentPassword, $domain );
 		case 'SearchAttribute':
 			global $wgLDAPSearchAttributes;
-			if ( isset( $wgLDAPSearchAttributes[$domain] ) ) {
-				return $wgLDAPSearchAttributes[$domain];
-			}
+			return self::setOrDefault( $wgLDAPSearchAttributes, $domain );
 		case 'BaseDN':
 			global $wgLDAPBaseDNs;
-			if ( isset( $wgLDAPBaseDNs[$domain] ) ) {
-				return $wgLDAPBaseDNs[$domain];
-			}
+			return self::setOrDefault( $wgLDAPBaseDNs, $domain );
 		case 'GroupBaseDN':
 			global $wgLDAPGroupBaseDNs;
-			if ( isset( $wgLDAPGroupBaseDNs[$domain] ) ) {
-				return $wgLDAPGroupBaseDNs[$domain];
-			}
+			return self::setOrDefault( $wgLDAPGroupBaseDNs, $domain );
 		case 'UserBaseDN':
 			global $wgLDAPUserBaseDNs;
-			if ( isset( $wgLDAPUserBaseDNs[$domain] ) ) {
-				return $wgLDAPUserBaseDNs[$domain];
-			}
+			return self::setOrDefault( $wgLDAPUserBaseDNs, $domain );
 		case 'WriterDN':
 			global $wgLDAPWriterDN;
-			if ( isset( $wgLDAPWriterDN[$domain] ) ) {
-				return $wgLDAPWriterDN[$domain];
-			}
+			return self::setOrDefault( $wgLDAPWriterDN, $domain );
 		case 'WriterPassword':
 			global $wgLDAPWriterPassword;
-			if ( isset( $wgLDAPWriterPassword[$domain] ) ) {
-				return $wgLDAPWriterPassword[$domain];
-			}
+			return self::setOrDefault( $wgLDAPWriterPassword, $domain );
 		case 'WriteLocation':
 			global $wgLDAPWriteLocation;
-			if ( isset( $wgLDAPWriteLocation[$domain] ) ) {
-				return $wgLDAPWriteLocation[$domain];
-			}
+			return self::setOrDefault( $wgLDAPWriteLocation, $domain );
 		case 'AddLDAPUsers':
 			global $wgLDAPAddLDAPUsers;
-			if ( isset( $wgLDAPAddLDAPUsers[$domain] ) ) {
-				return $wgLDAPAddLDAPUsers[$domain];
-			}
-			return false;
+			return self::setOrDefault( $wgLDAPAddLDAPUsers, $domain, false );
 		case 'UpdateLDAP':
 			global $wgLDAPUpdateLDAP;
-			if ( isset( $wgLDAPUpdateLDAP[$domain] ) ) {
-				return $wgLDAPUpdateLDAP[$domain];
-			}
-			return false;
+			return self::setOrDefault( $wgLDAPUpdateLDAP, $domain, false );
 		case 'PasswordHash':
 			global $wgLDAPPasswordHash;
-			if ( isset( $wgLDAPPasswordHash[$domain] ) ) {
-				return $wgLDAPPasswordHash[$domain];
-			} else {
-				return 'clear';
-			}
+			return self::setOrDefault( $wgLDAPPasswordHash, $domain, 'clear' );
 		case 'MailPassword':
 			global $wgLDAPMailPassword;
-			if ( isset( $wgLDAPMailPassword[$domain] ) ) {
-				return $wgLDAPMailPassword[$domain];
-			}
-			return false;
+			return self::setOrDefault( $wgLDAPMailPassword, $domain, false );
 		case 'Preferences':
 			global $wgLDAPPreferences;
-			if ( isset( $wgLDAPPreferences[$domain] ) ) {
-				return $wgLDAPPreferences[$domain];
-			}
-			return array();
+			return self::setOrDefault( $wgLDAPPreferences, $domain, array() );
 		case 'DisableAutoCreate':
 			global $wgLDAPDisableAutoCreate;
-			if ( isset( $wgLDAPDisableAutoCreate[$domain] ) ) {
-				return $wgLDAPDisableAutoCreate[$domain];
-			}
-			return false;
+			return self::setOrDefault( $wgLDAPDisableAutoCreate, $domain, false );
 		case 'GroupUseFullDN':
 			global $wgLDAPGroupUseFullDN;
-			if ( isset( $wgLDAPGroupUseFullDN[$domain] ) ) {
-				return $wgLDAPGroupUseFullDN[$domain];
-			}
-			return false;
+			return self::setOrDefault( $wgLDAPGroupUseFullDN, $domain, false );
 		case 'LowerCaseUsername':
 			global $wgLDAPLowerCaseUsername;
 			if ( isset( $wgLDAPLowerCaseUsername[$domain] ) ) {
 				$this->printDebug( "Configuration set to lowercase username.", NONSENSITIVE );
 				return $wgLDAPLowerCaseUsername[$domain];
+			} else {
+				return false;
 			}
-			return false;
 		case 'LowerCaseUsernameScheme':
 			global $wgLDAPLowerCaseUsernameScheme;
-			if ( isset( $wgLDAPLowerCaseUsernameScheme[$domain] ) ) {
-				return $wgLDAPLowerCaseUsernameScheme[$domain];
-			} else {
-				// Default set to true for backwards compatibility with
-				// versions < 2.0a
-				return true;
-			}
+			// Default set to true for backwards compatibility with
+			// versions < 2.0a
+			return self::setOrDefault( $wgLDAPLowerCaseUsernameScheme, $domain, true );
 		case 'GroupUseRetievedUsername':
 			global $wgLDAPGroupUseRetrievedUsername;
-			if ( isset( $wgLDAPGroupUseRetrievedUsername[$domain] ) ) {
-				return $wgLDAPGroupUseRetrievedUsername[$domain];
-			}
-			return false;
+			return self::setOrDefault( $wgLDAPGroupUseRetrievedUsername, $domain, false );
 		case 'GroupObjectclass':
 			global $wgLDAPGroupObjectclass;
-			if ( isset( $wgLDAPGroupObjectclass[$domain] ) ) {
-				return $wgLDAPGroupObjectclass[$domain];
-			}
+			return self::setOrDefault( $wgLDAPGroupObjectclass, $domain );
 		case 'GroupAttribute':
 			global $wgLDAPGroupAttribute;
-			if ( isset( $wgLDAPGroupAttribute[$domain] ) ) {
-				return $wgLDAPGroupAttribute[$domain];
-			}
+			return self::setOrDefault( $wgLDAPGroupAttribute, $domain );
 		case 'GroupNameAttribute':
 			global $wgLDAPGroupNameAttribute;
-			if ( isset( $wgLDAPGroupNameAttribute[$domain] ) ) {
-				return $wgLDAPGroupNameAttribute[$domain];
-			}
+			return self::setOrDefault( $wgLDAPGroupNameAttribute, $domain );
 		case 'GroupsUseMemberOf':
 			global $wgLDAPGroupsUseMemberOf;
-			if ( isset( $wgLDAPGroupsUseMemberOf[$domain] ) ) {
-				return $wgLDAPGroupsUseMemberOf[$domain];
-			}
-			return false;
+			return self::setOrDefault( $wgLDAPGroupsUseMemberOf, $domain, false );
 		case 'UseLDAPGroups':
 			global $wgLDAPUseLDAPGroups;
-			if ( isset( $wgLDAPUseLDAPGroups[$domain] ) ) {
-				return $wgLDAPUseLDAPGroups[$domain];
-			}
-			return false;
+			return self::setOrDefault( $wgLDAPUseLDAPGroups, $domain, false );
 		case 'LocallyManagedGroups':
 			global $wgLDAPLocallyManagedGroups;
-			if ( isset( $wgLDAPLocallyManagedGroups[$domain] ) ) {
-				return $wgLDAPLocallyManagedGroups[$domain];
-			}
-			return array();
+			return self::setOrDefault( $wgLDAPLocallyManagedGroups, $domain, array() );
 		case 'GroupsPrevail':
 			global $wgLDAPGroupsPrevail;
-			if ( isset( $wgLDAPGroupsPrevail[$domain] ) ) {
-				return $wgLDAPGroupsPrevail[$domain];
-			}
-			return false;
+			return self::setOrDefault( $wgLDAPGroupsPrevail, $domain, false );
 		case 'RequiredGroups':
 			global $wgLDAPRequiredGroups;
-			if ( isset( $wgLDAPRequiredGroups[$domain] ) ) {
-				return $wgLDAPRequiredGroups[$domain];
-			}
-			return array();
+			return self::setOrDefault( $wgLDAPRequiredGroups, $domain, array() );
 		case 'ExcludedGroups':
 			global $wgLDAPExcludedGroups;
-			if ( isset( $wgLDAPExcludedGroups[$domain] ) ) {
-				return $wgLDAPExcludedGroups[$domain];
-			}
-			return array();
+			return self::setOrDefault( $wgLDAPExcludedGroups, $domain, array() );
 		case 'GroupSearchNestedGroups':
 			global $wgLDAPGroupSearchNestedGroups;
-			if ( isset( $wgLDAPGroupSearchNestedGroups[$domain] ) ) {
-				return $wgLDAPGroupSearchNestedGroups[$domain];
-			}
-			return false;
+			return self::setOrDefault( $wgLDAPGroupSearchNestedGroups, $domain, false );
 		case 'AuthAttribute':
 			global $wgLDAPAuthAttribute;
-			if ( isset( $wgLDAPAuthAttribute[$domain] ) ) {
-				return $wgLDAPAuthAttribute[$domain];
-			}
+			return self::setOrDefault( $wgLDAPAuthAttribute, $domain );
 		case 'AutoAuthUsername':
 			global $wgLDAPAutoAuthUsername;
 			return $wgLDAPAutoAuthUsername;
@@ -492,6 +406,19 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return $wgLDAPAutoAuthDomain;
 		}
 		return '';
+	}
+
+	/**
+	 * Returns the item from $array at index $key if it is set,
+	 * else, it returns $default
+	 *
+	 * @param $array array
+	 * @param $key
+	 * @param $default mixed
+	 * @return mixed
+	 */
+	private static function setOrDefault( $array, $key, $default = '' ) {
+		return isset( $array[$key] ) ? $array[$key] : $default;
 	}
 
 	/**
@@ -549,7 +476,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	/**
 	 * Connect to LDAP
 	 */
-	private function connect( $domain='' ) {
+	public function connect( $domain='' ) {
+		// FIXME: $domain isn't used
 		if ( $domain == '' ) {
 			$domain = $this->getSessionDomain();
 		}
@@ -557,7 +485,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$this->printDebug( "Entering Connect", NONSENSITIVE );
 
 		if ( !function_exists( 'ldap_connect' ) ) {
-			$this->printDebug( "It looks like you are missing LDAP support; please ensure you have either compiled LDAP support in, or have enabled the module. If the authentication is working for you, the plugin isn't properly detecting the LDAP module, and you can safely ignore this message.", NONSENSITIVE );
+			$this->printDebug( "It looks like you are missing LDAP support; please ensure you have either compiled LDAP "
+				. "support in, or have enabled the module. If the authentication is working for you, the plugin isn't properly "
+				. "detecting the LDAP module, and you can safely ignore this message.", NONSENSITIVE );
 			return false;
 		}
 
