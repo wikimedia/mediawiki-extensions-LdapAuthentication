@@ -1545,10 +1545,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				}
 			} else {
 				$this->printDebug( "Searching for the groups", NONSENSITIVE );
-				$this->userLDAPGroups = LdapAuthenticationPlugin::ldap_searchGroups( $usertopass );
+				$this->userLDAPGroups = LdapAuthenticationPlugin::searchGroups( $usertopass );
 
 				if ( $this->getConf( 'GroupSearchNestedGroups' ) ) {
-					$this->userLDAPGroups = LdapAuthenticationPlugin::ldap_searchNestedGroups( $this->userLDAPGroups );
+					$this->userLDAPGroups = LdapAuthenticationPlugin::searchNestedGroups( $this->userLDAPGroups );
 					$this->printDebug( "Got the following nested groups:", SENSITIVE, $this->userLDAPGroups["dn"] );
 				}
 			}
@@ -1556,7 +1556,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			// Only find all groups if the user has any groups; otherwise, we are
 			// just wasting a search.
 			if ( $this->getConf( 'GroupsPrevail' ) && count( $this->userLDAPGroups ) != 0 ) {
-				$this->allLDAPGroups = LdapAuthenticationPlugin::ldap_searchGroups( '*' );
+				$this->allLDAPGroups = LdapAuthenticationPlugin::searchGroups( '*' );
 			}
 		}
 	}
@@ -1584,7 +1584,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$groupstosearch = array( "short" => array(), "dn" => array() );
 		foreach ( $groups["dn"] as $group ) {
-			$returnedgroups = LdapAuthenticationPlugin::ldap_searchGroups( $group );
+			$returnedgroups = LdapAuthenticationPlugin::searchGroups( $group );
 			$this->printDebug( "Group $group is in the following groups:", SENSITIVE, $returnedgroups["dn"] );
 			foreach ( $returnedgroups["dn"] as $searchme ) {
 				if ( in_array( $searchme, $searchedgroups["dn"] ) ) {
@@ -1610,7 +1610,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$searchedgroups = array_merge_recursive( $groups, $searchedgroups );
 
-		return LdapAuthenticationPlugin::ldap_searchNestedGroups( $groupstosearch, $searchedgroups );
+		return LdapAuthenticationPlugin::searchNestedGroups( $groupstosearch, $searchedgroups );
 	}
 
 	/**
