@@ -504,8 +504,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return bool
 	 */
 	public function userExists( $username ) {
-		global $wgLDAPAddLDAPUsers;
-
 		$this->printDebug( "Entering userExists", NONSENSITIVE );
 
 		// If we can't add LDAP users, we don't really need to check
@@ -550,10 +548,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Connect to LDAP
-	 *
-	 * @access private
 	 */
-	function connect( $domain='' ) {
+	private function connect( $domain='' ) {
 		if ( $domain == '' ) {
 			$domain = $this->getSessionDomain();
 		}
@@ -747,6 +743,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * Modify options in the login template.
 	 *
 	 * @param UserLoginTemplate $template
+	 * @param $type
 	 */
 	public function modifyUITemplate( &$template, &$type ) {
 		$this->printDebug( "Entering modifyUITemplate", NONSENSITIVE );
@@ -764,6 +761,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		wfRunHooks( 'LDAPModifyUITemplate', array( &$template ) );
 	}
 
+	/**
+	 * @return array
+	 */
 	function domainList() {
 		global $wgLDAPDomainNames;
 
@@ -858,13 +858,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			if ( $success ) {
 				$this->printDebug( "Successfully modified the user's password", NONSENSITIVE );
 				return true;
-			} else {
-				$this->printDebug( "Failed to modify the user's password", NONSENSITIVE );
-				return false;
 			}
-		} else {
-			return false;
+			$this->printDebug( "Failed to modify the user's password", NONSENSITIVE );
 		}
+		return false;
 	}
 
 	/**
@@ -918,14 +915,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$this->printDebug( "Successfully modified the user's attributes", NONSENSITIVE );
 				LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
 				return true;
-			} else {
-				$this->printDebug( "Failed to modify the user's attributes", NONSENSITIVE );
-				LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
-				return false;
 			}
-		} else {
-			return false;
+			$this->printDebug( "Failed to modify the user's attributes", NONSENSITIVE );
+			LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
 		}
+		return false;
 	}
 
 	/**
@@ -966,6 +960,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 *
 	 * @param User $user
 	 * @param string $password
+	 * @param string $email
+	 * @param string $realname
 	 * @return bool
 	 */
 	public function addUser( $user, $password, $email = '', $realname = '' ) {
@@ -1054,14 +1050,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$this->printDebug( "Successfully added user", NONSENSITIVE );
 				LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
 				return true;
-			} else {
-				$this->printDebug( "Failed to add user", NONSENSITIVE );
-				LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
-				return false;
 			}
-		} else {
-			return false;
+			$this->printDebug( "Failed to add user", NONSENSITIVE );
+			LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
 		}
+		return false;
 	}
 
 	/**
@@ -1198,10 +1191,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		if ( $this->getConf( 'UseLocal' ) || $this->getConf( 'MailPassword' ) ) {
 			$this->printDebug( "Returning false in strict().", NONSENSITIVE );
 			return false;
-		} else {
-			$this->printDebug( "Returning true in strict().", NONSENSITIVE );
-			return true;
 		}
+		$this->printDebug( "Returning true in strict().", NONSENSITIVE );
+		return true;
 	}
 
 	/**
@@ -1366,6 +1358,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		return $userdn;
 	}
 
+	/**
+	 * @return array|null
+	 */
 	function getUserInfo() {
 		// Don't fetch the same data more than once
 		if ( $this->fetchedUserInfo ) {
@@ -1375,13 +1370,17 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$userInfo = $this->getUserInfoStateless( $this->usernn );
 		if ( is_null( $userInfo ) ) {
 			$this->fetchedUserInfo = false;
-			return;
+			return null;
 		} else {
 			$this->fetchedUserInfo = true;
 			return $userInfo;
 		}
 	}
 
+	/**
+	 * @param $userdn string
+	 * @return array|null
+	 */
 	function getUserInfoStateless( $userdn ) {
 		// Don't fetch the same data more than once
 		// TODO: use memcached here
@@ -1389,7 +1388,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$entry = LdapAuthenticationPlugin::ldap_read( $this->ldapconn, $userdn, "objectclass=*", array( '*', 'memberof' ) );
 		$userInfo = LdapAuthenticationPlugin::ldap_get_entries( $this->ldapconn, $entry );
 		if ( $userInfo["count"] < 1 ) {
-			return;
+			return null;
 		} else {
 			return $userInfo;
 		}
@@ -1397,11 +1396,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Retrieve user preferences from LDAP
-	 *
-	 * @param string $userDN
-	 * @access private
 	 */
-	function getPreferences() {
+	private function getPreferences() {
 		$this->printDebug( "Entering getPreferences", NONSENSITIVE );
 
 		$this->userInfo = $this->getUserInfo();
@@ -1411,33 +1407,33 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		// Retrieve preferences
 		$prefs = $this->getConf( 'Preferences' );
-		if ( $prefs ) {
-			$this->printDebug( "Retrieving preferences", NONSENSITIVE );
-			foreach ( array_keys( $prefs ) as $key ) {
-				$attr = strtolower( $prefs[$key] );
-				if ( isset( $this->userInfo[0][$attr] ) ) {
-					$value = $this->userInfo[0][$attr][0];
-				} else {
-					continue;
-				}
-				switch ( $key ) {
-					case "email":
-						$this->email = $value;
-						$this->printDebug( "Retrieved email ($this->email) using attribute ($prefs[$key])", NONSENSITIVE );
-						break;
-					case "language":
-						$this->lang = $value;
-						$this->printDebug( "Retrieved language ($this->lang) using attribute ($prefs[$key])", NONSENSITIVE );
-						break;
-					case "nickname":
-						$this->nickname = $value;
-						$this->printDebug( "Retrieved nickname ($this->nickname) using attribute ($prefs[$key])", NONSENSITIVE );
-						break;
-					case "realname":
-						$this->realname = $value;
-						$this->printDebug( "Retrieved realname ($this->realname) using attribute ($prefs[$key])", NONSENSITIVE );
-						break;
-				}
+		if ( !$prefs ) {
+			return;
+		}
+		$this->printDebug( "Retrieving preferences", NONSENSITIVE );
+		foreach ( array_keys( $prefs ) as $key ) {
+			$attr = strtolower( $prefs[$key] );
+			if ( !isset( $this->userInfo[0][$attr] ) ) {
+				continue;
+			}
+			$value = $this->userInfo[0][$attr][0];
+			switch ( $key ) {
+				case "email":
+					$this->email = $value;
+					$this->printDebug( "Retrieved email ($this->email) using attribute ($prefs[$key])", NONSENSITIVE );
+					break;
+				case "language":
+					$this->lang = $value;
+					$this->printDebug( "Retrieved language ($this->lang) using attribute ($prefs[$key])", NONSENSITIVE );
+					break;
+				case "nickname":
+					$this->nickname = $value;
+					$this->printDebug( "Retrieved nickname ($this->nickname) using attribute ($prefs[$key])", NONSENSITIVE );
+					break;
+				case "realname":
+					$this->realname = $value;
+					$this->printDebug( "Retrieved realname ($this->realname) using attribute ($prefs[$key])", NONSENSITIVE );
+					break;
 			}
 		}
 	}
@@ -1497,10 +1493,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Function to get the user's groups.
-	 *
-	 * @access private
 	 */
-	function getGroups( $username ) {
+	private function getGroups( $username ) {
 		$this->printDebug( "Entering getGroups", NONSENSITIVE );
 
 		// Find groups
@@ -1624,9 +1618,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 *
 	 * @param string $dn
 	 * @return array
-	 * @access private
 	 */
-	function searchGroups( $dn ) {
+	private function searchGroups( $dn ) {
 		$this->printDebug( "Entering searchGroups", NONSENSITIVE );
 
 		$base = $this->getBaseDN( GROUPDN );
@@ -1637,8 +1630,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		// We actually want to search for * not \2a, ensure we don't escape *
 		$value = $dn;
-		if ( $value != "*" )
+		if ( $value != "*" ) {
 			$value = $this->getLdapEscapedString( $value );
+		}
 
 		$proxyagent = $this->getConf( 'ProxyAgent' );
 		if ( $proxyagent ) {
@@ -1662,6 +1656,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$Usid = $PGentries[0]['objectsid'][0];
 				$PGrid = $PGentries[0]['primarygroupid'][0];
 				$PGsid = bin2hex( $Usid );
+				$PGSID = array();
 				for ( $i=0; $i < 56; $i += 2 ) {
 					$PGSID[] = substr( $PGsid, $i, 2 );
 				}
