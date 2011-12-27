@@ -900,7 +900,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			if ( count( $values ) && LdapAuthenticationPlugin::ldap_modify( $this->ldapconn, $this->userdn, $values ) ) {
 				// We changed the user, we need to invalidate the memcache key
 				$key = wfMemcKey( 'ldapauthentication', 'userinfo', $this->userdn );
-				$wgMemc->delete( $key )
+				$wgMemc->delete( $key );
 				$this->printDebug( "Successfully modified the user's attributes", NONSENSITIVE );
 				LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
 				return true;
