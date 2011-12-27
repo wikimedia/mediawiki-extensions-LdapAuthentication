@@ -61,11 +61,9 @@ $wgLDAPAddLDAPUsers = array();
 $wgLDAPUpdateLDAP = array();
 $wgLDAPPasswordHash = array();
 $wgLDAPMailPassword = array();
-$wgLDAPRetrievePrefs = array();
 $wgLDAPPreferences = array();
 $wgLDAPDisableAutoCreate = array();
 $wgLDAPDebug = 0;
-$wgLDAPGroupDN = ""; //Deprecated
 $wgLDAPGroupUseFullDN = array();
 $wgLDAPLowerCaseUsername = array();
 $wgLDAPLowerCaseUsernameScheme = array();
@@ -83,9 +81,6 @@ $wgLDAPGroupSearchNestedGroups = array();
 $wgLDAPAuthAttribute = array();
 $wgLDAPAutoAuthUsername = "";
 $wgLDAPAutoAuthDomain = "";
-$wgLDAPUniqueAttribute = array(); //Currently unused
-$wgLDAPUniqueBlockLogin = array(); //Currently unused
-$wgLDAPUniqueRenameUser = array(); //Currently unused
 $wgPasswordResetRoutes['domain'] = true;
 
 define( "LDAPAUTHVERSION", "2.0a" );
@@ -115,7 +110,7 @@ define( "NONSENSITIVE", 1 );
 define( "SENSITIVE", 2 );
 define( "HIGHLYSENSITIVE", 3 );
 
-class LdapAuthenticationPlugin extends AuthPlugin {
+class LdapAuthenticationextends AuthPlugin {
 
 	// ldap connection resource
 	var $ldapconn;
@@ -145,6 +140,185 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	// the user we are currently bound as
 	var $boundAs;
 
+	/**
+	 * Wrapper for ldap_connect
+	 */
+	public static function ldap_connect( $hostname=null, $port=389 ) {
+		wfSuppressWarnings();
+		$ret = ldap_connect( $hostname, $port );
+		wfRestoreWarnings();
+		return $ret;
+	}
+
+	/**
+	 * Wrapper for ldap_bind
+	 */
+	public static function ldap_bind( $ldapconn, $dn=null, $password=null ) {
+		wfSuppressWarnings();
+		$ret = ldap_bind( $ldapconn, $dn, $password );
+		wfRestoreWarnings();
+		return $ret;
+	}
+
+	/**
+	 * Wrapper for ldap_unbind
+	 */
+	public static function ldap_unbind( $ldapconn ) {
+		if ( $ldapconn ) {
+			wfSuppressWarnings();
+			$ret = ldap_unbind( $ldapconn );
+			wfRestoreWarnings();
+		} else {
+			$ret = false;
+		}
+		return $ret;
+	}
+
+	/**
+	 * Wrapper for ldap_modify
+	 */
+	public static function ldap_modify( $ldapconn, $dn, $entry ) {
+		wfSuppressWarnings();
+		$ret = ldap_modify( $ldapconn, $dn, $entry );
+		wfRestoreWarnings();
+		return $ret;
+	}
+
+	/**
+	 * Wrapper for ldap_add
+	 */
+	public static function ldap_add( $ldapconn, $dn, $entry ) {
+		wfSuppressWarnings();
+		$ret = ldap_add( $ldapconn, $dn, $entry );
+		wfRestoreWarnings();
+		return $ret;
+	}
+
+	/**
+	 * Wrapper for ldap_delete
+	 */
+	public static function ldap_delete( $ldapconn, $dn ) {
+		wfSuppressWarnings();
+		$ret = ldap_delete( $ldapconn, $dn );
+		wfRestoreWarnings();
+		return $ret;
+	}
+
+	/**
+	 * Wrapper for ldap_search
+	 */
+	public static function ldap_search( $ldapconn, $basedn, $filter, $attributes=null, $attrsonly=null, $sizelimit=null, $timelimit=null, $deref=null ) {
+		wfSuppressWarnings();
+		if ( $attributes ) {
+			if ( $attrsonly ) {
+				if ( $sizelimit ) {
+					if ( $timelimit ) {
+						if ( $deref ) {
+							$ret = ldap_search( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit, $timelimit, $deref );
+						} else {
+							$ret = ldap_search( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit, $timelimit );
+						}
+					} else {
+						$ret = ldap_search( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit );
+					}
+				} else {
+					$ret = ldap_search( $ldapconn, $basedn, $filter, $attributes, $attrsonly );
+				}
+			} else {
+				$ret = ldap_search( $ldapconn, $basedn, $filter, $attributes );
+			}
+		} else {
+			$ret = ldap_search( $ldapconn, $basedn, $filter );
+		}
+		wfRestoreWarnings();
+		return $ret;
+	}
+
+	/**
+	 * Wrapper for ldap_read
+	 */
+	public static function ldap_read( $ldapconn, $basedn, $filter, $attributes=null, $attrsonly=null, $sizelimit=null, $timelimit=null, $deref=null ) {
+		wfSuppressWarnings();
+		if ( $attributes ) {
+			if ( $attrsonly ) {
+				if ( $sizelimit ) {
+					if ( $timelimit ) {
+						if ( $deref ) {
+							$ret = ldap_read( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit, $timelimit, $deref );
+						} else {
+							$ret = ldap_read( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit, $timelimit );
+						}
+					} else {
+						$ret = ldap_read( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit );
+					}
+				} else {
+					$ret = ldap_read( $ldapconn, $basedn, $filter, $attributes, $attrsonly );
+				}
+			} else {
+				$ret = ldap_read( $ldapconn, $basedn, $filter, $attributes );
+			}
+		} else {
+			$ret = ldap_read( $ldapconn, $basedn, $filter );
+		}
+		wfRestoreWarnings();
+		return $ret;
+	}
+
+	/**
+	 * Wrapper for ldap_list
+	 */
+	public static function ldap_list( $ldapconn, $basedn, $filter, $attributes=null, $attrsonly=null, $sizelimit=null, $timelimit=null, $deref=null ) {
+		wfSuppressWarnings();
+		if ( $attributes ) {
+			if ( $attrsonly ) {
+				if ( $sizelimit ) {
+					if ( $timelimit ) {
+						if ( $deref ) {
+							$ret = ldap_list( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit, $timelimit, $deref );
+						} else {
+							$ret = ldap_list( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit, $timelimit );
+						}
+					} else {
+						$ret = ldap_list( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit );
+					}
+				} else {
+					$ret = ldap_list( $ldapconn, $basedn, $filter, $attributes, $attrsonly );
+				}
+			} else {
+				$ret = ldap_list( $ldapconn, $basedn, $filter, $attributes );
+			}
+		} else {
+			$ret = ldap_list( $ldapconn, $basedn, $filter );
+		}
+		wfRestoreWarnings();
+		return $ret;
+	}
+
+	/**
+	 * Wrapper for ldap_get_entries
+	 */
+	public static function ldap_get_entries( $ldapconn, $resultid ) {
+		wfSuppressWarnings();
+		$ret = ldap_get_entries( $ldapconn, $resultid );
+		wfRestoreWarnings();
+		return $ret;
+	}
+
+	/**
+	 * Wrapper for ldap_count_entries
+	 */
+	public static function ldap_count_entries( $ldapconn, $resultid ) {
+		wfSuppressWarnings();
+		$ret = ldap_count_entries( $ldapconn, $resultid );
+		wfRestoreWarnings();
+		return $ret;
+	}
+
+	/**
+	 * Get the user's domain as defined in the user's session.
+	 *
+	 * @return string
+	 */
 	public function getSessionDomain() {
 		if ( isset( $_SESSION['wsDomain'] ) ) {
 			return $_SESSION['wsDomain'];
@@ -153,6 +327,12 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		}
 	}
 
+	/**
+	 * Get configuration defined by admin, or return default value
+	 *
+	 * @param string $preference
+	 * @return mixed
+	 */
 	public function getConf( $preference ) {
 		$domain = $this->getSessionDomain();
 		switch ( $preference ) {
@@ -290,13 +470,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			} else {
 				return false;
 			}
-		case 'RetrievePrefs':
-			global $wgLDAPRetrievePrefs;
-			if ( isset( $wgLDAPRetrievePrefs[$domain] ) ) {
-				return $wgLDAPRetrievePrefs[$domain];
-			} else {
-				return false;
-			}
 		case 'Preferences':
 			global $wgLDAPPreferences;
 			if ( isset( $wgLDAPPreferences[$domain] ) ) {
@@ -311,13 +484,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			} else {
 				return false;
 			}
-		case 'GroupDN':
-			global $wgLDAPGroupDN;
-			if ( isset( $wgLDAPGroupDN[$domain] ) ) {
-				return $wgLDAPGroupDN[$domain];
-			} else {
-				return '';
-			}
 		case 'GroupUseFullDN':
 			global $wgLDAPGroupUseFullDN;
 			if ( isset( $wgLDAPGroupUseFullDN[$domain] ) ) {
@@ -328,6 +494,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		case 'LowerCaseUsername':
 			global $wgLDAPLowerCaseUsername;
 			if ( isset( $wgLDAPLowerCaseUsername[$domain] ) ) {
+				$this->printDebug( "Configuration set to lowercase username.", NONSENSITIVE );
 				return $wgLDAPLowerCaseUsername[$domain];
 			} else {
 				return false;
@@ -431,27 +598,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		case 'AutoAuthDomain':
 			global $wgLDAPAutoAuthDomain;
 			return $wgLDAPAutoAuthDomain;
-		case 'UniqueAttribute':
-			global $wgLDAPUniqueAttribute;
-			if ( isset( $wgLDAPUniqueAttribute[$domain] ) ) {
-				return $wgLDAPUniqueAttribute[$domain];
-			} else {
-				return '';
-			}
-		case 'UniqueBlockLogin':
-			global $wgLDAPUniqueBlockLogin;
-			if ( isset( $wgLDAPUniqueBlockLogin[$domain] ) ) {
-				return $wgLDAPUniqueBlockLogin[$domain];
-			} else {
-				return false;
-			}
-		case 'UniqueRenameUser':
-			global $wgLDAPUniqueRenameUser;
-			if ( isset( $wgLDAPUniqueRenameUser[$domain] ) ) {
-				return $wgLDAPUniqueRenameUser[$domain];
-			} else {
-				return false;
-			}
 		}
 	}
 
@@ -479,7 +625,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$this->connect();
 		if ( $this->ldapconn ) {
-			$this->printDebug( "Successfully connected", NONSENSITIVE );
+			$this->printDebug( "PHP's LDAP connect method returned true (note, this does not imply it connected to the server).", NONSENSITIVE );
 
 			$searchstring = $this->getSearchString( $username );
 
@@ -487,17 +633,15 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			// anything back, then the user exists.
 			if ( $this->useAutoAuth() && $searchstring != '' ) {
 				// getSearchString is going to bind, but will not unbind
-				// Let's clean up
-				@ldap_unbind();
+				LdapAuthentication::ldap_unbind( $this->ldapconn );
 				return true;
 			}
 
 			// Search for the entry.
-			$entry = @ldap_read( $this->ldapconn, $searchstring, "objectclass=*" );
+			$entry = LdapAuthentication::ldap_read( $this->ldapconn, $searchstring, "objectclass=*" );
 
 			// getSearchString is going to bind, but will not unbind
-			// Let's clean up
-			@ldap_unbind();
+			LdapAuthentication::ldap_unbind( $this->ldapconn );
 			if ( !$entry ) {
 				$this->printDebug( "Did not find a matching user in LDAP", NONSENSITIVE );
 				return false;
@@ -506,7 +650,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				return true;
 			}
 		} else {
-			$this->printDebug( "Failed to connect", NONSENSITIVE );
+			$this->printDebug( "PHP's LDAP method returned false, this likely implies a misconfiguration of the plugin.", NONSENSITIVE );
 			return false;
 		}
 	}
@@ -532,8 +676,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$encryptionType = $this->getConf( 'EncryptionType' );
 		switch( $encryptionType ) {
 			case "ldapi":
-				# this is a really dirty place to put this,
-				# but it is easy and avoids another config option.
 				$this->printDebug( "Using ldapi", SENSITIVE );
 				$serverpre = "ldapi://";
 				break;
@@ -546,7 +688,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$serverpre = "ldap://";
 		}
 
-		// Make a space separated list of server strings with the ldap:// or ldaps://
+		// Make a space separated list of server strings with the connection type
 		// string added.
 		$servers = "";
 		$tmpservers = $this->getConf( 'ServerNames' );
@@ -560,7 +702,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$this->printDebug( "Using servers: $servers", SENSITIVE );
 
 		// Connect and set options
-		$this->ldapconn = @ldap_connect( $servers );
+		$this->ldapconn = LdapAuthentication::ldap_connect( $servers );
 		ldap_set_option( $this->ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3 );
 		ldap_set_option( $this->ldapconn, LDAP_OPT_REFERRALS, 0 );
 
@@ -570,7 +712,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			}
 		}
 
-		// TLS needs to be started after the connection is made
+		// TLS needs to be started after the connection resource is available
 		if ( $encryptionType == "tls" ) {
 			$this->printDebug( "Using TLS", SENSITIVE );
 			if ( !ldap_start_tls( $this->ldapconn ) ) {
@@ -620,14 +762,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$this->connect();
 		if ( $this->ldapconn ) {
-			$this->printDebug( "Connected successfully", NONSENSITIVE );
-
 			// Mediawiki munges the username before authenticate is called,
 			// this can mess with authentication, group pulling/restriction,
 			// preference pulling, etc. Let's allow the admin to use
 			// a lowercased username if needed.
 			if ( $this->getConf( 'LowerCaseUsername') ) {
-				$this->printDebug( "Lowercasing the username: $username", NONSENSITIVE );
 				$username = strtolower( $username );
 			}
 
@@ -638,7 +777,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			// return true, and will let anyone in!
 			if ( '' == $this->userdn ) {
 				$this->printDebug( "User DN is blank", NONSENSITIVE );
-				@ldap_unbind();
+				LdapAuthentication::ldap_unbind( $this->ldapconn );
 				$this->markAuthFailed();
 				return false;
 			}
@@ -647,8 +786,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			// user to make sure the password is correct.
 			if ( !$this->useAutoAuth() ) {
 				$this->printDebug( "Binding as the user", NONSENSITIVE );
-
-				// Let's see if the user can authenticate.
 				$bind = $this->bindAs( $this->userdn, $password );
 				if ( !$bind ) {
 					$this->markAuthFailed();
@@ -676,12 +813,12 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 					$filter = "(" . $aa . ")";
 					$attributes = array( "dn" );
 
-					$entry = ldap_read( $this->ldapconn, $this->userdn, $filter, $attributes );
-					$info = ldap_get_entries( $this->ldapconn, $entry );
+					$entry = LdapAuthentication::ldap_read( $this->ldapconn, $this->userdn, $filter, $attributes );
+					$info = LdapAuthentication::ldap_get_entries( $this->ldapconn, $entry );
 
 					if ( $info["count"] < 1 ) {
 						$this->printDebug( "Failed auth attribute check", NONSENSITIVE );
-						@ldap_unbind();
+						LdapAuthentication::ldap_unbind( $this->ldapconn );
 						$this->markAuthFailed();
 						return false;
 					}
@@ -691,22 +828,15 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$this->getGroups( $username );
 
 			if ( !$this->checkGroups( $username ) ) {
-				@ldap_unbind();
+				LdapAuthentication::ldap_unbind( $this->ldapconn );
 				$this->markAuthFailed();
 				return false;
 			}
 
 			$this->getPreferences();
 
-			if ( !$this->synchUsername( $username ) ) {
-				@ldap_unbind();
-				$this->markAuthFailed();
-				return false;
-			}
-
-			@ldap_unbind();
+			LdapAuthentication::ldap_unbind( $this->ldapconn );
 		} else {
-			$this->printDebug( "Failed to connect", NONSENSITIVE );
 			$this->markAuthFailed();
 			return false;
 		}
@@ -815,7 +945,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$this->connect();
 		if ( $this->ldapconn ) {
-			$this->printDebug( "Connected successfully", NONSENSITIVE );
 			$this->userdn = $this->getSearchString( $user->getName() );
 
 			$this->printDebug( "Binding as the writerDN", NONSENSITIVE );
@@ -830,10 +959,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			// domain credentials for security reasons.
 			$password = '';
 
-			$success = @ldap_modify( $this->ldapconn, $this->userdn, $values );
+			$success = LdapAuthentication::ldap_modify( $this->ldapconn, $this->userdn, $values );
 
-			// Let's clean up
-			@ldap_unbind();
+			LdapAuthentication::ldap_unbind( $this->ldapconn );
 			if ( $success ) {
 				$this->printDebug( "Successfully modified the user's password", NONSENSITIVE );
 				return true;
@@ -842,7 +970,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				return false;
 			}
 		} else {
-			$this->printDebug( "Failed to connect", NONSENSITIVE );
 			return false;
 		}
 	}
@@ -881,7 +1008,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$this->connect();
 		if ( $this->ldapconn ) {
-			$this->printDebug( "Connected successfully", NONSENSITIVE );
 			$this->userdn = $this->getSearchString( $user->getName() );
 
 			$this->printDebug( "Binding as the writerDN", NONSENSITIVE );
@@ -895,17 +1021,16 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			if ( '' != $this->realname ) { $values["cn"] = $this->realname; }
 			if ( '' != $this->lang ) { $values["preferredlanguage"] = $this->lang; }
 
-			if ( 0 != sizeof( $values ) && @ldap_modify( $this->ldapconn, $this->userdn, $values ) ) {
+			if ( 0 != sizeof( $values ) && LdapAuthentication::ldap_modify( $this->ldapconn, $this->userdn, $values ) ) {
 				$this->printDebug( "Successfully modified the user's attributes", NONSENSITIVE );
-				@ldap_unbind();
+				LdapAuthentication::ldap_unbind( $this->ldapconn );
 				return true;
 			} else {
 				$this->printDebug( "Failed to modify the user's attributes", NONSENSITIVE );
-				@ldap_unbind();
+				LdapAuthentication::ldap_unbind( $this->ldapconn );
 				return false;
 			}
 		} else {
-			$this->printDebug( "Failed to Connect", NONSENSITIVE );
 			return false;
 		}
 	}
@@ -960,7 +1085,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return true;
 		}
 
-		if ( $this->getConf( 'RequiredGroups' ) || $this->getConf( 'GroupDN' ) ) {
+		if ( $this->getConf( 'RequiredGroups' ) ) {
 			$this->printDebug( "The wiki is requiring users to be in specific groups, and cannot add users as this would be a security hole.", NONSENSITIVE );
 			// It is possible that later we can add users into
 			// groups, but since we don't support it, we don't want
@@ -984,8 +1109,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$this->connect();
 		if ( $this->ldapconn ) {
-			$this->printDebug( "Successfully connected", NONSENSITIVE );
-
 			$writeloc = $this->getConf( 'WriteLocation' );
 			$this->userdn = $this->getSearchString( $username );
 			if ( '' == $this->userdn ) {
@@ -997,13 +1120,12 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				} else {
 					$this->printDebug( "wgLDAPWriteLocation is not set, failing", NONSENSITIVE );
 					// getSearchString will bind, but will not unbind
-					@ldap_unbind();
+					LdapAuthentication::ldap_unbind( $this->ldapconn );
 					return false;
 				}
 			}
 
 			$this->printDebug( "Binding as the writerDN", NONSENSITIVE );
-
 			$bind = $this->bindAs( $writer, $this->getConf( 'WriterPassword' ) );
 			if ( !$bind ) {
 				$this->printDebug( "Failed to bind as the writerDN; add failed", NONSENSITIVE );
@@ -1025,7 +1147,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			wfRunHooks( 'LDAPSetCreationValues', array( $this, $username, &$values, $writeloc, &$this->userdn, &$result ) );
 			if ( ! $result ) {
 				$this->printDebug( "Failed to add user because LDAPSetCreationValues returned false", NONSENSITIVE );
-				@ldap_unbind();
+				LdapAuthentication::ldap_unbind( $this->ldapconn );
 				return false;
 			}
 
@@ -1035,17 +1157,16 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			}
 
 			$this->printDebug( "Adding user", NONSENSITIVE );
-			if ( @ldap_add( $this->ldapconn, $this->userdn, $values ) ) {
+			if ( LdapAuthentication::ldap_add( $this->ldapconn, $this->userdn, $values ) ) {
 				$this->printDebug( "Successfully added user", NONSENSITIVE );
-				@ldap_unbind();
+				LdapAuthentication::ldap_unbind( $this->ldapconn );
 				return true;
 			} else {
 				$this->printDebug( "Failed to add user", NONSENSITIVE );
-				@ldap_unbind();
+				LdapAuthentication::ldap_unbind( $this->ldapconn );
 				return false;
 			}
 		} else {
-			$this->printDebug( "Failed to connect; add failed", NONSENSITIVE );
 			return false;
 		}
 	}
@@ -1099,7 +1220,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		// If we aren't pulling preferences, we don't want to accidentally
 		// overwrite anything.
-		if ( $this->getConf( 'RetrievePrefs' ) || $this->getConf( 'Preferences' ) ) {
+		if ( $this->getConf( 'Preferences' ) ) {
 			$this->printDebug( "Setting user preferences.", NONSENSITIVE );
 
 			if ( '' != $this->lang ) {
@@ -1118,12 +1239,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$this->printDebug( "Setting email.", NONSENSITIVE );
 				$user->setEmail( $this->email );
 				$user->confirmEmail();
-			}
-			if ( $this->getConf( 'UniqueBlockLogin' ) || $this->getConf( 'UniqueRenameUser' ) ) {
-
-				if ( '' != $this->externalid ) {
-					$user->setExternalID( $this->externalid );
-				}
 			}
 
 			$saveSettings = true;
@@ -1228,11 +1343,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				} else {
 					$this->connect();
 					if ( $this->ldapconn ) {
-						$this->printDebug( "Successfully connected", NONSENSITIVE );
 						$this->userdn = $this->getSearchString( $username );
 						wfRunHooks( 'SetUsernameAttributeFromLDAP', array( &$this->LDAPUsername, $this->userInfo ) );
-					} else {
-						$this->printDebug( "Failed to connect in getCanonicalName, this is non-critical, but may indicate a misconfiguration.", NONSENSITIVE );
 					}
 				}
 
@@ -1334,14 +1446,14 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$this->printDebug( "Using base: $base", SENSITIVE );
 
-		$entry = @ldap_search( $this->ldapconn, $base, $filter, $attributes );
-		if ( @ldap_count_entries($this->ldapconn,$entry)==0 ) {
+		$entry = LdapAuthentication::ldap_search( $this->ldapconn, $base, $filter, $attributes );
+		if ( LdapAuthentication::ldap_count_entries( $this->ldapconn, $entry ) == 0 ) {
 			$this->printDebug( "Couldn't find an entry", NONSENSITIVE );
 			$this->fetchedUserInfo = false;
 			return '';
 		}
 
-		$this->userInfo = @ldap_get_entries( $this->ldapconn, $entry );
+		$this->userInfo = LdapAuthentication::ldap_get_entries( $this->ldapconn, $entry );
 		$this->fetchedUserInfo = true;
 		if ( isset( $this->userInfo[0][$searchattr] ) ) {
 			$username = $this->userInfo[0][$searchattr][0];
@@ -1381,8 +1493,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		// Don't fetch the same data more than once
 		// TODO: use memcached here
 
-		$entry = @ldap_read( $this->ldapconn, $userdn, "objectclass=*", array( '*', 'memberof' ) );
-		$userInfo = @ldap_get_entries( $this->ldapconn, $entry );
+		$entry = LdapAuthentication::ldap_read( $this->ldapconn, $userdn, "objectclass=*", array( '*', 'memberof' ) );
+		$userInfo = LdapAuthentication::ldap_get_entries( $this->ldapconn, $entry );
 		if ( $userInfo["count"] < 1 ) {
 			return;
 		} else {
@@ -1434,95 +1546,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 						break;
 				}
 			}
-		} elseif ( $this->getConf( 'RetrievePrefs' ) ) {
-			// DEPRECATED. Kept for backwards compatibility.
-			$this->printDebug( "Retrieving preferences", NONSENSITIVE );
-			$this->printDebug( '$wgLDAPRetrievePrefs is a DEPRECATED option, please use $wgLDAPPreferences.', NONSENSITIVE );
-
-			if ( isset( $this->userInfo[0]["mail"] ) ) {
-				$this->email = $this->userInfo[0]["mail"][0];
-			}
-			if ( isset( $this->userInfo[0]["preferredlanguage"] ) ) {
-				$this->lang = $this->userInfo[0]["preferredlanguage"][0];
-			}
-			if ( isset( $this->userInfo[0]["displayname"] ) ) {
-				$this->nickname = $this->userInfo[0]["displayname"][0];
-			}
-			if ( isset( $this->userInfo[0]["cn"] ) ) {
-				$this->realname = $this->userInfo[0]["cn"][0];
-			}
-
-			$this->printDebug( "Retrieved: $this->email, $this->lang, $this->nickname, $this->realname", SENSITIVE );
 		}
-	}
-
-	function synchUsername( $username ) {
-		$this->printDebug( "Entering synchUsername", NONSENSITIVE );
-
-		$this->userInfo = $this->getUserInfo();
-		if ( is_null( $this->userInfo ) ) {
-			$this->printDebug( "Failed to get preferences", NONSENSITIVE );
-		}
-
-		// Are we blocking login/renaming users on unique external ID mismatches?
-		//     *** WARNING ***
-		//     This needs to be fixed before use! This probably does not work correctly
-		//     with all options. It is probably a good idea to refactor the username stuff
-		//     in general (as it is currently somewhat of a kludge). Also, MediaWiki does
-		//     not currently have support for this.
-		//     *** WARNING ***
-		if ( $this->getConf( 'UniqueBlockLogin' ) || $this->getConf( 'UniqueRenameUser' ) ) {
-
-			$this->printDebug( "Checking for username change in LDAP.", SENSITIVE );
-
-			// Get the user's unique attribute from LDAP
-			$ldapuniqueattr = $this->getConf( 'UniqueAttribute' );
-			if ( $ldapuniqueattr ) {
-				$this->externalid = $this->info[0][$ldapuniqueattr][0];
-			} else {
-				return false;
-			}
-
-			$this->printDebug( "Retrieved external id: $this->externalid", SENSITIVE );
-
-			$retrievedusername = User::whoIsExternalID( "$this->externalid" );
-
-			$this->printDebug( "Username (in MediaWiki database) of fetched external id: $retrievedusername", SENSITIVE );
-
-			// See if the username returned from the database matches the username given
-			if ( $retrievedusername != '' && ( $username != $retrievedusername ) ) {
-				if ( $this->getConf( 'UniqueBlockLogin' ) ) {
-
-					$this->printDebug( "Usernames do not match, blocking login.", SENSITIVE );
-					return false;
-				} elseif ( $this->getConf( 'UniqueRenameUser' ) ) {
-
-					$this->printDebug( "Usernames do not match, renaming user in database.", SENSITIVE );
-
-					$olduser = User::newFromName( $retrievedusername );
-					$uid = $olduser->idForName();
-
-					// Ensure we don't require the same class twice
-					if ( !class_exists( 'RenameuserSQL' ) ) {
-						require( 'Renameuser/SpecialRenameuser_body.php' );
-					}
-
-					// Make a new rename user object with: from, to, uid of from
-					$rename = new RenameuserSQL( $retrievedusername, $username, $uid );
-					$rename->rename();
-
-					// For the time being we can't just allow the user to log in
-					// as MediaWiki will try to create the user account after we
-					// do a rename. If we don't return false, the user will get
-					// a database error
-					return false;
-				}
-			}
-
-			$this->printDebug( "Usernames matched or the user doesn't exist in the database yet.", SENSITIVE );
-		}
-
-		return true;
 	}
 
 	/**
@@ -1534,18 +1558,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 */
 	function checkGroups( $username ) {
 		$this->printDebug( "Entering checkGroups", NONSENSITIVE );
-
-		// Old style groups, non-nestable and fairly limited on group type (full DN
-		// versus username). DEPRECATED
-		$groupdn = $this->getConf( 'GroupDN' );
-		if ( $groupdn ) {
-			$this->printDebug( "Checking for (old style) group membership", NONSENSITIVE );
-			// we need to do a subbase search for the entry
-			$filter = "(member=" . $this->getLdapEscapedString( $this->userdn ) . ")";
-			$info = @ldap_get_entries( $this->ldapconn, @ldap_search( $this->ldapconn, $groupdn, $filter ) );
-
-			return ( $info["count"] >= 1 );
-		}
 
 		$excgroups = $this->getConf( 'ExcludedGroups' );
 		if ( $excgroups ) {
@@ -1565,7 +1577,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			}
 		}
 
-		// New style group checking
 		$reqgroups = $this->getConf( 'RequiredGroups' );
 		if ( $reqgroups ) {
 			$this->printDebug( "Checking for (new style) group membership", NONSENSITIVE );
@@ -1647,10 +1658,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				}
 			} else {
 				$this->printDebug( "Searching for the groups", NONSENSITIVE );
-				$this->userLDAPGroups = $this->searchGroups( $usertopass );
+				$this->userLDAPGroups = LdapAuthentication::ldap_searchGroups( $usertopass );
 
 				if ( $this->getConf( 'GroupSearchNestedGroups' ) ) {
-					$this->userLDAPGroups = $this->searchNestedGroups( $this->userLDAPGroups );
+					$this->userLDAPGroups = LdapAuthentication::ldap_searchNestedGroups( $this->userLDAPGroups );
 					$this->printDebug( "Got the following nested groups:", SENSITIVE, $this->userLDAPGroups["dn"] );
 				}
 			}
@@ -1658,7 +1669,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			// Only find all groups if the user has any groups; otherwise, we are
 			// just wasting a search.
 			if ( $this->getConf( 'GroupsPrevail' ) && count( $this->userLDAPGroups ) != 0 ) {
-				$this->allLDAPGroups = $this->searchGroups( '*' );
+				$this->allLDAPGroups = LdapAuthentication::ldap_searchGroups( '*' );
 			}
 		}
 	}
@@ -1686,7 +1697,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$groupstosearch = array( "short" => array(), "dn" => array() );
 		foreach ( $groups["dn"] as $group ) {
-			$returnedgroups = $this->searchGroups( $group );
+			$returnedgroups = LdapAuthentication::ldap_searchGroups( $group );
 			$this->printDebug( "Group $group is in the following groups:", SENSITIVE, $returnedgroups["dn"] );
 			foreach ( $returnedgroups["dn"] as $searchme ) {
 				if ( in_array( $searchme, $searchedgroups["dn"] ) ) {
@@ -1712,8 +1723,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$searchedgroups = array_merge_recursive( $groups, $searchedgroups );
 
-		// Mmmmmm. Tail recursion. Tasty.
-		return $this->searchNestedGroups( $groupstosearch, $searchedgroups );
+		return LdapAuthentication::ldap_searchNestedGroups( $groupstosearch, $searchedgroups );
 	}
 
 	/**
@@ -1753,8 +1763,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		if ( $dn != "*" ) {
 			$PGfilter = "(&(distinguishedName=$value)(objectclass=user))";
 			$this->printDebug( "User Filter: $PGfilter", SENSITIVE );
-			$PGinfo = @ldap_search( $this->ldapconn, $base, $PGfilter );
-			$PGentries = @ldap_get_entries( $this->ldapconn, $PGinfo );
+			$PGinfo = LdapAuthentication::ldap_search( $this->ldapconn, $base, $PGfilter );
+			$PGentries = LdapAuthentication::ldap_get_entries( $this->ldapconn, $PGinfo );
 			if ( $PGentries ) {
 				$Usid = $PGentries[0]['objectsid'][0];
 				$PGrid = $PGentries[0]['primarygroupid'][0];
@@ -1777,8 +1787,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				}
 				$PGfilter = "(&(objectSid=$PGsid_string)(objectclass=$objectclass))";
 				$this->printDebug( "Primary Group Filter: $PGfilter", SENSITIVE );
-				$info = @ldap_search( $this->ldapconn, $base, $PGfilter );
-				$PGentries = @ldap_get_entries( $this->ldapconn, $info );
+				$info = LdapAuthentication::ldap_search( $this->ldapconn, $base, $PGfilter );
+				$PGentries = LdapAuthentication::ldap_get_entries( $this->ldapconn, $info );
 				array_shift( $PGentries );
 				$dnMember = strtolower( $PGentries[0]['dn'] );
 				$groups["dn"][] = $dnMember;
@@ -1798,7 +1808,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$this->printDebug( "Search string: $filter", SENSITIVE );
 
-		$info = @ldap_search( $this->ldapconn, $base, $filter );
+		$info = LdapAuthentication::ldap_search( $this->ldapconn, $base, $filter );
 		if ( !$info ) {
 			$this->printDebug( "No entries returned from search.", SENSITIVE );
 
@@ -1807,7 +1817,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return array( "short" => array(), "dn" => array() );
 		}
 
-		$entries = @ldap_get_entries( $this->ldapconn, $info );
+		$entries = LdapAuthentication::ldap_get_entries( $this->ldapconn, $info );
 
 		if ( $entries ){
 			// We need to shift because the first entry will be a count
@@ -1985,13 +1995,12 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	function bindAs( $userdn = null, $password = null ) {
 		// Let's see if the user can authenticate.
 		if ( $userdn == null || $password == null ) {
-			$bind = @ldap_bind( $this->ldapconn );
+			$bind = LdapAuthentication::ldap_bind( $this->ldapconn );
 		} else {
-			$bind = @ldap_bind( $this->ldapconn, $userdn, $password );
+			$bind = LdapAuthentication::ldap_bind( $this->ldapconn, $userdn, $password );
 		}
 		if ( !$bind ) {
 			$this->printDebug( "Failed to bind as $userdn", NONSENSITIVE );
-			$this->printDebug( "with password: $password", HIGHLYSENSITIVE );
 			return false;
 		}
 		$this->boundAs = $userdn;
@@ -2022,9 +2031,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	function getLdapEscapedString( $string ) {
 		// Make the string LDAP compliant by escaping *, (, ) , \ & NUL
 		return str_replace(
-			array( "\\", "(", ")", "*", "\x00" ), // replace this
-			array( "\\5c", "\\28", "\\29", "\\2a", "\\00" ), // with this
-			$string // in this
+			array( "\\", "(", ")", "*", "\x00" ),
+			array( "\\5c", "\\28", "\\29", "\\2a", "\\00" ),
+			$string
 			);
 	}
 
@@ -2068,11 +2077,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	}
 }
 
-// The following was derived from the SSL Authentication plugin
+// The auto-auth code was originally derived from the SSL Authentication plugin
 // http://www.mediawiki.org/wiki/SSL_authentication
 
 /**
- * Sets up the SSL authentication piece of the LDAP plugin.
+ * Sets up the auto-authentication piece of the LDAP plugin.
  *
  * @access public
  */

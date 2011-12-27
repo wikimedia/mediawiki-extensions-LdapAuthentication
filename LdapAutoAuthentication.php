@@ -26,6 +26,7 @@ class LdapAutoAuthentication {
 
 		$autoauthname = $wgAuth->getConf( 'AutoAuthUsername' );
 		$wgAuth->printDebug( "Calling authenticate with username ($autoauthname).", NONSENSITIVE );
+
 		// The user hasn't already been authenticated, let's check them
 		$authenticated = $wgAuth->authenticate( $autoauthname );
 		if ( !$authenticated ) {
@@ -35,7 +36,7 @@ class LdapAutoAuthentication {
 			return false;
 		}
 
-		// We need the username that MediaWiki will always use, *not* the one we
+		// We need the username that MediaWiki will always use, not necessarily the one we
 		// get from LDAP.
 		$mungedUsername = $wgAuth->getCanonicalName( $autoauthname );
 
@@ -111,4 +112,5 @@ class LdapAutoAuthentication {
 
 		return true;
 	}
+
 }
