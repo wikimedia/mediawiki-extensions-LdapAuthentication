@@ -326,8 +326,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param string $preference
 	 * @return mixed
 	 */
-	public function getConf( $preference ) {
-		$domain = $this->getSessionDomain();
+	public function getConf( $preference, $domain='' ) {
+		if ( !$domain ) {
+			$domain = $this->getSessionDomain();
+		}
 		switch ( $preference ) {
 		case 'ServerNames':
 			global $wgLDAPServerNames;
@@ -532,11 +534,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return bool
 	 */
 	public function connect( $domain='' ) {
-		// FIXME: $domain isn't used
-		if ( $domain == '' ) {
-			$domain = $this->getSessionDomain();
-		}
-
 		$this->printDebug( "Entering Connect", NONSENSITIVE );
 
 		if ( !function_exists( 'ldap_connect' ) ) {
@@ -547,7 +544,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		}
 
 		// Set the server string depending on whether we use ssl or not
-		$encryptionType = $this->getConf( 'EncryptionType' );
+		$encryptionType = $this->getConf( 'EncryptionType', $domain );
 		switch( $encryptionType ) {
 			case "ldapi":
 				$this->printDebug( "Using ldapi", SENSITIVE );
@@ -565,10 +562,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		// Make a space separated list of server strings with the connection type
 		// string added.
 		$servers = "";
-		$tmpservers = $this->getConf( 'ServerNames' );
+		$tmpservers = $this->getConf( 'ServerNames', $domain );
 		$tok = strtok( $tmpservers, " " );
 		while ( $tok ) {
-			$servers = $servers . " " . $serverpre . $tok . ":" . $this->getConf( 'Port' );
+			$servers = $servers . " " . $serverpre . $tok . ":" . $this->getConf( 'Port', $domain );
 			$tok = strtok( " " );
 		}
 		$servers = rtrim( $servers );
