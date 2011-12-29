@@ -212,18 +212,18 @@ $messages['ms'] = array(
 	'ldapauthentication-desc' => 'Pemalam pengesahan LDAP dengan sokongan untuk berbilang kaedah pengesahan LDAP',
 );
 
-/** Dutch (Nederlands)
- * @author Siebrand
- */
-$messages['nl'] = array(
-	'ldapauthentication-desc' => 'LDAP-authenticatieplug-in met ondersteuning voor meerdere LDAP-authenticatiemethoden',
-);
-
 /** Norwegian (bokmål)‬ (‪Norsk (bokmål)‬)
  * @author Nghtwlkr
  */
 $messages['nb'] = array(
 	'ldapauthentication-desc' => 'Programutvidelse for LDAP-autentisering med støtte for flere LDAP-autentiseringsmetoder',
+);
+
+/** Dutch (Nederlands)
+ * @author Siebrand
+ */
+$messages['nl'] = array(
+	'ldapauthentication-desc' => 'LDAP-authenticatieplug-in met ondersteuning voor meerdere LDAP-authenticatiemethoden',
 );
 
 /** Occitan (Occitan)
@@ -321,5 +321,12 @@ $messages['tr'] = array(
  */
 $messages['uk'] = array(
 	'ldapauthentication-desc' => 'Плагін LDAP-аутентифікації з підтримкою декількох методів перевірки автентичності LDAP',
+);
+
+/** Vietnamese (Tiếng Việt)
+ * @author Minh Nguyen
+ */
+$messages['vi'] = array(
+	'ldapauthentication-desc' => 'Phần bổ trợ xác thực LDAP hỗ trợ nhiều phương pháp xác thực LDAP',
 );
 
