@@ -330,3 +330,10 @@ $messages['vi'] = array(
 	'ldapauthentication-desc' => 'Phần bổ trợ xác thực LDAP hỗ trợ nhiều phương pháp xác thực LDAP',
 );
 
+/** Simplified Chinese (‪中文(简体)‬)
+ * @author Yanmiao liu
+ */
+$messages['zh-hans'] = array(
+	'ldapauthentication-desc' => '具有多种LDAP认证方法支持的LDAP认证插件',
+);
+
