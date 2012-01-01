@@ -99,6 +99,13 @@ $messages['dsb'] = array(
 	'ldapauthentication-desc' => 'Tykac awtentifikacije LDAP z pódpěru za někotare metody LDAP-awtentifikacije',
 );
 
+/** Esperanto (Esperanto)
+ * @author Blahma
+ */
+$messages['eo'] = array(
+	'ldapauthentication-desc' => 'LDAP-aŭtentiga kromprogramo kun subteno de pluraj LDAP-aŭtentigaj metodoj',
+);
+
 /** Spanish (Español)
  * @author Translationista
  */
