@@ -344,3 +344,10 @@ $messages['zh-hans'] = array(
 	'ldapauthentication-desc' => '具有多种LDAP认证方法支持的LDAP认证插件',
 );
 
+/** Traditional Chinese (‪中文(繁體)‬)
+ * @author Anakmalaysia
+ */
+$messages['zh-hant'] = array(
+	'ldapauthentication-desc' => '具有多種LDAP認證方法支持的LDAP認證外掛程式',
+);
+
