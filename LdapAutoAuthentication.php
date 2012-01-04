@@ -45,7 +45,6 @@ class LdapAutoAuthentication {
 		$mungedUsername = $wgAuth->getCanonicalName( $autoauthname );
 
 		$wgAuth->printDebug( "User exists in LDAP; finding the user by name ($mungedUsername) in MediaWiki.", NONSENSITIVE );
-
 		$localId = User::idFromName( $mungedUsername );
 		$wgAuth->printDebug( "Got id ($localId).", NONSENSITIVE );
 
@@ -86,19 +85,15 @@ class LdapAutoAuthentication {
 		}
 
 		$wgAuth->printDebug( "User does not exist in local database; creating.", NONSENSITIVE );
-
 		// Checks passed, create the user
 		$user->loadDefaults( $mungedUsername );
 		$user->addToDatabase();
-
 		$wgAuth->initUser( $user, true );
 		$user->setCookies();
 		wfSetupSession();
-
 		# Update user count
 		$ssUpdate = new SiteStatsUpdate( 0, 0, 0, 0, 1 );
 		$ssUpdate->doUpdate();
-
 		# Notify hooks (e.g. Newuserlog)
 		wfRunHooks( 'AuthPluginAutoCreate', array( $user ) );
 
@@ -116,10 +111,9 @@ class LdapAutoAuthentication {
 		 * @var $wgAuth LdapAuthenticationPlugin
 		 */
 		global $wgAuth;
+
 		$wgAuth->printDebug( "Entering NoLogout.", NONSENSITIVE );
-
 		unset( $personal_urls['logout'] );
-
 		return true;
 	}
 
