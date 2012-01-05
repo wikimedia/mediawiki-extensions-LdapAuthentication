@@ -1259,6 +1259,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			}
 		}
 
+		$searchattr = $this->getConf( 'SearchAttribute' );
 		// we need to do a subbase search for the entry
 		$filter = "(" . $searchattr . "=" . $this->getLdapEscapedString( $username ) . ")";
 		$this->printDebug( "Created a regular filter: $filter", SENSITIVE );
