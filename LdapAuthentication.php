@@ -324,7 +324,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		switch ( $preference ) {
 		case 'ServerNames':
 			global $wgLDAPServerNames;
-			return self::setOrDefault( $wgLDAPServerNames, $domain, array() );
+			return self::setOrDefault( $wgLDAPServerNames, $domain );
 		case 'UseLocal':
 			global $wgLDAPUseLocal;
 			return $wgLDAPUseLocal;
