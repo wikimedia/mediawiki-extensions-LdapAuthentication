@@ -860,10 +860,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			}
 
 			$values = array();
-			if ( '' != $this->email ) { $values["mail"] = $this->email; }
-			if ( '' != $this->nickname ) { $values["displayname"] = $this->nickname; }
-			if ( '' != $this->realname ) { $values["cn"] = $this->realname; }
-			if ( '' != $this->lang ) { $values["preferredlanguage"] = $this->lang; }
+			if ( is_string( $this->email ) ) { $values["mail"] = $this->email; }
+			if ( is_string( $this->nickname ) ) { $values["displayname"] = $this->nickname; }
+			if ( is_string( $this->realname ) ) { $values["cn"] = $this->realname; }
+			if ( is_string( $this->lang ) ) { $values["preferredlanguage"] = $this->lang; }
 
 			if ( count( $values ) && LdapAuthenticationPlugin::ldap_modify( $this->ldapconn, $this->userdn, $values ) ) {
 				// We changed the user, we need to invalidate the memcache key
@@ -980,8 +980,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$values["uid"] = $username;
 			// sn is required for objectclass inetorgperson
 			$values["sn"] = $username;
-			if ( $this->email ) { $values["mail"] = $this->email; }
-			if ( $this->realname ) { $values["cn"] = $this->realname; }
+			if ( is_string( $this->email ) ) { $values["mail"] = $this->email; }
+			if ( is_string( $this->realname ) ) { $values["cn"] = $this->realname; }
 				else { $values["cn"] = $username; }
 			$values["userpassword"] = $pass;
 			$values["objectclass"] = array( "inetorgperson" );
@@ -1058,19 +1058,19 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		if ( $this->getConf( 'Preferences' ) ) {
 			$this->printDebug( "Setting user preferences.", NONSENSITIVE );
-			if ( $this->lang ) {
+			if ( is_string( $this->lang ) ) {
 				$this->printDebug( "Setting language.", NONSENSITIVE );
 				$user->setOption( 'language', $this->lang );
 			}
-			if ( $this->nickname ) {
+			if ( is_string( $this->nickname ) ) {
 				$this->printDebug( "Setting nickname.", NONSENSITIVE );
 				$user->setOption( 'nickname', $this->nickname );
 			}
-			if ( $this->realname ) {
+			if ( is_string( $this->realname ) ) {
 				$this->printDebug( "Setting realname.", NONSENSITIVE );
 				$user->setRealName( $this->realname );
 			}
-			if ( $this->email ) {
+			if ( is_string( $this->email ) ) {
 				$this->printDebug( "Setting email.", NONSENSITIVE );
 				$user->setEmail( $this->email );
 				$user->confirmEmail();
