@@ -1156,7 +1156,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$key = wfMemcKey( 'ldapauthentication', 'canonicalname', $username );
 		$canonicalname = $username;
 		if ( $username != '' ) {
-			$this->printDebug( "Username isn't empty.", NONSENSITIVE );
+			$this->printDebug( "Username is: $username", NONSENSITIVE );
 			if ( $this->getConf( 'LowercaseUsernameScheme' ) ) {
 				$canonicalname = strtolower( $canonicalname );
 			} else {
@@ -1169,7 +1169,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 						return $userInfo["canonicalname"];
 					}
 				} else {
-					if ( $this->connect() ) {
+					if ( $this->validDomain( $this->getSessionDomain() ) && $this->connect() ) {
 						// Try to pull the username from LDAP. In the case of straight binds,
 						// try to fetch the username by search before bind.
 						$this->userdn = $this->getUserDN( $username, true );
