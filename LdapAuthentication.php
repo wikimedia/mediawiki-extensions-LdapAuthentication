@@ -674,7 +674,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$aa = $this->getConf( 'AuthAttribute' ); 
 			if ( $aa ) {
 				$this->printDebug( "Checking for auth attributes: $aa", NONSENSITIVE );
-				if ( !isset( $this->userInfo ) || !isset( $this->userInfo[0][$aa] ) ) {
+				$filter = "(" . $aa . ")";
+				$attributes = array( "dn" );
+				$entry = LdapAuthenticationPlugin::ldap_read( $this->ldapconn, $this->userdn, $filter, $attributes );
+				$info = LdapAuthenticationPlugin::ldap_get_entries( $this->ldapconn, $entry );
+				if ( $info["count"] < 1 ) {
 					$this->printDebug( "Failed auth attribute check", NONSENSITIVE );
 					LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
 					$this->markAuthFailed();
@@ -993,11 +997,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$this->printDebug( "Failed to add user because LDAPSetCreationValues returned false", NONSENSITIVE );
 				LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
 				return false;
-			}
-
-			$aa = $this->getConf( 'AuthAttribute' );
-			if ( $aa ) {
-				$values[$aa] = "true";
 			}
 
 			$this->printDebug( "Adding user", NONSENSITIVE );
