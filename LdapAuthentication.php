@@ -1427,6 +1427,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	private function getGroups( $username ) {
 		$this->printDebug( "Entering getGroups", NONSENSITIVE );
 
+		// Ensure userLDAPGroups is set, no matter what
+		$this->userLDAPGroups = array( "dn"=> array(), "short"=>array() );
+
 		// Find groups
 		if ( $this->getConf( 'RequiredGroups' ) || $this->getConf( 'UseLDAPGroups' ) ) {
 			$this->printDebug( "Retrieving LDAP group membership", NONSENSITIVE );
