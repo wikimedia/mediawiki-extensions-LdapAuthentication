@@ -186,9 +186,10 @@ $messages['it'] = array(
 
 /** Japanese (日本語)
  * @author Aotake
+ * @author Shirayuki
  */
 $messages['ja'] = array(
-	'ldapauthentication-desc' => '複数のLDAP認証方式をサポートするLDAP認証プラグイン',
+	'ldapauthentication-desc' => '複数の LDAP 認証方式対応の LDAP 認証プラグイン',
 );
 
 /** Colognian (Ripoarisch)
