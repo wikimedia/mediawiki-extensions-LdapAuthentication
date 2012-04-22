@@ -1894,7 +1894,7 @@ function AutoAuthSetup() {
 
 	$wgAuth->printDebug( "Entering AutoAuthSetup.", NONSENSITIVE );
 
-	if ( !$wgAuth->getConf( 'AutoAuthUsername' ) ) {
+	if ( $wgAuth->getConf( 'AutoAuthUsername' ) !== "" ) {
 		$wgAuth->printDebug( "wgLDAPAutoAuthUsername is not null, adding hooks.", NONSENSITIVE );
 		$wgHooks['UserLoadAfterLoadFromSession'][] = 'LdapAutoAuthentication::Authenticate';
 
