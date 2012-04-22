@@ -951,7 +951,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$this->email = $user->getEmail();
 		$this->realname = $user->getRealName();
 		$username = $user->getName();
-		if ( $this->getConf( 'LowercaseUsernameScheme' ) ) {
+		if ( $this->getConf( 'LowerCaseUsernameScheme' ) ) {
 			$username = strtolower( $username );
 		}
 		$pass = $this->getPasswordHash( $password );
@@ -1156,7 +1156,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$canonicalname = $username;
 		if ( $username != '' ) {
 			$this->printDebug( "Username is: $username", NONSENSITIVE );
-			if ( $this->getConf( 'LowercaseUsernameScheme' ) ) {
+			if ( $this->getConf( 'LowerCaseUsernameScheme' ) ) {
 				$canonicalname = strtolower( $canonicalname );
 			} else {
 				# Fetch username, so that we can possibly use it.
