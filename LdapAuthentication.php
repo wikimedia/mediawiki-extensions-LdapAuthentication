@@ -652,6 +652,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 					$this->markAuthFailed();
 					return false;
 				}
+				$result = true;
+				wfRunHooks( 'ChainAuth', array( $username, $password, &$result ) );
+				if ( $result == false ) {
+					return false;
+				}
 
 				$this->printDebug( "Bound successfully", NONSENSITIVE );
 
