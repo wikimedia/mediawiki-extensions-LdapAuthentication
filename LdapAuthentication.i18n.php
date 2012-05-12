@@ -87,9 +87,10 @@ $messages['cs'] = array(
 
 /** German (Deutsch)
  * @author Imre
+ * @author Kghbln
  */
 $messages['de'] = array(
-	'ldapauthentication-desc' => 'Plug-in für LDAP-Authentifizierung mit Unterstützung einiger LDAP-Authentifizierungsmethoden',
+	'ldapauthentication-desc' => 'Ermöglicht die LDAP-Authentifizierung mit Hilfe mehrerer Authentifizierungsmethoden',
 );
 
 /** Lower Sorbian (Dolnoserbski)
