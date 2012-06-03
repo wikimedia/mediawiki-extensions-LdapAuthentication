@@ -193,6 +193,13 @@ $messages['ja'] = array(
 	'ldapauthentication-desc' => '複数の LDAP 認証方式対応の LDAP 認証プラグイン',
 );
 
+/** Korean (한국어)
+ * @author 아라
+ */
+$messages['ko'] = array(
+	'ldapauthentication-desc' => '여러 LDAP 인증 방법에 대해 지원하는 LDAP 인증 플러그인',
+);
+
 /** Colognian (Ripoarisch)
  * @author Purodha
  */
