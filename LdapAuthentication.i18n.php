@@ -43,7 +43,7 @@ $messages['ar'] = array(
 	'ldapauthentication-desc' => 'إضافة تحقيق LDAP بدعم لوسائل تحقيق LDAP متعددة',
 );
 
-/** Asturian (Asturianu)
+/** Asturian (asturianu)
  * @author Xuacu
  */
 $messages['ast'] = array(
@@ -57,28 +57,28 @@ $messages['be-tarask'] = array(
 	'ldapauthentication-desc' => 'Дапаўненьне LDAP-аўтэнтыфікацыі з падтрымкай некалькіх мэтадаў аўтэнтыфікацыі LDAP',
 );
 
-/** Breton (Brezhoneg)
+/** Breton (brezhoneg)
  * @author Fulup
  */
 $messages['br'] = array(
 	'ldapauthentication-desc' => 'Adveziant gwiriekaat LDAP ennañ meur a hentenn wiriekaat LDAP',
 );
 
-/** Bosnian (Bosanski)
+/** Bosnian (bosanski)
  * @author CERminator
  */
 $messages['bs'] = array(
 	'ldapauthentication-desc' => 'Proširenje LDAP autentifikacije sa podrškom za mnoge metode LDAP autentifikacije',
 );
 
-/** Catalan (Català)
+/** Catalan (català)
  * @author Paucabot
  */
 $messages['ca'] = array(
 	'ldapauthentication-desc' => "Connector d'autentificació LDAP amb suport per a diversos mètodes d'autenticació LDAP",
 );
 
-/** Czech (Česky)
+/** Czech (česky)
  * @author Mormegil
  */
 $messages['cs'] = array(
@@ -107,21 +107,21 @@ $messages['eo'] = array(
 	'ldapauthentication-desc' => 'LDAP-aŭtentiga kromprogramo kun subteno de pluraj LDAP-aŭtentigaj metodoj',
 );
 
-/** Spanish (Español)
+/** Spanish (español)
  * @author Translationista
  */
 $messages['es'] = array(
 	'ldapauthentication-desc' => 'Complemento de autentificación LDAP con apoyo de múltiples métodos de autentificación LDAP',
 );
 
-/** Finnish (Suomi)
+/** Finnish (suomi)
  * @author Centerlink
  */
 $messages['fi'] = array(
 	'ldapauthentication-desc' => 'LDAP-todentamisliitännäinen useiden LDAP-todennustapojen tuella',
 );
 
-/** French (Français)
+/** French (français)
  * @author IAlex
  * @author Urhixidur
  */
@@ -157,14 +157,14 @@ $messages['hsb'] = array(
 	'ldapauthentication-desc' => 'Tykač awtentifikacije LDAP z podpěru za wjacore metody LDAP-awtentifikacije',
 );
 
-/** Hungarian (Magyar)
+/** Hungarian (magyar)
  * @author Glanthor Reviol
  */
 $messages['hu'] = array(
 	'ldapauthentication-desc' => 'LDAP hitelesítési bővítmény többféle LDAP azonosítási módszer támogatásával',
 );
 
-/** Interlingua (Interlingua)
+/** Interlingua (interlingua)
  * @author McDutchie
  */
 $messages['ia'] = array(
@@ -178,7 +178,7 @@ $messages['id'] = array(
 	'ldapauthentication-desc' => 'Pengaya otentikasi LDAP dengan dukungan untuk berbagai metode otentikasi LDAP',
 );
 
-/** Italian (Italiano)
+/** Italian (italiano)
  * @author HalphaZ
  */
 $messages['it'] = array(
@@ -214,7 +214,7 @@ $messages['lb'] = array(
 	'ldapauthentication-desc' => 'Authentifikatiouns-Plugin fir LDAP mat Ënnerstëtzung fir multipel LDAP Authentifikatiouns-Methoden',
 );
 
-/** Macedonian (Македонски)
+/** Macedonian (македонски)
  * @author Bjankuloski06
  */
 $messages['mk'] = array(
@@ -242,14 +242,14 @@ $messages['nl'] = array(
 	'ldapauthentication-desc' => 'LDAP-authenticatieplug-in met ondersteuning voor meerdere LDAP-authenticatiemethoden',
 );
 
-/** Occitan (Occitan)
+/** Occitan (occitan)
  * @author Cedric31
  */
 $messages['oc'] = array(
 	'ldapauthentication-desc' => "Plugin d'autentificacion LDAP amb supòrt de metòdes d'autentificacion LDAP multiples",
 );
 
-/** Polish (Polski)
+/** Polish (polski)
  * @author Sp5uhe
  */
 $messages['pl'] = array(
@@ -264,54 +264,54 @@ $messages['pms'] = array(
 	'ldapauthentication-desc' => "Plugin për l'autenticassion LDAP con apògg për vàire manere d'autenticassion LDAP",
 );
 
-/** Portuguese (Português)
+/** Portuguese (português)
  * @author Hamilton Abreu
  */
 $messages['pt'] = array(
 	'ldapauthentication-desc' => "''Plugin'' de autenticação LDAP, com suporte para vários métodos de autenticação",
 );
 
-/** Brazilian Portuguese (Português do Brasil)
+/** Brazilian Portuguese (português do Brasil)
  * @author Giro720
  */
 $messages['pt-br'] = array(
 	'ldapauthentication-desc' => "''Plugin'' de autenticação LDAP, com suporte para vários métodos de autenticação",
 );
 
-/** Tarandíne (Tarandíne)
+/** tarandíne (tarandíne)
  * @author Joetaras
  */
 $messages['roa-tara'] = array(
 	'ldapauthentication-desc' => "plugin de autendicazione LDAP cu 'u supporte pe autendicaziune multeple de metode LDAP",
 );
 
-/** Russian (Русский)
+/** Russian (русский)
  * @author Александр Сигачёв
  */
 $messages['ru'] = array(
 	'ldapauthentication-desc' => 'Плагин LDAP-аутентификации с поддержкой нескольких методов проверки подлинности LDAP',
 );
 
-/** Slovak (Slovenčina)
+/** Slovak (slovenčina)
  * @author Helix84
  */
 $messages['sk'] = array(
 	'ldapauthentication-desc' => 'Zásuvný modul na autentifikáciu prostredníctvom LDAP s podporou viacerých metód LDAP',
 );
 
-/** Serbian (Cyrillic script) (‪Српски (ћирилица)‬)
+/** Serbian (Cyrillic script) (‪српски (ћирилица)‬)
  * @author Михајло Анђелковић
  */
 $messages['sr-ec'] = array(
 	'ldapauthentication-desc' => 'Плагин за LDAP ауторизацију, са подршком за више метода LDAP ауторизације',
 );
 
-/** Serbian (Latin script) (‪Srpski (latinica)‬) */
+/** Serbian (Latin script) (‪srpski (latinica)‬) */
 $messages['sr-el'] = array(
 	'ldapauthentication-desc' => 'Plagin za LDAP autorizaciju, sa podrškom za više metoda LDAP autorizacije',
 );
 
-/** Swedish (Svenska)
+/** Swedish (svenska)
  * @author Boivie
  */
 $messages['sv'] = array(
@@ -332,7 +332,7 @@ $messages['tr'] = array(
 	'ldapauthentication-desc' => 'Birden çok LDAP kimlik doğrulama yöntemini destekleyen LDAP kimlik doğrulama eklentisi',
 );
 
-/** Ukrainian (Українська)
+/** Ukrainian (українська)
  * @author Ytsukeng Fyvaprol
  */
 $messages['uk'] = array(
@@ -346,14 +346,14 @@ $messages['vi'] = array(
 	'ldapauthentication-desc' => 'Phần bổ trợ xác thực LDAP hỗ trợ nhiều phương pháp xác thực LDAP',
 );
 
-/** Simplified Chinese (‪中文(简体)‬)
+/** Simplified Chinese (‪中文（简体）‬)
  * @author Yanmiao liu
  */
 $messages['zh-hans'] = array(
 	'ldapauthentication-desc' => '具有多种LDAP认证方法支持的LDAP认证插件',
 );
 
-/** Traditional Chinese (‪中文(繁體)‬)
+/** Traditional Chinese (‪中文（繁體）‬)
  * @author Anakmalaysia
  */
 $messages['zh-hant'] = array(
