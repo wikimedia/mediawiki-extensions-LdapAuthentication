@@ -299,19 +299,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	}
 
 	/**
-	 * Get the user's domain as defined in the user's session.
-	 *
-	 * @return string
-	 */
-	public function getSessionDomain() {
-		if ( isset( $_SESSION['wsDomain'] ) ) {
-			return $_SESSION['wsDomain'];
-		} else {
-			return '';
-		}
-	}
-
-	/**
 	 * Get configuration defined by admin, or return default value
 	 *
 	 * @param string $preference
@@ -319,7 +306,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 */
 	public function getConf( $preference, $domain='' ) {
 		if ( !$domain ) {
-			$domain = $this->getSessionDomain();
+			$domain = $this->getDomain();
 		}
 		switch ( $preference ) {
 		case 'ServerNames':
@@ -599,7 +586,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$this->printDebug( "Entering authenticate for username $username", NONSENSITIVE );
 
 		// We don't handle local authentication
-		if ( 'local' == $this->getSessionDomain() ) {
+		if ( 'local' == $this->getDomain() ) {
 			$this->printDebug( "User is using a local domain", SENSITIVE );
 			return false;
 		}
@@ -782,7 +769,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	public function setPassword( $user, $password ) {
 		$this->printDebug( "Entering setPassword", NONSENSITIVE );
 
-		if ( $this->getSessionDomain() == 'local' ) {
+		if ( $this->getDomain() == 'local' ) {
 			$this->printDebug( "User is using a local domain", NONSENSITIVE );
 
 			// We don't set local passwords, but we don't want the wiki
@@ -841,7 +828,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		global $wgMemc;
 
 		$this->printDebug( "Entering updateExternalDB", NONSENSITIVE );
-		if ( !$this->getConf( 'UpdateLDAP' ) || $this->getSessionDomain() == 'local' ) {
+		if ( !$this->getConf( 'UpdateLDAP' ) || $this->getDomain() == 'local' ) {
 			$this->printDebug( "Either the user is using a local domain, or the wiki isn't allowing updates", NONSENSITIVE );
 			// We don't handle local preferences, but we don't want the
 			// wiki to return an error.
@@ -909,7 +896,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$this->printDebug( "Entering allowPasswordChange", NONSENSITIVE );
 
 		// Local domains need to be able to change passwords
-		if ( $this->getConf( 'UseLocal' ) && 'local' == $this->getSessionDomain() ) {
+		if ( $this->getConf( 'UseLocal' ) && 'local' == $this->getDomain() ) {
 			return true;
 		}
 		if ( $this->getConf( 'UpdateLDAP' ) || $this->getConf( 'MailPassword' ) ) {
@@ -931,7 +918,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	public function addUser( $user, $password, $email = '', $realname = '' ) {
 		$this->printDebug( "Entering addUser", NONSENSITIVE );
 
-		if ( !$this->getConf( 'AddLDAPUsers' ) || 'local' == $this->getSessionDomain() ) {
+		if ( !$this->getConf( 'AddLDAPUsers' ) || 'local' == $this->getDomain() ) {
 			$this->printDebug( "Either the user is using a local domain, or the wiki isn't allowing users to be added to LDAP", NONSENSITIVE );
 
 			// Tell the wiki not to return an error.
@@ -1027,6 +1014,32 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	}
 
 	/**
+	 * Get the user's domain
+	 *
+	 * @return string
+	 */
+	public function getDomain() {
+		global $wgUser;
+
+		$this->printDebug( "Entering getDomain", NONSENSITIVE );
+
+		# First check if we already have a valid domain set
+		if ( isset( $_SESSION['wsDomain'] ) && $_SESSION['wsDomain'] != 'invaliddomain' ) {
+			$this->printDebug( "Pulling domain from session.", NONSENSITIVE );
+			return $_SESSION['wsDomain'];
+		}
+		# If the session domain isn't set, the user may have been logged
+		# in with a token, check the user options.
+		if ( $wgUser->isLoggedIn() && $wgUser->getToken( false ) ) {
+			$this->printDebug( "Pulling domain from user options.", NONSENSITIVE );
+			return $wgUser->getOption( 'ldapdomain' );
+		}
+		# The user must be using an invalid domain
+		$this->printDebug( "No domain found, returning invaliddomain", NONSENSITIVE );
+		return 'invaliddomain';
+	}
+
+	/**
 	 * Check to see if the specific domain is a valid domain.
 	 * Return true if the domain is valid.
 	 *
@@ -1058,8 +1071,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return;
 		}
 
-		$saveSettings = false;
-
 		if ( $this->getConf( 'Preferences' ) ) {
 			$this->printDebug( "Setting user preferences.", NONSENSITIVE );
 			if ( is_string( $this->lang ) ) {
@@ -1079,22 +1090,24 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$user->setEmail( $this->email );
 				$user->confirmEmail();
 			}
-			$saveSettings = true;
 		}
 
 		if ( $this->getConf( 'UseLDAPGroups' ) ) {
 			$this->printDebug( "Setting user groups.", NONSENSITIVE );
 			$this->setGroups( $user );
-			$saveSettings = true;
+		}
+
+		# We must set a user option if we want token based logins to work
+		if ( $user->getToken( false ) ) {
+			$this->printDebug( "User has a token, setting domain in user options.", NONSENSITIVE );
+			$user->setOption( 'ldapdomain', $_SESSION['wsDomain'] );
 		}
 
 		# Let other extensions update the user
 		wfRunHooks( 'LDAPUpdateUser', array( $this ) );
 
-		if ( $saveSettings ) {
-			$this->printDebug( "Saving user settings.", NONSENSITIVE );
-			$user->saveSettings();
-		}
+		$this->printDebug( "Saving user settings.", NONSENSITIVE );
+		$user->saveSettings();
 	}
 
 	/**
@@ -1111,7 +1124,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$this->printDebug( "User didn't successfully authenticate, exiting.", NONSENSITIVE );
 			return null;
 		}
-		if ( 'local' == $this->getSessionDomain() ) {
+		if ( 'local' == $this->getDomain() ) {
 			$this->printDebug( "User is using a local domain", NONSENSITIVE );
 			return null;
 		}
@@ -1173,7 +1186,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 						return $userInfo["canonicalname"];
 					}
 				} else {
-					if ( $this->validDomain( $this->getSessionDomain() ) && $this->connect() ) {
+					if ( $this->validDomain( $this->getDomain() ) && $this->connect() ) {
 						// Try to pull the username from LDAP. In the case of straight binds,
 						// try to fetch the username by search before bind.
 						$this->userdn = $this->getUserDN( $username, true );
@@ -1822,8 +1835,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @access private
 	 */
 	function useAutoAuth() {
-		$this->printDebug( "", NONSENSITIVE );
-		return $this->getSessionDomain() == $this->getConf( 'AutoAuthDomain' );
+		return $this->getDomain() == $this->getConf( 'AutoAuthDomain' );
 	}
 
 	/**
