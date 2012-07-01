@@ -50,7 +50,7 @@ $messages['ast'] = array(
 	'ldapauthentication-desc' => "Complemento p'autenticación LDAP con sofitu pa dellos métodos d'autenticación LDAP",
 );
 
-/** Belarusian (Taraškievica orthography) (‪Беларуская (тарашкевіца)‬)
+/** Belarusian (Taraškievica orthography) (‪беларуская (тарашкевіца)‬)
  * @author EugeneZelenko
  */
 $messages['be-tarask'] = array(
@@ -93,7 +93,7 @@ $messages['de'] = array(
 	'ldapauthentication-desc' => 'Ermöglicht die LDAP-Authentifizierung mit Hilfe mehrerer Authentifizierungsmethoden',
 );
 
-/** Lower Sorbian (Dolnoserbski)
+/** Lower Sorbian (dolnoserbski)
  * @author Michawiki
  */
 $messages['dsb'] = array(
@@ -129,7 +129,7 @@ $messages['fr'] = array(
 	'ldapauthentication-desc' => 'Extension d’authentification LDAP prenant en charge de multiples méthodes d’authentification LDAP',
 );
 
-/** Galician (Galego)
+/** Galician (galego)
  * @author Toliño
  */
 $messages['gl'] = array(
@@ -150,7 +150,7 @@ $messages['he'] = array(
 	'ldapauthentication-desc' => 'תוסף אימות LDAP עם תמיכה במספר שיטות LDAP לאימות',
 );
 
-/** Upper Sorbian (Hornjoserbsce)
+/** Upper Sorbian (hornjoserbsce)
  * @author Michawiki
  */
 $messages['hsb'] = array(
