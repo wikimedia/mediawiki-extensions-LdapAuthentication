@@ -228,7 +228,7 @@ $messages['ms'] = array(
 	'ldapauthentication-desc' => 'Pemalam pengesahan LDAP dengan sokongan untuk berbilang kaedah pengesahan LDAP',
 );
 
-/** Norwegian (bokmål)‬ (‪Norsk (bokmål)‬)
+/** Norwegian Bokmål (‪norsk (bokmål)‬)
  * @author Nghtwlkr
  */
 $messages['nb'] = array(
