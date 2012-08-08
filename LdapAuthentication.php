@@ -74,7 +74,7 @@ $wgLDAPAutoAuthUsername = "";
 $wgLDAPAutoAuthDomain = "";
 $wgPasswordResetRoutes['domain'] = true;
 
-define( "LDAPAUTHVERSION", "2.0a" );
+define( "LDAPAUTHVERSION", "2.0b" );
 
 /**
  * Add extension information to Special:Version
@@ -1132,7 +1132,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		// We are creating an LDAP user, it is very important that we do
 		// NOT set a local password because it could compromise the
 		// security of our domain.
-		$user->mPassword = '';
+		$user->setInternalPassword();
 
 		// The update user function does everything else we need done.
 		$this->updateUser( $user );
