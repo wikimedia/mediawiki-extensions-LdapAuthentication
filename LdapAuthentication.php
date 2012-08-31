@@ -74,7 +74,7 @@ $wgLDAPAutoAuthUsername = "";
 $wgLDAPAutoAuthDomain = "";
 $wgPasswordResetRoutes['domain'] = true;
 
-define( "LDAPAUTHVERSION", "2.0b" );
+define( "LDAPAUTHVERSION", "2.0c" );
 
 /**
  * Add extension information to Special:Version
@@ -906,6 +906,21 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	}
 
 	/**
+	 * Disallow MediaWiki from setting local passwords in the database,
+	 * unless $wgLDAPUseLocal is true. Warning: if you set $wgLDAPUseLocal,
+	 * it will cause MediaWiki to leak LDAP passwords into the local database.
+	 */
+	public function allowSetLocalPassword() {
+		global $wgLDAPUseLocal;
+
+		if ( $wgLDAPUseLocal ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Add a user to LDAP.
 	 * Return true if successful.
 	 *
@@ -1128,11 +1143,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$this->printDebug( "User is using a local domain", NONSENSITIVE );
 			return null;
 		}
-
-		// We are creating an LDAP user, it is very important that we do
-		// NOT set a local password because it could compromise the
-		// security of our domain.
-		$user->setInternalPassword();
 
 		// The update user function does everything else we need done.
 		$this->updateUser( $user );
