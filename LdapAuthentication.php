@@ -299,6 +299,18 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	}
 
 	/**
+	 * Wrapper for ldap_errno
+	 * @param $ldapconn
+	 * @return int
+	 */
+	public static function ldap_errno( $ldapconn ) {
+		wfSuppressWarnings();
+		$ret = ldap_errno( $ldapconn );
+		wfRestoreWarnings();
+		return $ret;
+	}
+
+	/**
 	 * Get configuration defined by admin, or return default value
 	 *
 	 * @param string $preference
@@ -1011,6 +1023,17 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$this->printDebug( "Successfully added user", NONSENSITIVE );
 				LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
 				return true;
+			}
+			$errno = LdapAuthenticationPlugin::ldap_errno( $this->ldapconn );
+			# Constraint violation, let's allow other plugins a chance to retry
+			if ( $errno === 19 ) {
+				$result = false;
+				wfRunHooks( 'LDAPRetrySetCreationValues', array( $this, $username, &$values, $writeloc, &$this->userdn, &$result ) );
+				if ( $result && LdapAuthenticationPlugin::ldap_add( $this->ldapconn, $this->userdn, $values ) ) {
+					$this->printDebug( "Successfully added user", NONSENSITIVE );
+					LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
+					return true;
+				}
 			}
 			$this->printDebug( "Failed to add user", NONSENSITIVE );
 			LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
