@@ -1922,7 +1922,7 @@ function AutoAuthSetup() {
 	$wgAuth->printDebug( "Entering AutoAuthSetup.", NONSENSITIVE );
 
 	# We need both authentication username and domain (bug 34787)
-	if ( $wgLDAPAutoAuthUsername !== "" && $wgLDAPAutoAuthDomain !== "" ) {
+	if ( $wgAuth->getConf("AutoAuthUsername") !== "" && $wgAuth->getConf("AutoAuthDomain") !== "" ) {
 		$wgAuth->printDebug( "wgLDAPAutoAuthUsername and wgLDAPAutoAuthDomain is not null, adding hooks.", NONSENSITIVE );
 		$wgHooks['UserLoadAfterLoadFromSession'][] = 'LdapAutoAuthentication::Authenticate';
 
