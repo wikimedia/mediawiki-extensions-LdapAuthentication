@@ -50,7 +50,7 @@ $messages['ast'] = array(
 	'ldapauthentication-desc' => "Complemento p'autenticación LDAP con sofitu pa dellos métodos d'autenticación LDAP",
 );
 
-/** Belarusian (Taraškievica orthography) (‪беларуская (тарашкевіца)‬)
+/** Belarusian (Taraškievica orthography) (беларуская (тарашкевіца)‎)
  * @author EugeneZelenko
  */
 $messages['be-tarask'] = array(
@@ -228,7 +228,7 @@ $messages['ms'] = array(
 	'ldapauthentication-desc' => 'Pemalam pengesahan LDAP dengan sokongan untuk berbilang kaedah pengesahan LDAP',
 );
 
-/** Norwegian Bokmål (‪norsk (bokmål)‬)
+/** Norwegian Bokmål (norsk (bokmål)‎)
  * @author Nghtwlkr
  */
 $messages['nb'] = array(
@@ -299,14 +299,14 @@ $messages['sk'] = array(
 	'ldapauthentication-desc' => 'Zásuvný modul na autentifikáciu prostredníctvom LDAP s podporou viacerých metód LDAP',
 );
 
-/** Serbian (Cyrillic script) (‪српски (ћирилица)‬)
+/** Serbian (Cyrillic script) (српски (ћирилица)‎)
  * @author Михајло Анђелковић
  */
 $messages['sr-ec'] = array(
 	'ldapauthentication-desc' => 'Плагин за LDAP ауторизацију, са подршком за више метода LDAP ауторизације',
 );
 
-/** Serbian (Latin script) (‪srpski (latinica)‬) */
+/** Serbian (Latin script) (srpski (latinica)‎) */
 $messages['sr-el'] = array(
 	'ldapauthentication-desc' => 'Plagin za LDAP autorizaciju, sa podrškom za više metoda LDAP autorizacije',
 );
@@ -346,14 +346,14 @@ $messages['vi'] = array(
 	'ldapauthentication-desc' => 'Phần bổ trợ xác thực LDAP hỗ trợ nhiều phương pháp xác thực LDAP',
 );
 
-/** Simplified Chinese (‪中文（简体）‬)
+/** Simplified Chinese (中文（简体）‎)
  * @author Yanmiao liu
  */
 $messages['zh-hans'] = array(
 	'ldapauthentication-desc' => '具有多种LDAP认证方法支持的LDAP认证插件',
 );
 
-/** Traditional Chinese (‪中文（繁體）‬)
+/** Traditional Chinese (中文（繁體）‎)
  * @author Anakmalaysia
  */
 $messages['zh-hant'] = array(
