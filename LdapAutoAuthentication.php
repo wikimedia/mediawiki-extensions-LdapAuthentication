@@ -87,7 +87,11 @@ class LdapAutoAuthentication {
 		$wgAuth->printDebug( "User does not exist in local database; creating.", NONSENSITIVE );
 		// Checks passed, create the user
 		$user->loadDefaults( $mungedUsername );
-		$user->addToDatabase();
+		$status = $user->addToDatabase();
+		if ( $status !== null && !$status->isOK() ) {
+			$wgAuth->printDebug( "Creation failed: " . $status->getWikiText(), NONSENSITIVE );
+			return false;
+		}
 		$wgAuth->initUser( $user, true );
 		$user->setCookies();
 		wfSetupSession();
