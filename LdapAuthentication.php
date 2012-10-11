@@ -1475,7 +1475,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * Function to get the user's groups.
 	 * @param string $username
 	 */
-	private function getGroups( $username ) {
+	protected function getGroups( $username ) {
 		$this->printDebug( "Entering getGroups", NONSENSITIVE );
 
 		// Ensure userLDAPGroups is set, no matter what
