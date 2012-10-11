@@ -407,7 +407,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			// Default set to true for backwards compatibility with
 			// versions < 2.0a
 			return self::setOrDefault( $wgLDAPLowerCaseUsernameScheme, $domain, true );
-		case 'GroupUseRetievedUsername':
+		case 'GroupUseRetrievedUsername':
 			global $wgLDAPGroupUseRetrievedUsername;
 			return self::setOrDefault( $wgLDAPGroupUseRetrievedUsername, $domain, false );
 		case 'GroupObjectclass':
