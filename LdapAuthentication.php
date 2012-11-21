@@ -74,7 +74,7 @@ $wgLDAPAutoAuthUsername = "";
 $wgLDAPAutoAuthDomain = "";
 $wgPasswordResetRoutes['domain'] = true;
 
-define( "LDAPAUTHVERSION", "2.0c" );
+define( "LDAPAUTHVERSION", "2.0d" );
 
 /**
  * Add extension information to Special:Version
@@ -90,6 +90,23 @@ $wgExtensionCredits['other'][] = array(
 
 $dir = dirname( __FILE__ ) . '/';
 $wgExtensionMessagesFiles['LdapAuthentication'] = $dir . 'LdapAuthentication.i18n.php';
+
+# Schema changes
+$wgHooks['LoadExtensionSchemaUpdates'][] = 'efLdapAuthenticationSchemaUpdates';
+
+/**
+ * @param $updater DatabaseUpdater
+ * @return bool
+ */
+function efLdapAuthenticationSchemaUpdates( $updater ) {
+	$base = dirname( __FILE__ );
+	switch ( $updater->getDB()->getType() ) {
+	case 'mysql':
+		$updater->addExtensionTable( 'ldap_domains', "$base/ldap.sql" );
+		break;
+	}
+	return true;
+}
 
 // constants for search base
 define( "GROUPDN", 0 );
@@ -1070,7 +1087,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		# in with a token, check the user options.
 		if ( $wgUser->isLoggedIn() && $wgUser->getToken( false ) ) {
 			$this->printDebug( "Pulling domain from user options.", NONSENSITIVE );
-			return $wgUser->getOption( 'ldapdomain' );
+			$domain = self::loadDomain( $wgUser );
+			if ( $domain ) {
+				return $domain;
+			}
 		}
 		# The user must be using an invalid domain
 		$this->printDebug( "No domain found, returning invaliddomain", NONSENSITIVE );
@@ -1138,7 +1158,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		# We must set a user option if we want token based logins to work
 		if ( $user->getToken( false ) ) {
 			$this->printDebug( "User has a token, setting domain in user options.", NONSENSITIVE );
-			$user->setOption( 'ldapdomain', $_SESSION['wsDomain'] );
+			self::saveDomain( $user, $_SESSION['wsDomain'] );
 		}
 
 		# Let other extensions update the user
@@ -1927,6 +1947,57 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return $ret;
 		}
 	}
+
+	/**
+	 * @param User $user
+	 * @return string
+	 */
+	static function loadDomain( $user ) {
+		$user_id = $user->getId();
+		if ( $user_id != 0 ) {
+			$dbr = wfGetDB( DB_SLAVE );
+			$row = $dbr->selectRow(
+				'ldap_domains',
+				array( 'domain' ),
+				array( 'user_id' => $user_id ),
+				__METHOD__ );
+
+			if ( $row ) {
+				return $row->domain;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * @param User $user
+	 * @param string $domain
+	 * @return bool
+	 */
+	static function saveDomain( $user, $domain ) {
+		$user_id = $user->getId();
+		if ( $user_id != 0 ) {
+			$dbw = wfGetDB( DB_MASTER );
+			$olddomain = self::loadDomain( $user );
+			if ( $olddomain ) {
+				return $dbw->update(
+					'ldap_domains',
+					array( 'domain' => $domain ),
+					array( 'user_id' => $user_id ),
+					__METHOD__ );
+			} else {
+				return $dbw->insert(
+					'ldap_domains',
+					array(  'domain' => $domain,
+						'user_id' => $user_id ),
+					__METHOD__ );
+			}
+		} else {
+			return false;
+		}
+	}
+
 }
 
 // The auto-auth code was originally derived from the SSL Authentication plugin
