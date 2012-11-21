@@ -1142,7 +1142,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		}
 
 		# Let other extensions update the user
-		wfRunHooks( 'LDAPUpdateUser', array( $this ) );
+		wfRunHooks( 'LDAPUpdateUser', array( &$user ) );
 
 		$this->printDebug( "Saving user settings.", NONSENSITIVE );
 		$user->saveSettings();
