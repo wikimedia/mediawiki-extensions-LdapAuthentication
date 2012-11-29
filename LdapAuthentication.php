@@ -1309,7 +1309,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return string
 	 * @access private
 	 */
-	function getUserDN( $username, $bind=false ) {
+	function getUserDN( $username, $bind=false, $searchattr='' ) {
 		$this->printDebug( "Entering getUserDN", NONSENSITIVE );
 		if ( $bind ) {
 			// This is a proxy bind, or an anonymous bind with a search
@@ -1329,7 +1329,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			}
 		}
 
-		$searchattr = $this->getConf( 'SearchAttribute' );
+		if ( ! $searchattr ) {
+			$searchattr = $this->getConf( 'SearchAttribute' );
+		}
 		// we need to do a subbase search for the entry
 		$filter = "(" . $searchattr . "=" . $this->getLdapEscapedString( $username ) . ")";
 		$this->printDebug( "Created a regular filter: $filter", SENSITIVE );
