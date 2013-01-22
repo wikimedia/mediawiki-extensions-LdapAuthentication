@@ -885,10 +885,32 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			}
 
 			$values = array();
-			if ( is_string( $this->email ) ) { $values["mail"] = $this->email; }
-			if ( is_string( $this->nickname ) ) { $values["displayname"] = $this->nickname; }
-			if ( is_string( $this->realname ) ) { $values["cn"] = $this->realname; }
-			if ( is_string( $this->lang ) ) { $values["preferredlanguage"] = $this->lang; }
+			$prefs = $this->getConf( 'Preferences' );
+			foreach ( array_keys( $prefs ) as $key ) {
+				$attr = strtolower( $prefs[$key] );
+				switch ( $key ) {
+					case "email":
+						if ( is_string( $this->email ) ) {
+							$values[$attr] = $this->email;
+						}
+						break;
+					case "nickname":
+						if ( is_string( $this->nickname ) ) {
+							$values[$attr] = $this->nickname;
+						}
+						break;
+					case "realname":
+						if ( is_string( $this->realname ) ) {
+							$values[$attr] = $this->realname;
+						}
+						break;
+					case "language":
+						if ( is_string( $this->lang ) ) {
+							$values[$attr] = $this->lang;
+						}
+						break;
+				}
+			}
 
 			if ( count( $values ) && LdapAuthenticationPlugin::ldap_modify( $this->ldapconn, $this->userdn, $values ) ) {
 				// We changed the user, we need to invalidate the memcache key
@@ -1020,9 +1042,35 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$values["uid"] = $username;
 			// sn is required for objectclass inetorgperson
 			$values["sn"] = $username;
-			if ( is_string( $this->email ) ) { $values["mail"] = $this->email; }
-			if ( is_string( $this->realname ) ) { $values["cn"] = $this->realname; }
-				else { $values["cn"] = $username; }
+			$prefs = $this->getConf( 'Preferences' );
+			foreach ( array_keys( $prefs ) as $key ) {
+				$attr = strtolower( $prefs[$key] );
+				switch ( $key ) {
+					case "email":
+						if ( is_string( $this->email ) ) {
+							$values[$attr] = $this->email;
+						}
+						break;
+					case "nickname":
+						if ( is_string( $this->nickname ) ) {
+							$values[$attr] = $this->nickname;
+						}
+						break;
+					case "realname":
+						if ( is_string( $this->realname ) ) {
+							$values[$attr] = $this->realname;
+						}
+						break;
+					case "language":
+						if ( is_string( $this->lang ) ) {
+							$values[$attr] = $this->lang;
+						}
+						break;
+				}
+			}
+			if ( !array_key_exists( "cn", $values ) ) {
+				$values["cn"] = $username;
+			}
 			$values["userpassword"] = $pass;
 			$values["objectclass"] = array( "inetorgperson" );
 
