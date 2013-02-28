@@ -17,9 +17,10 @@ $messages['en'] = array(
 
 /** Message documentation (Message documentation)
  * @author Fryed-peach
+ * @author Shirayuki
  */
 $messages['qqq'] = array(
-	'ldapauthentication-desc' => '{{desc}}',
+	'ldapauthentication-desc' => '{{desc|name=LDAP Authentication|url=http://www.mediawiki.org/wiki/Extension:LDAP_Authentication}}',
 );
 
 /** Afrikaans (Afrikaans)
