@@ -1133,7 +1133,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		}
 		# If the session domain isn't set, the user may have been logged
 		# in with a token, check the user options.
-		if ( $wgUser->isLoggedIn() && $wgUser->getToken( false ) ) {
+		# If $wgUser isn't defined yet, it might be due to an LDAPAutoAuthDomain config.
+		if ( isset( $wgUser ) && $wgUser->isLoggedIn() && $wgUser->getToken( false ) ) {
 			$this->printDebug( "Pulling domain from user options.", NONSENSITIVE );
 			$domain = self::loadDomain( $wgUser );
 			if ( $domain ) {
