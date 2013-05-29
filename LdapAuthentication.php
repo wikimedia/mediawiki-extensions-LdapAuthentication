@@ -73,8 +73,9 @@ $wgLDAPAuthAttribute = array();
 $wgLDAPAutoAuthUsername = "";
 $wgLDAPAutoAuthDomain = "";
 $wgPasswordResetRoutes['domain'] = true;
+$wgLDAPActiveDirectory = array();
 
-define( "LDAPAUTHVERSION", "2.0d" );
+define( "LDAPAUTHVERSION", "2.0e" );
 
 /**
  * Add extension information to Special:Version
@@ -466,6 +467,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		case 'AutoAuthDomain':
 			global $wgLDAPAutoAuthDomain;
 			return $wgLDAPAutoAuthDomain;
+		case 'ActiveDirectory':
+			global $wgLDAPActiveDirectory;
+			return self::setOrDefault( $wgLDAPActiveDirectory, $domain, false );
 		}
 		return '';
 	}
@@ -1694,8 +1698,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$groups = array( "short" => array(), "dn" => array() );
 
 		// AD does not include the primary group in the list of groups, we have to find it ourselves.
-		// TODO: find a way to only do this search for AD domains.
-		if ( $dn != "*" ) {
+		if ( $dn != "*" && $this->getConf('ActiveDirectory')) {
 			$PGfilter = "(&(distinguishedName=$value)(objectclass=user))";
 			$this->printDebug( "User Filter: $PGfilter", SENSITIVE );
 			$PGinfo = LdapAuthenticationPlugin::ldap_search( $this->ldapconn, $base, $PGfilter );
