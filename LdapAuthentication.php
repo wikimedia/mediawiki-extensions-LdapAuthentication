@@ -624,6 +624,14 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return false;
 		}
 
+		// Mediawiki munges the username before authenticate is called,
+		// this can mess with authentication, group pulling/restriction,
+		// preference pulling, etc. Let's allow the admin to use
+		// a lowercased username if needed.
+		if ( $this->getConf( 'LowerCaseUsername') ) {
+			$username = strtolower( $username );
+		}
+
 		// If the user is using auto authentication, we need to ensure
 		// that he/she isn't trying to fool us by sending a username other
 		// than the one the web server got from the auto-authentication method.
@@ -643,13 +651,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		}
 
 		if ( $this->connect() ) {
-			// Mediawiki munges the username before authenticate is called,
-			// this can mess with authentication, group pulling/restriction,
-			// preference pulling, etc. Let's allow the admin to use
-			// a lowercased username if needed.
-			if ( $this->getConf( 'LowerCaseUsername') ) {
-				$username = strtolower( $username );
-			}
 
 			$this->userdn = $this->getSearchString( $username );
 
