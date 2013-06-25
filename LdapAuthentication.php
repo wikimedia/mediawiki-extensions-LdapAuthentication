@@ -1736,7 +1736,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$memAttrs = explode( ',', strtolower( $dnMember ) );
 				if ( isset( $memAttrs[0] ) ) {
 					$memAttrs = explode( '=', $memAttrs[0] );
-					if ( isset( $memAttrs[0] ) ) {
+					if ( isset( $memAttrs[1] ) ) {
 						$groups["short"][] = strtolower( $memAttrs[1] );
 					}
 				}
