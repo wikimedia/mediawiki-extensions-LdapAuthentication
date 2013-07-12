@@ -335,6 +335,23 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return mixed
 	 */
 	public function getConf( $preference, $domain='' ) {
+		# Global preferences
+		switch ( $preference ) {
+		case 'DomainNames':
+			global $wgLDAPDomainNames;
+			return $wgLDAPDomainNames;
+		case 'UseLocal':
+			global $wgLDAPUseLocal;
+			return $wgLDAPUseLocal;
+		case 'AutoAuthUsername':
+			global $wgLDAPAutoAuthUsername;
+			return $wgLDAPAutoAuthUsername;
+		case 'AutoAuthDomain':
+			global $wgLDAPAutoAuthDomain;
+			return $wgLDAPAutoAuthDomain;
+		}
+
+		# Domain specific preferences
 		if ( !$domain ) {
 			$domain = $this->getDomain();
 		}
@@ -342,9 +359,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		case 'ServerNames':
 			global $wgLDAPServerNames;
 			return self::setOrDefault( $wgLDAPServerNames, $domain );
-		case 'UseLocal':
-			global $wgLDAPUseLocal;
-			return $wgLDAPUseLocal;
 		case 'EncryptionType':
 			global $wgLDAPEncryptionType;
 			return self::setOrDefault( $wgLDAPEncryptionType, $domain, 'tls' );
@@ -461,12 +475,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		case 'AuthAttribute':
 			global $wgLDAPAuthAttribute;
 			return self::setOrDefault( $wgLDAPAuthAttribute, $domain );
-		case 'AutoAuthUsername':
-			global $wgLDAPAutoAuthUsername;
-			return $wgLDAPAutoAuthUsername;
-		case 'AutoAuthDomain':
-			global $wgLDAPAutoAuthDomain;
-			return $wgLDAPAutoAuthDomain;
 		case 'ActiveDirectory':
 			global $wgLDAPActiveDirectory;
 			return self::setOrDefault( $wgLDAPActiveDirectory, $domain, false );
@@ -757,9 +765,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return array
 	 */
 	function domainList() {
-		global $wgLDAPDomainNames;
-
-		$tempDomArr = $wgLDAPDomainNames;
+		$tempDomArr = $this->getConf( 'DomainNames' );
 		if ( $this->getConf( 'UseLocal' ) ) {
 			$this->printDebug( "Allowing the local domain, adding it to the list.", NONSENSITIVE );
 			array_push( $tempDomArr, 'local' );
@@ -963,13 +969,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Disallow MediaWiki from setting local passwords in the database,
-	 * unless $wgLDAPUseLocal is true. Warning: if you set $wgLDAPUseLocal,
+	 * unless UseLocal is true. Warning: if you set $wgLDAPUseLocal,
 	 * it will cause MediaWiki to leak LDAP passwords into the local database.
 	 */
 	public function allowSetLocalPassword() {
-		global $wgLDAPUseLocal;
-
-		if ( $wgLDAPUseLocal ) {
+		if ( $this->getConf( 'UseLocal') ) {
 			return true;
 		} else {
 			return false;
@@ -1131,6 +1135,15 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$this->printDebug( "Entering getDomain", NONSENSITIVE );
 
+		# If there's only a single domain set, there's no reason
+		# to bother with sessions, tokens, etc.. This works around
+		# a number of bugs caused by supporting multiple domains.
+		# The bugs will still exist when using multiple domains,
+		# though.
+		$domainNames = $this->getConf( 'DomainNames' );
+		if ( count( $domainNames ) === 1 ) {
+			return $domainNames[0];
+		}
 		# First check if we already have a valid domain set
 		if ( isset( $_SESSION['wsDomain'] ) && $_SESSION['wsDomain'] != 'invaliddomain' ) {
 			$this->printDebug( "Pulling domain from session.", NONSENSITIVE );
@@ -1159,10 +1172,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return bool
 	 */
 	public function validDomain( $domain ) {
-		global $wgLDAPDomainNames;
-
 		$this->printDebug( "Entering validDomain", NONSENSITIVE );
-		if ( in_array( $domain, $wgLDAPDomainNames ) || ( $this->getConf( 'UseLocal' ) && 'local' == $domain ) ) {
+		if ( in_array( $domain, $this->getConf( 'DomainNames' ) ) || ( $this->getConf( 'UseLocal' ) && 'local' == $domain ) ) {
 			$this->printDebug( "User is using a valid domain ($domain).", NONSENSITIVE );
 			return true;
 		}
@@ -1277,12 +1288,16 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		global $wgMemc;
 
 		$this->printDebug( "Entering getCanonicalName", NONSENSITIVE );
+		if ( User::isIP( $username ) ) {
+			$this->printDebug( "Username is an IP, not munging.", NONSENSITIVE );
+			return $username;
+		}
 		$key = wfMemcKey( 'ldapauthentication', 'canonicalname', $username );
 		$canonicalname = $username;
 		if ( $username != '' ) {
 			$this->printDebug( "Username is: $username", NONSENSITIVE );
 			if ( $this->getConf( 'LowerCaseUsernameScheme' ) ) {
-				$canonicalname = strtolower( $canonicalname );
+				$canonicalname = ucfirst( strtolower( $canonicalname ) );
 			} else {
 				# Fetch username, so that we can possibly use it.
 				$userInfo = $wgMemc->get( $key );
@@ -1292,36 +1307,32 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 						$this->printDebug( "Username matched a key in memcache, using the fetched name: " . $userInfo["canonicalname"], NONSENSITIVE );
 						return $userInfo["canonicalname"];
 					}
-				} else {
-					if ( $this->validDomain( $this->getDomain() ) && $this->connect() ) {
-						// Try to pull the username from LDAP. In the case of straight binds,
-						// try to fetch the username by search before bind.
-						$this->userdn = $this->getUserDN( $username, true );
-						$hookSetUsername = $this->LDAPUsername;
-						wfRunHooks( 'SetUsernameAttributeFromLDAP', array( &$hookSetUsername, $this->userInfo ) );
-						if ( is_string( $hookSetUsername ) ) {
-							$this->printDebug( "Username munged by hook: $hookSetUsername", NONSENSITIVE );
-							$this->LDAPUsername = $hookSetUsername;
-						} else {
-							$this->printDebug( "Fetched username is not a string (check your hook code...). This message can be safely ignored if you do not have the SetUsernameAttributeFromLDAP hook defined.", NONSENSITIVE );
-						}
+				}
+				if ( $this->validDomain( $this->getDomain() ) && $this->connect() ) {
+					// Try to pull the username from LDAP. In the case of straight binds,
+					// try to fetch the username by search before bind.
+					$this->userdn = $this->getUserDN( $username, true );
+					$hookSetUsername = $this->LDAPUsername;
+					wfRunHooks( 'SetUsernameAttributeFromLDAP', array( &$hookSetUsername, $this->userInfo ) );
+					if ( is_string( $hookSetUsername ) ) {
+						$this->printDebug( "Username munged by hook: $hookSetUsername", NONSENSITIVE );
+						$this->LDAPUsername = $hookSetUsername;
+					} else {
+						$this->printDebug( "Fetched username is not a string (check your hook code...). This message can be safely ignored if you do not have the SetUsernameAttributeFromLDAP hook defined.", NONSENSITIVE );
 					}
 				}
 
 				// We want to use the username returned by LDAP
 				// if it exists
 				if ( $this->LDAPUsername != '' ) {
-					$canonicalname = $this->LDAPUsername;
+					$canonicalname = ucfirst( $this->LDAPUsername );
 					$this->printDebug( "Using LDAPUsername: $canonicalname", NONSENSITIVE );
 				}
-			}
 
-			// The wiki considers an all lowercase name to be invalid; need to
-			// uppercase the first letter
-			$canonicalname[0] = strtoupper( $canonicalname[0] );
+				$wgMemc->set( $key, array( "username" => $username, "canonicalname" => $canonicalname ), 3600 * 24 );
+			}
 		}
 		$this->printDebug( "Munged username: $canonicalname", NONSENSITIVE );
-		$wgMemc->set( $key, array( "username" => $username, "canonicalname" => $canonicalname ), 3600 * 24 );
 		return $canonicalname;
 	}
 
