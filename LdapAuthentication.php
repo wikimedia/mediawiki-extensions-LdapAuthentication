@@ -57,7 +57,6 @@ $wgLDAPDisableAutoCreate = array();
 $wgLDAPDebug = 0;
 $wgLDAPGroupUseFullDN = array();
 $wgLDAPLowerCaseUsername = array();
-$wgLDAPLowerCaseUsernameScheme = array();
 $wgLDAPGroupUseRetrievedUsername = array();
 $wgLDAPGroupObjectclass = array();
 $wgLDAPGroupAttribute = array();
@@ -75,7 +74,7 @@ $wgLDAPAutoAuthDomain = "";
 $wgPasswordResetRoutes['domain'] = true;
 $wgLDAPActiveDirectory = array();
 
-define( "LDAPAUTHVERSION", "2.0e" );
+define( "LDAPAUTHVERSION", "2.0f" );
 
 /**
  * Add extension information to Special:Version
@@ -428,17 +427,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return self::setOrDefault( $wgLDAPGroupUseFullDN, $domain, false );
 		case 'LowerCaseUsername':
 			global $wgLDAPLowerCaseUsername;
-			if ( isset( $wgLDAPLowerCaseUsername[$domain] ) ) {
-				$this->printDebug( "Configuration set to lowercase username.", NONSENSITIVE );
-				return $wgLDAPLowerCaseUsername[$domain];
-			} else {
-				return false;
-			}
-		case 'LowerCaseUsernameScheme':
-			global $wgLDAPLowerCaseUsernameScheme;
 			// Default set to true for backwards compatibility with
 			// versions < 2.0a
-			return self::setOrDefault( $wgLDAPLowerCaseUsernameScheme, $domain, true );
+			return self::setOrDefault( $wgLDAPLowerCaseUsername, $domain, true );
 		case 'GroupUseRetrievedUsername':
 			global $wgLDAPGroupUseRetrievedUsername;
 			return self::setOrDefault( $wgLDAPGroupUseRetrievedUsername, $domain, false );
@@ -1018,7 +1009,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$this->email = $user->getEmail();
 		$this->realname = $user->getRealName();
 		$username = $user->getName();
-		if ( $this->getConf( 'LowerCaseUsernameScheme' ) ) {
+		if ( $this->getConf( 'LowerCaseUsername' ) ) {
 			$username = strtolower( $username );
 		}
 		$pass = $this->getPasswordHash( $password );
@@ -1279,7 +1270,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	}
 
 	/**
-	 * Munge the username based on a scheme (lowercase, by default)
+	 * Munge the username based on a scheme (lowercase, by default), by search attribute
+	 * otherwise.
 	 *
 	 * @param string $username
 	 * @return string
@@ -1296,7 +1288,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$canonicalname = $username;
 		if ( $username != '' ) {
 			$this->printDebug( "Username is: $username", NONSENSITIVE );
-			if ( $this->getConf( 'LowerCaseUsernameScheme' ) ) {
+			if ( $this->getConf( 'LowerCaseUsername' ) ) {
 				$canonicalname = ucfirst( strtolower( $canonicalname ) );
 			} else {
 				# Fetch username, so that we can possibly use it.
