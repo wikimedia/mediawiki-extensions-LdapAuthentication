@@ -237,7 +237,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param $ldapconn
 	 * @param $basedn
 	 * @param $filter
-	 * @param null $attributes
+	 * @param array|null $attributes
 	 * @param null $attrsonly
 	 * @param null $sizelimit
 	 * @param null $timelimit
@@ -256,7 +256,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param $ldapconn
 	 * @param $basedn
 	 * @param $filter
-	 * @param null $attributes
+	 * @param array|null $attributes
 	 * @param null $attrsonly
 	 * @param null $sizelimit
 	 * @param null $timelimit
@@ -275,7 +275,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param $ldapconn
 	 * @param $basedn
 	 * @param $filter
-	 * @param null $attributes
+	 * @param array|null $attributes
 	 * @param null $attrsonly
 	 * @param null $sizelimit
 	 * @param null $timelimit
@@ -331,6 +331,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * Get configuration defined by admin, or return default value
 	 *
 	 * @param string $preference
+	 * @param string $domain
 	 * @return mixed
 	 */
 	public function getConf( $preference, $domain='' ) {
@@ -713,7 +714,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 			$this->getGroups( $username );
 
-			if ( !$this->checkGroups( $username ) ) {
+			if ( !$this->checkGroups() ) {
 				LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
 				$this->markAuthFailed();
 				return false;
@@ -835,6 +836,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 			// Blank out the password in the database. We don't want to save
 			// domain credentials for security reasons.
+			// This doesn't do anything. $password isn't by reference
 			$password = '';
 
 			$success = LdapAuthenticationPlugin::ldap_modify( $this->ldapconn, $this->userdn, $values );
@@ -964,11 +966,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * it will cause MediaWiki to leak LDAP passwords into the local database.
 	 */
 	public function allowSetLocalPassword() {
-		if ( $this->getConf( 'UseLocal') ) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->getConf( 'UseLocal');
 	}
 
 	/**
@@ -1236,11 +1234,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		if ( $this->authFailed ) {
 			$this->printDebug( "User didn't successfully authenticate, exiting.", NONSENSITIVE );
-			return null;
+			return;
 		}
 		if ( 'local' == $this->getDomain() ) {
 			$this->printDebug( "User is using a local domain", NONSENSITIVE );
-			return null;
+			return;
 		}
 
 		// The update user function does everything else we need done.
@@ -1363,10 +1361,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * This function will set $this->LDAPUsername
 	 *
 	 * @param string $username
+	 * @param bool $bind
+	 * @param string $searchattr
 	 * @return string
-	 * @access private
 	 */
-	function getUserDN( $username, $bind=false, $searchattr='' ) {
+	private function getUserDN( $username, $bind=false, $searchattr='' ) {
 		$this->printDebug( "Entering getUserDN", NONSENSITIVE );
 		if ( $bind ) {
 			// This is a proxy bind, or an anonymous bind with a search
@@ -1500,11 +1499,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	/**
 	 * Checks to see whether a user is in a required group.
 	 *
-	 * @param string $username
 	 * @return bool
-	 * @access private
 	 */
-	function checkGroups( $username ) {
+	private function checkGroups() {
 		$this->printDebug( "Entering checkGroups", NONSENSITIVE );
 
 		$excgroups = $this->getConf( 'ExcludedGroups' );
@@ -1817,8 +1814,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$this->printDebug( "Adding all groups to wgGroupPermissions: ", SENSITIVE, $this->allLDAPGroups );
 
 			foreach ( $this->allLDAPGroups["short"] as $ldapgroup ) {
-				if ( !array_key_exists( $ldapgroup, $wgGroupPermissions ) )
-						$wgGroupPermissions[$ldapgroup] = array();
+				if ( !array_key_exists( $ldapgroup, $wgGroupPermissions ) ) {
+					$wgGroupPermissions[$ldapgroup] = array();
+				}
 			}
 		}
 
@@ -2051,9 +2049,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 						'user_id' => $user_id ),
 					__METHOD__ );
 			}
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 }
