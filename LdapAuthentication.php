@@ -102,7 +102,10 @@ function efLdapAuthenticationSchemaUpdates( $updater ) {
 	$base = dirname( __FILE__ );
 	switch ( $updater->getDB()->getType() ) {
 	case 'mysql':
-		$updater->addExtensionTable( 'ldap_domains', "$base/ldap.sql" );
+		$updater->addExtensionTable( 'ldap_domains', "$base/schema/ldap-mysql.sql" );
+		break;
+	case 'postgres':
+		$updater->addExtensionTable( 'ldap_domains', "$base/schema/ldap-postgres.sql" );
 		break;
 	}
 	return true;
