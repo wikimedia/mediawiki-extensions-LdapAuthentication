@@ -1368,7 +1368,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param string $searchattr
 	 * @return string
 	 */
-	private function getUserDN( $username, $bind=false, $searchattr='' ) {
+	public function getUserDN( $username, $bind=false, $searchattr='' ) {
 		$this->printDebug( "Entering getUserDN", NONSENSITIVE );
 		if ( $bind ) {
 			// This is a proxy bind, or an anonymous bind with a search
