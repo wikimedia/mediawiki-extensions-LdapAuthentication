@@ -94,6 +94,12 @@ $wgExtensionMessagesFiles['LdapAuthentication'] = $dir . 'LdapAuthentication.i18
 # Schema changes
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'efLdapAuthenticationSchemaUpdates';
 
+$wgRedactedFunctionArguments['LdapAuthenticationPlugin::ldap_bind'] = 2;
+$wgRedactedFunctionArguments['LdapAuthenticationPlugin::authenticate'] = 2;
+$wgRedactedFunctionArguments['LdapAuthenticationPlugin::getPasswordHash'] = 0;
+$wgRedactedFunctionArguments['LdapAuthenticationPlugin::bindAs'] = 1;
+$wgRedactedFunctionArguments['LdapAuthenticationPlugin::setOrDefaultPrivate'] = 0;
+
 /**
  * @param $updater DatabaseUpdater
  * @return bool
@@ -386,7 +392,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return self::setOrDefault( $wgLDAPProxyAgent, $domain );
 		case 'ProxyAgentPassword':
 			global $wgLDAPProxyAgentPassword;
-			return self::setOrDefault( $wgLDAPProxyAgentPassword, $domain );
+			return self::setOrDefaultPrivate( $wgLDAPProxyAgentPassword, $domain );
 		case 'SearchAttribute':
 			global $wgLDAPSearchAttributes;
 			return self::setOrDefault( $wgLDAPSearchAttributes, $domain );
@@ -404,7 +410,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return self::setOrDefault( $wgLDAPWriterDN, $domain );
 		case 'WriterPassword':
 			global $wgLDAPWriterPassword;
-			return self::setOrDefault( $wgLDAPWriterPassword, $domain );
+			return self::setOrDefaultPrivate( $wgLDAPWriterPassword, $domain );
 		case 'WriteLocation':
 			global $wgLDAPWriteLocation;
 			return self::setOrDefault( $wgLDAPWriteLocation, $domain );
@@ -416,10 +422,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return self::setOrDefault( $wgLDAPUpdateLDAP, $domain, false );
 		case 'PasswordHash':
 			global $wgLDAPPasswordHash;
-			return self::setOrDefault( $wgLDAPPasswordHash, $domain, 'clear' );
+			return self::setOrDefaultPrivate( $wgLDAPPasswordHash, $domain, 'clear' );
 		case 'MailPassword':
 			global $wgLDAPMailPassword;
-			return self::setOrDefault( $wgLDAPMailPassword, $domain, false );
+			return self::setOrDefaultPrivate( $wgLDAPMailPassword, $domain, false );
 		case 'Preferences':
 			global $wgLDAPPreferences;
 			return self::setOrDefault( $wgLDAPPreferences, $domain, array() );
@@ -487,6 +493,21 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return mixed
 	 */
 	private static function setOrDefault( $array, $key, $default = '' ) {
+		return isset( $array[$key] ) ? $array[$key] : $default;
+	}
+
+	/**
+	 * Returns the item from $array at index $key if it is set,
+	 * else, it returns $default
+	 *
+	 * Use for sensitive data
+	 *
+	 * @param $array array
+	 * @param $key
+	 * @param $default mixed
+	 * @return mixed
+	 */
+	private static function setOrDefaultPrivate( $array, $key, $default = '' ) {
 		return isset( $array[$key] ) ? $array[$key] : $default;
 	}
 
