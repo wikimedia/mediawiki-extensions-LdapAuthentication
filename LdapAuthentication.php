@@ -1154,7 +1154,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		# The bugs will still exist when using multiple domains,
 		# though.
 		$domainNames = $this->getConf( 'DomainNames' );
-		if ( count( $domainNames ) === 1 ) {
+		if ( ( count( $domainNames ) === 1 ) && !$this->getConf( 'UseLocal' ) ) {
 			return $domainNames[0];
 		}
 		# First check if we already have a valid domain set
