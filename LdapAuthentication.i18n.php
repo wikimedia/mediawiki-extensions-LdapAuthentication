@@ -215,6 +215,13 @@ $messages['lb'] = array(
 	'ldapauthentication-desc' => 'Authentifikatiouns-Plugin fir LDAP mat Ënnerstëtzung fir multipel LDAP Authentifikatiouns-Methoden',
 );
 
+/** Latvian (latviešu)
+ * @author Papuass
+ */
+$messages['lv'] = array(
+	'ldapauthentication-desc' => 'LDAP autentifikācijas spraudnis ar atbalstu vairākām LDAP autentifikācijas metodēm',
+);
+
 /** Macedonian (македонски)
  * @author Bjankuloski06
  */
