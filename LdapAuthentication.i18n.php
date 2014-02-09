@@ -115,6 +115,13 @@ $messages['es'] = array(
 	'ldapauthentication-desc' => 'Complemento de autentificación LDAP con apoyo de múltiples métodos de autentificación LDAP',
 );
 
+/** Persian (فارسی)
+ * @author Armin1392
+ */
+$messages['fa'] = array(
+	'ldapauthentication-desc' => 'اعتبار افزونهٔ‌ ال‌دی‌ای‌پی با پشتیبانی برای چند زوش تأیید ال‌دی‌ای‌پی',
+);
+
 /** Finnish (suomi)
  * @author Centerlink
  */
