@@ -307,6 +307,13 @@ $messages['ru'] = array(
 	'ldapauthentication-desc' => 'Плагин LDAP-аутентификации с поддержкой нескольких методов проверки подлинности LDAP',
 );
 
+/** Scots (Scots)
+ * @author John Reid
+ */
+$messages['sco'] = array(
+	'ldapauthentication-desc' => 'LDAP authentication plug-in wi support fer multiple LDAP authentication methods',
+);
+
 /** Slovak (slovenčina)
  * @author Helix84
  */
