@@ -1,0 +1,8 @@
+{
+    "@metadata": {
+        "authors": [
+            "Anakmalaysia"
+        ]
+    },
+    "ldapauthentication-desc": "具有多種LDAP認證方法支持的LDAP認證外掛程式"
+}

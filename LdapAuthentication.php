@@ -74,7 +74,7 @@ $wgLDAPAutoAuthDomain = "";
 $wgPasswordResetRoutes['domain'] = true;
 $wgLDAPActiveDirectory = array();
 
-define( "LDAPAUTHVERSION", "2.0f" );
+define( "LDAPAUTHVERSION", "2.1.0" );
 
 /**
  * Add extension information to Special:Version
@@ -88,7 +88,8 @@ $wgExtensionCredits['other'][] = array(
 	'url' => 'https://www.mediawiki.org/wiki/Extension:LDAP_Authentication',
 );
 
-$dir = dirname( __FILE__ ) . '/';
+$dir = __DIR__ . '/';
+$wgMessagesDirs['LdapAuthentication'] = __DIR__ . '/i18n';
 $wgExtensionMessagesFiles['LdapAuthentication'] = $dir . 'LdapAuthentication.i18n.php';
 
 # Schema changes
@@ -105,7 +106,7 @@ $wgRedactedFunctionArguments['LdapAuthenticationPlugin::setOrDefaultPrivate'] = 
  * @return bool
  */
 function efLdapAuthenticationSchemaUpdates( $updater ) {
-	$base = dirname( __FILE__ );
+	$base = __DIR__;
 	switch ( $updater->getDB()->getType() ) {
 	case 'mysql':
 		$updater->addExtensionTable( 'ldap_domains', "$base/schema/ldap-mysql.sql" );
@@ -721,7 +722,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			}
 
 			// Ensure the user's entry has the required auth attribute
-			$aa = $this->getConf( 'AuthAttribute' ); 
+			$aa = $this->getConf( 'AuthAttribute' );
 			if ( $aa ) {
 				$this->printDebug( "Checking for auth attributes: $aa", NONSENSITIVE );
 				$filter = "(" . $aa . ")";
