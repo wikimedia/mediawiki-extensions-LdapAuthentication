@@ -1,8 +1,8 @@
 {
-    "@metadata": {
-        "authors": [
-            "Anakmalaysia"
-        ]
-    },
-    "ldapauthentication-desc": "Pemalam pengesahan LDAP dengan sokongan untuk berbilang kaedah pengesahan LDAP"
+	"@metadata": {
+		"authors": [
+			"Anakmalaysia"
+		]
+	},
+	"ldapauthentication-desc": "Pemalam pengesahan LDAP dengan sokongan untuk berbilang kaedah pengesahan LDAP"
 }

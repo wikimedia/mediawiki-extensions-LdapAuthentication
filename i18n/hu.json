@@ -1,8 +1,8 @@
 {
-    "@metadata": {
-        "authors": [
-            "Glanthor Reviol"
-        ]
-    },
-    "ldapauthentication-desc": "LDAP hitelesítési bővítmény többféle LDAP azonosítási módszer támogatásával"
+	"@metadata": {
+		"authors": [
+			"Glanthor Reviol"
+		]
+	},
+	"ldapauthentication-desc": "LDAP hitelesítési bővítmény többféle LDAP azonosítási módszer támogatásával"
 }

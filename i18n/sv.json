@@ -1,8 +1,8 @@
 {
-    "@metadata": {
-        "authors": [
-            "Boivie"
-        ]
-    },
-    "ldapauthentication-desc": "LDAP-autentiseringsplugin med stöd för flera LDAP-autentiseringsmetoder"
+	"@metadata": {
+		"authors": [
+			"Boivie"
+		]
+	},
+	"ldapauthentication-desc": "LDAP-autentiseringsplugin med stöd för flera LDAP-autentiseringsmetoder"
 }

@@ -1,6 +1,4 @@
 {
-    "@metadata": {
-        "authors": []
-    },
-    "ldapauthentication-desc": "Plagin za LDAP autorizaciju, sa podrškom za više metoda LDAP autorizacije"
+	"@metadata": [],
+	"ldapauthentication-desc": "Plagin za LDAP autorizaciju, sa podrškom za više metoda LDAP autorizacije"
 }

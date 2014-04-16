@@ -1,8 +1,8 @@
 {
-    "@metadata": {
-        "authors": [
-            "Centerlink"
-        ]
-    },
-    "ldapauthentication-desc": "LDAP-todentamisliitännäinen useiden LDAP-todennustapojen tuella"
+	"@metadata": {
+		"authors": [
+			"Centerlink"
+		]
+	},
+	"ldapauthentication-desc": "LDAP-todentamisliitännäinen useiden LDAP-todennustapojen tuella"
 }

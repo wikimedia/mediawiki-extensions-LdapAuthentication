@@ -1,8 +1,8 @@
 {
-    "@metadata": {
-        "authors": [
-            "Paucabot"
-        ]
-    },
-    "ldapauthentication-desc": "Connector d'autentificació LDAP amb suport per a diversos mètodes d'autenticació LDAP"
+	"@metadata": {
+		"authors": [
+			"Paucabot"
+		]
+	},
+	"ldapauthentication-desc": "Connector d'autentificació LDAP amb suport per a diversos mètodes d'autenticació LDAP"
 }

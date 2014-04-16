@@ -1,8 +1,8 @@
 {
-    "@metadata": {
-        "authors": [
-            "Siebrand"
-        ]
-    },
-    "ldapauthentication-desc": "LDAP-authenticatieplug-in met ondersteuning voor meerdere LDAP-authenticatiemethoden"
+	"@metadata": {
+		"authors": [
+			"Siebrand"
+		]
+	},
+	"ldapauthentication-desc": "LDAP-authenticatieplug-in met ondersteuning voor meerdere LDAP-authenticatiemethoden"
 }
