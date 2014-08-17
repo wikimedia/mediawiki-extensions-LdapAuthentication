@@ -131,32 +131,32 @@ define( "HIGHLYSENSITIVE", 3 );
 class LdapAuthenticationPlugin extends AuthPlugin {
 
 	// ldap connection resource
-	var $ldapconn;
+	public $ldapconn;
 
 	// preferences
-	var $email, $lang, $realname, $nickname, $externalid;
+	public $email, $lang, $realname, $nickname, $externalid;
 
 	// username pulled from ldap
-	var $LDAPUsername;
+	public $LDAPUsername;
 
 	// userdn pulled from ldap
-	var $userdn;
+	public $userdn;
 
 	// groups pulled from ldap
-	var $userLDAPGroups;
-	var $allLDAPGroups;
+	public $userLDAPGroups;
+	public $allLDAPGroups;
 
 	// boolean to test for failed auth
-	var $authFailed;
+	public $authFailed;
 
 	// boolean to test for fetched user info
-	var $fetchedUserInfo;
+	public $fetchedUserInfo;
 
 	// the user's entry and all attributes
-	var $userInfo;
+	public $userInfo;
 
 	// the user we are currently bound as
-	var $boundAs;
+	public $boundAs;
 
 	/**
 	 * Wrapper for ldap_connect
