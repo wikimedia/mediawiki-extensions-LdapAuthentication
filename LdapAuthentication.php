@@ -95,12 +95,6 @@ $wgExtensionMessagesFiles['LdapAuthentication'] = $dir . 'LdapAuthentication.i18
 # Schema changes
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'efLdapAuthenticationSchemaUpdates';
 
-$wgRedactedFunctionArguments['LdapAuthenticationPlugin::ldap_bind'] = 2;
-$wgRedactedFunctionArguments['LdapAuthenticationPlugin::authenticate'] = 2;
-$wgRedactedFunctionArguments['LdapAuthenticationPlugin::getPasswordHash'] = 0;
-$wgRedactedFunctionArguments['LdapAuthenticationPlugin::bindAs'] = 1;
-$wgRedactedFunctionArguments['LdapAuthenticationPlugin::setOrDefaultPrivate'] = 0;
-
 /**
  * @param $updater DatabaseUpdater
  * @return bool
