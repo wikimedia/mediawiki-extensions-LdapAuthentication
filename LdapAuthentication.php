@@ -86,6 +86,7 @@ $wgExtensionCredits['other'][] = array(
 	'author' => 'Ryan Lane',
 	'descriptionmsg' => 'ldapauthentication-desc',
 	'url' => 'https://www.mediawiki.org/wiki/Extension:LDAP_Authentication',
+	'license-name' => 'GPL-2.0+',
 );
 
 $dir = __DIR__ . '/';
