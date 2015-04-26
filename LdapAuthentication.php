@@ -89,9 +89,7 @@ $wgExtensionCredits['other'][] = array(
 	'license-name' => 'GPL-2.0+',
 );
 
-$dir = __DIR__ . '/';
 $wgMessagesDirs['LdapAuthentication'] = __DIR__ . '/i18n';
-$wgExtensionMessagesFiles['LdapAuthentication'] = $dir . 'LdapAuthentication.i18n.php';
 
 # Schema changes
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'efLdapAuthenticationSchemaUpdates';
