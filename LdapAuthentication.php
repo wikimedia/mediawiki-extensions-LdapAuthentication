@@ -1722,7 +1722,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$this->printDebug( "User Filter: $PGfilter", SENSITIVE );
 			$PGinfo = LdapAuthenticationPlugin::ldap_search( $this->ldapconn, $base, $PGfilter );
 			$PGentries = LdapAuthenticationPlugin::ldap_get_entries( $this->ldapconn, $PGinfo );
-			if ( $PGentries ) {
+			if ( !empty( $PGentries[0] ) ) {
 				$Usid = $PGentries[0]['objectsid'][0];
 				$PGrid = $PGentries[0]['primarygroupid'][0];
 				$PGsid = bin2hex( $Usid );
