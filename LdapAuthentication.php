@@ -591,6 +591,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$tok = strtok( " " );
 		}
 		$servers = trim( $servers );
+		if ( !$servers ) {
+			$this->printDebug( 'Empty server string, skipping connection', NONSENSITIVE );
+			return false;
+		}
 
 		$this->printDebug( "Using servers: $servers", SENSITIVE );
 
