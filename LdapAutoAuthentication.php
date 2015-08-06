@@ -99,7 +99,7 @@ class LdapAutoAuthentication {
 		$ssUpdate = new SiteStatsUpdate( 0, 0, 0, 0, 1 );
 		$ssUpdate->doUpdate();
 		# Notify hooks (e.g. Newuserlog)
-		wfRunHooks( 'AuthPluginAutoCreate', array( $user ) );
+		Hooks::run( 'AuthPluginAutoCreate', array( $user ) );
 
 		return true;
 	}
