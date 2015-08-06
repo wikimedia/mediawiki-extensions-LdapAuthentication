@@ -696,7 +696,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 					return false;
 				}
 				$result = true;
-				wfRunHooks( 'ChainAuth', array( $username, $password, &$result ) );
+				Hooks::run( 'ChainAuth', array( $username, $password, &$result ) );
 				if ( $result == false ) {
 					return false;
 				}
@@ -772,7 +772,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$template->set( 'useemail', $this->getConf( 'MailPassword' ) );
 		$template->set( 'canreset', $this->getConf( 'MailPassword' ) );
 		$template->set( 'domainnames', $this->domainList() );
-		wfRunHooks( 'LDAPModifyUITemplate', array( &$template ) );
+		Hooks::run( 'LDAPModifyUITemplate', array( &$template ) );
 	}
 
 	/**
@@ -1096,7 +1096,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 			$result = true;
 			# Let other extensions modify the user object before creation
-			wfRunHooks( 'LDAPSetCreationValues', array( $this, $username, &$values, $writeloc, &$this->userdn, &$result ) );
+			Hooks::run( 'LDAPSetCreationValues', array( $this, $username, &$values, $writeloc, &$this->userdn, &$result ) );
 			if ( !$result ) {
 				$this->printDebug( "Failed to add user because LDAPSetCreationValues returned false", NONSENSITIVE );
 				LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
@@ -1113,7 +1113,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			# Constraint violation, let's allow other plugins a chance to retry
 			if ( $errno === 19 ) {
 				$result = false;
-				wfRunHooks( 'LDAPRetrySetCreationValues', array( $this, $username, &$values, $writeloc, &$this->userdn, &$result ) );
+				Hooks::run( 'LDAPRetrySetCreationValues', array( $this, $username, &$values, $writeloc, &$this->userdn, &$result ) );
 				if ( $result && LdapAuthenticationPlugin::ldap_add( $this->ldapconn, $this->userdn, $values ) ) {
 					$this->printDebug( "Successfully added user", NONSENSITIVE );
 					LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
@@ -1238,7 +1238,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		}
 
 		# Let other extensions update the user
-		wfRunHooks( 'LDAPUpdateUser', array( &$user ) );
+		Hooks::run( 'LDAPUpdateUser', array( &$user ) );
 
 		$this->printDebug( "Saving user settings.", NONSENSITIVE );
 		$user->saveSettings();
@@ -1325,7 +1325,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 					// try to fetch the username by search before bind.
 					$this->userdn = $this->getUserDN( $username, true );
 					$hookSetUsername = $this->LDAPUsername;
-					wfRunHooks( 'SetUsernameAttributeFromLDAP', array( &$hookSetUsername, $this->userInfo ) );
+					Hooks::run( 'SetUsernameAttributeFromLDAP', array( &$hookSetUsername, $this->userInfo ) );
 					if ( is_string( $hookSetUsername ) ) {
 						$this->printDebug( "Username munged by hook: $hookSetUsername", NONSENSITIVE );
 						$this->LDAPUsername = $hookSetUsername;
