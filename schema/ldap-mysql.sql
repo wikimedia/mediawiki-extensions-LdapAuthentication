@@ -2,7 +2,7 @@ CREATE TABLE /*_*/ldap_domains (
 	-- IF for domain
 	domain_id int not null primary key auto_increment,
 
-	-- domain itself
+	-- Domain itself
 	domain varchar(255) binary not null,
 
 	-- User to which this domain belongs
