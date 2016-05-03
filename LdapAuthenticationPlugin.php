@@ -443,15 +443,17 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		if ( $this->connect() ) {
 			$searchstring = $this->getSearchString( $username );
 
-			// If we are using auto authentication, and we got
-			// anything back, then the user exists.
-			if ( $this->useAutoAuth() && $searchstring != '' ) {
+			if ( $searchstring == '' ) {
+				// It is possible that getSearchString will return an
+				// empty string, which means "no user".
+			} elseif ( $this->useAutoAuth() ) {
+				// If we are using auto authentication, and we got
+				// anything back, then the user exists.
 				$ret = true;
 			} else {
 				// Search for the entry.
 				$entry = LdapAuthenticationPlugin::ldap_read( $this->ldapconn, $searchstring, "objectclass=*" );
-
-				if ( $entry ) {
+				if ( $entry && LdapAuthenticationPlugin::ldap_count_entries( $this->ldapconn, $entry ) > 0 ) {
 					$this->printDebug( "Found a matching user in LDAP", NONSENSITIVE );
 					$ret = true;
 				} else {
