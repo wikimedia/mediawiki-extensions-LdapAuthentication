@@ -90,6 +90,7 @@ $wgExtensionCredits['other'][] = array(
 );
 
 $wgAutoloadClasses['LdapAuthenticationPlugin'] = __DIR__ . '/LdapAuthenticationPlugin.php';
+$wgAutoloadClasses['LdapPrimaryAuthenticationProvider'] = __DIR__ . '/LdapPrimaryAuthenticationProvider.php';
 
 $wgMessagesDirs['LdapAuthentication'] = __DIR__ . '/i18n';
 
@@ -134,6 +135,21 @@ define( "HIGHLYSENSITIVE", 3 );
 function AutoAuthSetup() {
 	global $wgHooks;
 	global $wgAuth;
+	global $wgDisableAuthManager;
+
+	if ( class_exists( MediaWiki\Auth\AuthManager::class ) && empty( $wgDisableAuthManager ) ) {
+		/**
+		 * @todo If you want to make AutoAuthSetup() work in an AuthManager
+		 *  world, what you need to do is figure out how to do it with a
+		 *  SessionProvider instead of the hackiness below. You'll probably
+		 *  want an ImmutableSessionProviderWithCookie subclass where
+		 *  provideSessionInfo() does the first part of
+		 *  LdapAutoAuthentication::Authenticate() (stop before the $localId
+		 *  bit).
+		 */
+		throw new BadFunctionCallException( 'AutoAuthSetup() is not supported with AuthManager.' );
+	}
+
 	$wgAuth = LdapAuthenticationPlugin::getInstance();
 
 	$wgAuth->printDebug( "Entering AutoAuthSetup.", NONSENSITIVE );
