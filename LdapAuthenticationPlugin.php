@@ -439,6 +439,18 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return true;
 		}
 
+		return $this->userExistsReal( $username );
+	}
+
+	/**
+	 * Like self::userExists, but always does the check
+	 * @see self::userExists()
+	 * @param string $username
+	 * @return bool
+	 */
+	public function userExistsReal( $username ) {
+		$this->printDebug( "Entering userExistsReal", NONSENSITIVE );
+
 		$ret = false;
 		if ( $this->connect() ) {
 			$searchstring = $this->getSearchString( $username );
