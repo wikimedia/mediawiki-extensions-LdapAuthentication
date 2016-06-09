@@ -72,6 +72,9 @@ class LdapPrimaryAuthenticationProvider
 	 */
 	private function setDomainForUser( LdapAuthenticationPlugin $ldap, User $user ) {
 		if ( !$this->hasMultipleDomains ) {
+			// LdapAuthenticationPlugin still needs setDomain called, even if
+			// getDomain is deterministic. Sigh.
+			$ldap->setDomain( $ldap->getDomain() );
 			return null;
 		}
 
@@ -193,8 +196,10 @@ class LdapPrimaryAuthenticationProvider
 			if ( !$ldap->validDomain( $domain ) ) {
 				$domain = $ldap->getDomain();
 			}
-			$ldap->setDomain( $domain );
+		} else {
+			$domain = $ldap->getDomain();
 		}
+		$ldap->setDomain( $domain );
 
 		if ( $this->testUserCanAuthenticateInternal( $ldap, User::newFromName( $username ) ) &&
 			$ldap->authenticate( $username, $req->password )
@@ -227,6 +232,7 @@ class LdapPrimaryAuthenticationProvider
 			return false;
 		} else {
 			// Yay, easy way out.
+			$ldap->setDomain( $ldap->getDomain() );
 			return $this->testUserCanAuthenticateInternal( $ldap, User::newFromName( $username ) );
 		}
 	}
@@ -296,6 +302,7 @@ class LdapPrimaryAuthenticationProvider
 			return false;
 		} else {
 			// Yay, easy way out.
+			$ldap->setDomain( $ldap->getDomain() );
 			return $ldap->userExistsReal( $username );
 		}
 	}
@@ -320,8 +327,8 @@ class LdapPrimaryAuthenticationProvider
 		$ldap = LdapAuthenticationPlugin::getInstance();
 
 		$curDomain = $ldap->getDomain();
-		if ( $checkData && $this->hasMultipleDomains ) {
-			$ldap->setDomain( $req->domain );
+		if ( $checkData ) {
+			$ldap->setDomain( $this->hasMultipleDomains ? $req->domain : $curDomain );
 		}
 		try {
 			// If !$checkData the domain might be wrong. Nothing we can do about that.
@@ -373,9 +380,7 @@ class LdapPrimaryAuthenticationProvider
 			}
 
 			$ldap = LdapAuthenticationPlugin::getInstance();
-			if ( $this->hasMultipleDomains ) {
-				$ldap->setDomain( $req->domain );
-			}
+			$ldap->setDomain( $this->hasMultipleDomains ? $req->domain : $ldap->getDomain() );
 			$user = User::newFromName( $username );
 			if ( !$ldap->setPassword( $user, $req->password ) ) {
 				// This is totally unfriendly and leaves other
@@ -417,9 +422,7 @@ class LdapPrimaryAuthenticationProvider
 		}
 
 		$ldap = LdapAuthenticationPlugin::getInstance();
-		if ( $this->hasMultipleDomains ) {
-			$ldap->setDomain( $req->domain );
-		}
+		$ldap->setDomain( $this->hasMultipleDomains ? $req->domain : $ldap->getDomain() );
 		if ( $ldap->addUser(
 			$user, $req->password, $user->getEmail(), $user->getRealName()
 		) ) {
