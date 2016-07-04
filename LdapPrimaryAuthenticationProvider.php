@@ -368,7 +368,7 @@ class LdapPrimaryAuthenticationProvider
 				return;
 			}
 
-			if ( $this->hasDomain && $req->domain === null ) {
+			if ( $this->hasMultipleDomains && $req->domain === null ) {
 				return;
 			}
 
