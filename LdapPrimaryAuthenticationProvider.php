@@ -90,7 +90,7 @@ class LdapPrimaryAuthenticationProvider
 		}
 
 		$ldap->setDomain( $domain );
-		return new ScopedCallback( [ $ldap, 'setDomain' ], $oldDomain );
+		return new ScopedCallback( [ $ldap, 'setDomain' ], [ $oldDomain ] );
 	}
 
 	/**
