@@ -2,7 +2,7 @@ CREATE TABLE ldap_domains (
 	-- IF for domain
 	domain_id serial PRIMARY KEY,
 
-	-- domain itself
+	-- Domain itself
 	domain varchar(255) not null,
 
 	-- User to which this domain belongs
