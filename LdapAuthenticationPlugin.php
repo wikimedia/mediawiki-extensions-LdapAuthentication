@@ -1,20 +1,22 @@
 <?php
-# Copyright (C) 2004 Ryan Lane <http://www.mediawiki.org/wiki/User:Ryan_lane>
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program; if not, write to the Free Software Foundation, Inc.,
-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-# http://www.gnu.org/copyleft/gpl.html
+/**
+ * Copyright (C) 2004 Ryan Lane <http://www.mediawiki.org/wiki/User:Ryan_lane>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * http://www.gnu.org/copyleft/gpl.html
+ */
 
 class LdapAuthenticationPlugin extends AuthPlugin {
 
@@ -71,7 +73,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param int $port
 	 * @return resource|false
 	 */
-	public static function ldap_connect( $hostname=null, $port=389 ) {
+	public static function ldap_connect( $hostname = null, $port = 389 ) {
 		wfSuppressWarnings();
 		$ret = ldap_connect( $hostname, $port );
 		wfRestoreWarnings();
@@ -85,7 +87,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param null $password
 	 * @return bool
 	 */
-	public static function ldap_bind( $ldapconn, $dn=null, $password=null ) {
+	public static function ldap_bind( $ldapconn, $dn = null, $password = null ) {
 		wfSuppressWarnings();
 		$ret = ldap_bind( $ldapconn, $dn, $password );
 		wfRestoreWarnings();
@@ -161,7 +163,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param null $deref
 	 * @return resource
 	 */
-	public static function ldap_search( $ldapconn, $basedn, $filter, $attributes=array(), $attrsonly=null, $sizelimit=null, $timelimit=null, $deref=null ) {
+	public static function ldap_search( $ldapconn, $basedn, $filter, $attributes = [], $attrsonly = null, $sizelimit = null, $timelimit = null, $deref = null ) {
 		wfSuppressWarnings();
 		$ret = ldap_search( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit, $timelimit, $deref );
 		wfRestoreWarnings();
@@ -180,7 +182,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param null $deref
 	 * @return resource
 	 */
-	public static function ldap_read( $ldapconn, $basedn, $filter, $attributes=array(), $attrsonly=null, $sizelimit=null, $timelimit=null, $deref=null ) {
+	public static function ldap_read( $ldapconn, $basedn, $filter, $attributes = [], $attrsonly = null, $sizelimit = null, $timelimit = null, $deref = null ) {
 		wfSuppressWarnings();
 		$ret = ldap_read( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit, $timelimit, $deref );
 		wfRestoreWarnings();
@@ -199,7 +201,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param null $deref
 	 * @return \resource
 	 */
-	public static function ldap_list( $ldapconn, $basedn, $filter, $attributes=array(), $attrsonly=null, $sizelimit=null, $timelimit=null, $deref=null ) {
+	public static function ldap_list( $ldapconn, $basedn, $filter, $attributes = [], $attrsonly = null, $sizelimit = null, $timelimit = null, $deref = null ) {
 		wfSuppressWarnings();
 		$ret = ldap_list( $ldapconn, $basedn, $filter, $attributes, $attrsonly, $sizelimit, $timelimit, $deref );
 		wfRestoreWarnings();
@@ -251,7 +253,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param string $domain
 	 * @return mixed
 	 */
-	public function getConf( $preference, $domain='' ) {
+	public function getConf( $preference, $domain = '' ) {
 		# Global preferences
 		switch ( $preference ) {
 		case 'DomainNames':
@@ -281,7 +283,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return self::setOrDefault( $wgLDAPEncryptionType, $domain, 'tls' );
 		case 'Options':
 			global $wgLDAPOptions;
-			return self::setOrDefault( $wgLDAPOptions, $domain, array() );
+			return self::setOrDefault( $wgLDAPOptions, $domain, [] );
 		case 'Port':
 			global $wgLDAPPort;
 			if ( isset( $wgLDAPPort[$domain] ) ) {
@@ -336,7 +338,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return self::setOrDefaultPrivate( $wgLDAPMailPassword, $domain, false );
 		case 'Preferences':
 			global $wgLDAPPreferences;
-			return self::setOrDefault( $wgLDAPPreferences, $domain, array() );
+			return self::setOrDefault( $wgLDAPPreferences, $domain, [] );
 		case 'DisableAutoCreate':
 			global $wgLDAPDisableAutoCreate;
 			return self::setOrDefault( $wgLDAPDisableAutoCreate, $domain, false );
@@ -368,16 +370,16 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return self::setOrDefault( $wgLDAPUseLDAPGroups, $domain, false );
 		case 'LocallyManagedGroups':
 			global $wgLDAPLocallyManagedGroups;
-			return self::setOrDefault( $wgLDAPLocallyManagedGroups, $domain, array() );
+			return self::setOrDefault( $wgLDAPLocallyManagedGroups, $domain, [] );
 		case 'GroupsPrevail':
 			global $wgLDAPGroupsPrevail;
 			return self::setOrDefault( $wgLDAPGroupsPrevail, $domain, false );
 		case 'RequiredGroups':
 			global $wgLDAPRequiredGroups;
-			return self::setOrDefault( $wgLDAPRequiredGroups, $domain, array() );
+			return self::setOrDefault( $wgLDAPRequiredGroups, $domain, [] );
 		case 'ExcludedGroups':
 			global $wgLDAPExcludedGroups;
-			return self::setOrDefault( $wgLDAPExcludedGroups, $domain, array() );
+			return self::setOrDefault( $wgLDAPExcludedGroups, $domain, [] );
 		case 'GroupSearchNestedGroups':
 			global $wgLDAPGroupSearchNestedGroups;
 			return self::setOrDefault( $wgLDAPGroupSearchNestedGroups, $domain, false );
@@ -483,7 +485,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param string $domain
 	 * @return bool
 	 */
-	public function connect( $domain='' ) {
+	public function connect( $domain = '' ) {
 		$this->printDebug( "Entering Connect", NONSENSITIVE );
 
 		if ( !function_exists( 'ldap_connect' ) ) {
@@ -495,7 +497,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		// Set the server string depending on whether we use ssl or not
 		$encryptionType = $this->getConf( 'EncryptionType', $domain );
-		switch( $encryptionType ) {
+		switch ( $encryptionType ) {
 			case "ldapi":
 				$this->printDebug( "Using ldapi", SENSITIVE );
 				$serverpre = "ldapi://";
@@ -578,7 +580,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		// this can mess with authentication, group pulling/restriction,
 		// preference pulling, etc. Let's allow the admin to use
 		// a lowercased username if needed.
-		if ( $this->getConf( 'LowerCaseUsername') ) {
+		if ( $this->getConf( 'LowerCaseUsername' ) ) {
 			$username = strtolower( $username );
 		}
 
@@ -624,7 +626,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 					return false;
 				}
 				$result = true;
-				Hooks::run( 'ChainAuth', array( $username, $password, &$result ) );
+				Hooks::run( 'ChainAuth', [ $username, $password, &$result ] );
 				if ( $result == false ) {
 					return false;
 				}
@@ -651,7 +653,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			if ( $aa ) {
 				$this->printDebug( "Checking for auth attributes: $aa", NONSENSITIVE );
 				$filter = "(" . $aa . ")";
-				$attributes = array( "dn" );
+				$attributes = [ "dn" ];
 				$entry = LdapAuthenticationPlugin::ldap_read( $this->ldapconn, $this->userdn, $filter, $attributes );
 				$info = LdapAuthenticationPlugin::ldap_get_entries( $this->ldapconn, $entry );
 				if ( $info["count"] < 1 ) {
@@ -700,7 +702,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$template->set( 'useemail', $this->getConf( 'MailPassword' ) );
 		$template->set( 'canreset', $this->getConf( 'MailPassword' ) );
 		$template->set( 'domainnames', $this->domainList() );
-		Hooks::run( 'LDAPModifyUITemplate', array( &$template ) );
+		Hooks::run( 'LDAPModifyUITemplate', [ &$template ] );
 	}
 
 	/**
@@ -720,7 +722,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			unset( $tempDomArr[array_search( $this->getConf( 'AutoAuthDomain' ), $tempDomArr )] );
 		}
 
-		$domains = array();
+		$domains = [];
 		foreach ( $tempDomArr as $tempDom ) {
 			$domains["$tempDom"] = $tempDom;
 		}
@@ -838,7 +840,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				return false;
 			}
 
-			$values = array();
+			$values = [];
 			$prefs = $this->getConf( 'Preferences' );
 			foreach ( array_keys( $prefs ) as $key ) {
 				$attr = strtolower( $prefs[$key] );
@@ -916,7 +918,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * it will cause MediaWiki to leak LDAP passwords into the local database.
 	 */
 	public function allowSetLocalPassword() {
-		return $this->getConf( 'UseLocal');
+		return $this->getConf( 'UseLocal' );
 	}
 
 	/**
@@ -1020,11 +1022,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$values["cn"] = $username;
 			}
 			$values["userpassword"] = $pass;
-			$values["objectclass"] = array( "inetorgperson" );
+			$values["objectclass"] = [ "inetorgperson" ];
 
 			$result = true;
 			# Let other extensions modify the user object before creation
-			Hooks::run( 'LDAPSetCreationValues', array( $this, $username, &$values, $writeloc, &$this->userdn, &$result ) );
+			Hooks::run( 'LDAPSetCreationValues', [ $this, $username, &$values, $writeloc, &$this->userdn, &$result ] );
 			if ( !$result ) {
 				$this->printDebug( "Failed to add user because LDAPSetCreationValues returned false", NONSENSITIVE );
 				LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
@@ -1041,7 +1043,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			# Constraint violation, let's allow other plugins a chance to retry
 			if ( $errno === 19 ) {
 				$result = false;
-				Hooks::run( 'LDAPRetrySetCreationValues', array( $this, $username, &$values, $writeloc, &$this->userdn, &$result ) );
+				Hooks::run( 'LDAPRetrySetCreationValues', [ $this, $username, &$values, $writeloc, &$this->userdn, &$result ] );
 				if ( $result && LdapAuthenticationPlugin::ldap_add( $this->ldapconn, $this->userdn, $values ) ) {
 					$this->printDebug( "Successfully added user", NONSENSITIVE );
 					LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
@@ -1166,7 +1168,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		}
 
 		# Let other extensions update the user
-		Hooks::run( 'LDAPUpdateUser', array( &$user ) );
+		Hooks::run( 'LDAPUpdateUser', [ &$user ] );
 
 		$this->printDebug( "Saving user settings.", NONSENSITIVE );
 		$user->saveSettings();
@@ -1253,7 +1255,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 					// try to fetch the username by search before bind.
 					$this->userdn = $this->getUserDN( $username, true );
 					$hookSetUsername = $this->LDAPUsername;
-					Hooks::run( 'SetUsernameAttributeFromLDAP', array( &$hookSetUsername, $this->userInfo ) );
+					Hooks::run( 'SetUsernameAttributeFromLDAP', [ &$hookSetUsername, $this->userInfo ] );
 					if ( is_string( $hookSetUsername ) ) {
 						$this->printDebug( "Username munged by hook: $hookSetUsername", NONSENSITIVE );
 						$this->LDAPUsername = $hookSetUsername;
@@ -1269,7 +1271,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 					$this->printDebug( "Using LDAPUsername: $canonicalname", NONSENSITIVE );
 				}
 
-				$wgMemc->set( $key, array( "username" => $username, "canonicalname" => $canonicalname ), 3600 * 24 );
+				$wgMemc->set( $key, [ "username" => $username, "canonicalname" => $canonicalname ], 3600 * 24 );
 			}
 		}
 		$this->printDebug( "Munged username: $canonicalname", NONSENSITIVE );
@@ -1315,11 +1317,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param string $searchattr
 	 * @return string
 	 */
-	public function getUserDN( $username, $bind=false, $searchattr='' ) {
+	public function getUserDN( $username, $bind = false, $searchattr = '' ) {
 		$this->printDebug( "Entering getUserDN", NONSENSITIVE );
 		if ( $bind ) {
 			// This is a proxy bind, or an anonymous bind with a search
-			$proxyagent = $this->getConf( 'ProxyAgent');
+			$proxyagent = $this->getConf( 'ProxyAgent' );
 			if ( $proxyagent ) {
 				// This is a proxy bind
 				$this->printDebug( "Doing a proxy bind", NONSENSITIVE );
@@ -1343,7 +1345,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$this->printDebug( "Created a regular filter: $filter", SENSITIVE );
 
 		// We explicitly put memberof here because it's an operational attribute in some servers.
-		$attributes = array( "*", "memberof" );
+		$attributes = [ "*", "memberof" ];
 		$base = $this->getBaseDN( USERDN );
 		$this->printDebug( "Using base: $base", SENSITIVE );
 		$entry = LdapAuthenticationPlugin::ldap_search( $this->ldapconn, $base, $filter, $attributes );
@@ -1393,7 +1395,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$key = wfMemcKey( 'ldapauthentication', 'userinfo', $userdn );
 		$userInfo = $wgMemc->get( $key );
 		if ( !is_array( $userInfo ) ) {
-			$entry = LdapAuthenticationPlugin::ldap_read( $this->ldapconn, $userdn, "objectclass=*", array( '*', 'memberof' ) );
+			$entry = LdapAuthenticationPlugin::ldap_read( $this->ldapconn, $userdn, "objectclass=*", [ '*', 'memberof' ] );
 			$userInfo = LdapAuthenticationPlugin::ldap_get_entries( $this->ldapconn, $entry );
 			if ( $userInfo["count"] < 1 ) {
 				return null;
@@ -1457,9 +1459,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$excgroups = $this->getConf( 'ExcludedGroups' );
 		if ( $excgroups ) {
 			$this->printDebug( "Checking for excluded group membership", NONSENSITIVE );
-			for ( $i = 0; $i < count( $excgroups ); $i++ ) {
-				$excgroups[$i] = strtolower( $excgroups[$i] );
-			}
+
+			$excgroups = array_map( 'strtolower', $excgroups );
 
 			$this->printDebug( "Excluded groups:", NONSENSITIVE, $excgroups );
 
@@ -1475,9 +1476,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$reqgroups = $this->getConf( 'RequiredGroups' );
 		if ( $reqgroups ) {
 			$this->printDebug( "Checking for (new style) group membership", NONSENSITIVE );
-			for ( $i = 0; $i < count( $reqgroups ); $i++ ) {
-				$reqgroups[$i] = strtolower( $reqgroups[$i] );
-			}
+
+			$reqgroups = array_map( 'strtolower', $reqgroups );
 
 			$this->printDebug( "Required groups:", NONSENSITIVE, $reqgroups );
 
@@ -1505,7 +1505,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$this->printDebug( "Entering getGroups", NONSENSITIVE );
 
 		// Ensure userLDAPGroups is set, no matter what
-		$this->userLDAPGroups = array( "dn"=> array(), "short"=>array() );
+		$this->userLDAPGroups = [ "dn" => [], "short" => [] ];
 
 		// Find groups
 		if ( $this->getConf( 'RequiredGroups' ) || $this->getConf( 'UseLDAPGroups' ) ) {
@@ -1527,13 +1527,13 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$this->printDebug( "Using memberOf", NONSENSITIVE );
 				if ( !$this->getUserInfo() ) {
 					$this->printDebug( "Couldn't get the user's entry.", NONSENSITIVE );
-				} else if ( isset( $this->userInfo[0]["memberof"] ) ) {
+				} elseif ( isset( $this->userInfo[0]["memberof"] ) ) {
 					# The first entry is always a count
 					$memberOfMembers = $this->userInfo[0]["memberof"];
 					array_shift( $memberOfMembers );
-					$groups = array( "dn"=> array(), "short"=>array() );
+					$groups = [ "dn" => [], "short" => [] ];
 
-					foreach( $memberOfMembers as $mem ) {
+					foreach ( $memberOfMembers as $mem ) {
 						array_push( $groups["dn"], strtolower( $mem ) );
 
 						// Get short name of group
@@ -1577,7 +1577,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return bool
 	 * @access private
 	 */
-	function searchNestedGroups( $groups, $searchedgroups = array( "dn" => array(), "short" => array() ) ) {
+	function searchNestedGroups( $groups, $searchedgroups = [ "dn" => [], "short" => [] ] ) {
 		$this->printDebug( "Entering searchNestedGroups", NONSENSITIVE );
 
 		// base case, no more groups left to check
@@ -1587,7 +1587,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		}
 
 		$this->printDebug( "Searching groups:", SENSITIVE, $groups["dn"] );
-		$groupstosearch = array( "short" => array(), "dn" => array() );
+		$groupstosearch = [ "short" => [], "dn" => [] ];
 		foreach ( $groups["dn"] as $group ) {
 			$returnedgroups = $this->searchGroups( $group );
 			$this->printDebug( "Group $group is in the following groups:", SENSITIVE, $returnedgroups["dn"] );
@@ -1646,10 +1646,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$this->bindAs( $proxyagent, $this->getConf( 'ProxyAgentPassword' ) );
 		}
 
-		$groups = array( "short" => array(), "dn" => array() );
+		$groups = [ "short" => [], "dn" => [] ];
 
 		// AD does not include the primary group in the list of groups, we have to find it ourselves.
-		if ( $dn != "*" && $this->getConf('ActiveDirectory')) {
+		if ( $dn != "*" && $this->getConf( 'ActiveDirectory' ) ) {
 			$PGfilter = "(&(distinguishedName=$value)(objectclass=user))";
 			$this->printDebug( "User Filter: $PGfilter", SENSITIVE );
 			$PGinfo = LdapAuthenticationPlugin::ldap_search( $this->ldapconn, $base, $PGfilter );
@@ -1658,13 +1658,13 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$Usid = $PGentries[0]['objectsid'][0];
 				$PGrid = $PGentries[0]['primarygroupid'][0];
 				$PGsid = bin2hex( $Usid );
-				$PGSID = array();
-				for ( $i=0; $i < 56; $i += 2 ) {
+				$PGSID = [];
+				for ( $i = 0; $i < 56; $i += 2 ) {
 					$PGSID[] = substr( $PGsid, $i, 2 );
 				}
 				$dPGrid = dechex( $PGrid );
 				$dPGrid = str_pad( $dPGrid, 8, '0', STR_PAD_LEFT );
-				$PGRID = array();
+				$PGRID = [];
 				for ( $i = 0; $i < 8; $i += 2 ) {
 					array_push( $PGRID, substr( $dPGrid, $i, 2 ) );
 				}
@@ -1701,7 +1701,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$this->printDebug( "No entries returned from search.", SENSITIVE );
 			// Return an array so that other functions
 			// don't error out.
-			return array( "short" => array(), "dn" => array() );
+			return [ "short" => [], "dn" => [] ];
 		}
 
 		$entries = LdapAuthenticationPlugin::ldap_get_entries( $this->ldapconn, $info );
@@ -1765,7 +1765,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 			foreach ( $this->allLDAPGroups["short"] as $ldapgroup ) {
 				if ( !array_key_exists( $ldapgroup, $wgGroupPermissions ) ) {
-					$wgGroupPermissions[$ldapgroup] = array();
+					$wgGroupPermissions[$ldapgroup] = [];
 				}
 			}
 		}
@@ -1773,7 +1773,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		# add groups permissions
 		$localAvailGrps = $user->getAllGroups();
 		$localUserGrps = $user->getEffectiveGroups();
-		$defaultLocallyManagedGrps = array( 'bot', 'sysop', 'bureaucrat' );
+		$defaultLocallyManagedGrps = [ 'bot', 'sysop', 'bureaucrat' ];
 		$locallyManagedGrps = $this->getConf( 'LocallyManagedGroups' );
 		if ( $locallyManagedGrps ) {
 			$locallyManagedGrps = array_unique( array_merge( $defaultLocallyManagedGrps, $locallyManagedGrps ) );
@@ -1909,8 +1909,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	function getLdapEscapedString( $string ) {
 		// Make the string LDAP compliant by escaping *, (, ) , \ & NUL
 		return str_replace(
-			array( "\\", "(", ")", "*", "\x00" ),
-			array( "\\5c", "\\28", "\\29", "\\2a", "\\00" ),
+			[ "\\", "(", ")", "*", "\x00" ],
+			[ "\\5c", "\\28", "\\29", "\\2a", "\\00" ],
 			$string
 			);
 	}
@@ -1926,7 +1926,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$this->printDebug( "Entering getBaseDN", NONSENSITIVE );
 
 		$ret = '';
-		switch( $type ) {
+		switch ( $type ) {
 			case USERDN:
 				$ret = $this->getConf( 'UserBaseDN' );
 				break;
@@ -1964,8 +1964,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$dbr = wfGetDB( DB_SLAVE );
 			$row = $dbr->selectRow(
 				'ldap_domains',
-				array( 'domain' ),
-				array( 'user_id' => $user_id ),
+				[ 'domain' ],
+				[ 'user_id' => $user_id ],
 				__METHOD__ );
 
 			if ( $row ) {
@@ -1989,15 +1989,19 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			if ( $olddomain ) {
 				return $dbw->update(
 					'ldap_domains',
-					array( 'domain' => $domain ),
-					array( 'user_id' => $user_id ),
-					__METHOD__ );
+					[ 'domain' => $domain ],
+					[ 'user_id' => $user_id ],
+					__METHOD__
+				);
 			} else {
 				return $dbw->insert(
 					'ldap_domains',
-					array(  'domain' => $domain,
-						'user_id' => $user_id ),
-					__METHOD__ );
+					[
+						'domain' => $domain,
+						'user_id' => $user_id
+					],
+					__METHOD__
+				);
 			}
 		}
 		return false;

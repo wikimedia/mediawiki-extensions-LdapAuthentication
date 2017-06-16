@@ -1,20 +1,22 @@
 <?php
-# Copyright (C) 2004 Ryan Lane <http://www.mediawiki.org/wiki/User:Ryan_lane>
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program; if not, write to the Free Software Foundation, Inc.,
-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-# http://www.gnu.org/copyleft/gpl.html
+/**
+ * Copyright (C) 2004 Ryan Lane <http://www.mediawiki.org/wiki/User:Ryan_lane>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * http://www.gnu.org/copyleft/gpl.html
+ */
 
 /**
  * LdapAuthentication plugin. LDAP Authentication and authorization integration with MediaWiki.
@@ -23,63 +25,65 @@
  * @ingroup MediaWiki
  */
 
-#
-# LdapAuthentication.php
-#
-# Info available at http://www.mediawiki.org/wiki/Extension:LDAP_Authentication
-# Support is available at http://www.mediawiki.org/wiki/Extension_talk:LDAP_Authentication
-#
+/**
+ * LdapAuthentication.php
+ *
+ * Info available at https://www.mediawiki.org/wiki/Extension:LDAP_Authentication
+ * Support is available at https://www.mediawiki.org/wiki/Extension_talk:LDAP_Authentication
+ */
 
-if ( !defined( 'MEDIAWIKI' ) ) exit;
+if ( !defined( 'MEDIAWIKI' ) ) {
+	exit;
+}
 
-$wgLDAPDomainNames = array();
-$wgLDAPServerNames = array();
+$wgLDAPDomainNames = [];
+$wgLDAPServerNames = [];
 $wgLDAPUseLocal = false;
-$wgLDAPEncryptionType = array();
-$wgLDAPOptions = array();
-$wgLDAPPort = array();
-$wgLDAPSearchStrings = array();
-$wgLDAPProxyAgent = array();
-$wgLDAPProxyAgentPassword = array();
-$wgLDAPSearchAttributes = array();
-$wgLDAPBaseDNs = array();
-$wgLDAPGroupBaseDNs = array();
-$wgLDAPUserBaseDNs = array();
-$wgLDAPWriterDN = array();
-$wgLDAPWriterPassword = array();
-$wgLDAPWriteLocation = array();
-$wgLDAPAddLDAPUsers = array();
-$wgLDAPUpdateLDAP = array();
-$wgLDAPPasswordHash = array();
-$wgLDAPMailPassword = array();
-$wgLDAPPreferences = array();
-$wgLDAPDisableAutoCreate = array();
+$wgLDAPEncryptionType = [];
+$wgLDAPOptions = [];
+$wgLDAPPort = [];
+$wgLDAPSearchStrings = [];
+$wgLDAPProxyAgent = [];
+$wgLDAPProxyAgentPassword = [];
+$wgLDAPSearchAttributes = [];
+$wgLDAPBaseDNs = [];
+$wgLDAPGroupBaseDNs = [];
+$wgLDAPUserBaseDNs = [];
+$wgLDAPWriterDN = [];
+$wgLDAPWriterPassword = [];
+$wgLDAPWriteLocation = [];
+$wgLDAPAddLDAPUsers = [];
+$wgLDAPUpdateLDAP = [];
+$wgLDAPPasswordHash = [];
+$wgLDAPMailPassword = [];
+$wgLDAPPreferences = [];
+$wgLDAPDisableAutoCreate = [];
 $wgLDAPDebug = 0;
-$wgLDAPGroupUseFullDN = array();
-$wgLDAPLowerCaseUsername = array();
-$wgLDAPGroupUseRetrievedUsername = array();
-$wgLDAPGroupObjectclass = array();
-$wgLDAPGroupAttribute = array();
-$wgLDAPGroupNameAttribute = array();
-$wgLDAPGroupsUseMemberOf = array();
-$wgLDAPUseLDAPGroups = array();
-$wgLDAPLocallyManagedGroups = array();
-$wgLDAPGroupsPrevail = array();
-$wgLDAPRequiredGroups = array();
-$wgLDAPExcludedGroups = array();
-$wgLDAPGroupSearchNestedGroups = array();
-$wgLDAPAuthAttribute = array();
+$wgLDAPGroupUseFullDN = [];
+$wgLDAPLowerCaseUsername = [];
+$wgLDAPGroupUseRetrievedUsername = [];
+$wgLDAPGroupObjectclass = [];
+$wgLDAPGroupAttribute = [];
+$wgLDAPGroupNameAttribute = [];
+$wgLDAPGroupsUseMemberOf = [];
+$wgLDAPUseLDAPGroups = [];
+$wgLDAPLocallyManagedGroups = [];
+$wgLDAPGroupsPrevail = [];
+$wgLDAPRequiredGroups = [];
+$wgLDAPExcludedGroups = [];
+$wgLDAPGroupSearchNestedGroups = [];
+$wgLDAPAuthAttribute = [];
 $wgLDAPAutoAuthUsername = "";
 $wgLDAPAutoAuthDomain = "";
 $wgPasswordResetRoutes['domain'] = true;
-$wgLDAPActiveDirectory = array();
+$wgLDAPActiveDirectory = [];
 
 define( "LDAPAUTHVERSION", "2.1.0" );
 
 /**
  * Add extension information to Special:Version
  */
-$wgExtensionCredits['other'][] = array(
+$wgExtensionCredits['other'][] = [
 	'path' => __FILE__,
 	'name' => 'LDAP Authentication Plugin',
 	'version' => LDAPAUTHVERSION,
@@ -87,7 +91,7 @@ $wgExtensionCredits['other'][] = array(
 	'descriptionmsg' => 'ldapauthentication-desc',
 	'url' => 'https://www.mediawiki.org/wiki/Extension:LDAP_Authentication',
 	'license-name' => 'GPL-2.0+',
-);
+];
 
 $wgAutoloadClasses['LdapAuthenticationPlugin'] = __DIR__ . '/LdapAuthenticationPlugin.php';
 $wgAutoloadClasses['LdapPrimaryAuthenticationProvider'] = __DIR__ . '/LdapPrimaryAuthenticationProvider.php';
@@ -156,7 +160,7 @@ function AutoAuthSetup() {
 	$wgAuth->printDebug( "Entering AutoAuthSetup.", NONSENSITIVE );
 
 	# We need both authentication username and domain (bug 34787)
-	if ( $wgAuth->getConf("AutoAuthUsername") !== "" && $wgAuth->getConf("AutoAuthDomain") !== "" ) {
+	if ( $wgAuth->getConf( "AutoAuthUsername" ) !== "" && $wgAuth->getConf( "AutoAuthDomain" ) !== "" ) {
 		$wgAuth->printDebug( "wgLDAPAutoAuthUsername and wgLDAPAutoAuthDomain is not null, adding hooks.", NONSENSITIVE );
 		$wgHooks['UserLoadAfterLoadFromSession'][] = 'LdapAutoAuthentication::Authenticate';
 
