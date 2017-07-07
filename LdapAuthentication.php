@@ -164,6 +164,7 @@ function AutoAuthSetup() {
 		$wgAuth->printDebug( "wgLDAPAutoAuthUsername and wgLDAPAutoAuthDomain is not null, adding hooks.", NONSENSITIVE );
 		$wgHooks['UserLoadAfterLoadFromSession'][] = 'LdapAutoAuthentication::Authenticate';
 
-		$wgHooks['PersonalUrls'][] = 'LdapAutoAuthentication::NoLogout'; /* Disallow logout link */
+		// Disallow logout link
+		$wgHooks['PersonalUrls'][] = 'LdapAutoAuthentication::NoLogout';
 	}
 }

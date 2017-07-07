@@ -603,7 +603,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		}
 
 		if ( $this->connect() ) {
-
 			$this->userdn = $this->getSearchString( $username );
 
 			// It is possible that getSearchString will return an
@@ -1516,7 +1515,6 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$usertopass = $this->userdn;
 			} else {
 				if ( $this->getConf( 'GroupUseRetrievedUsername' ) && $this->LDAPUsername != '' ) {
-
 					$usertopass = $this->LDAPUsername;
 				} else {
 					$usertopass = $username;
@@ -1705,7 +1703,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		}
 
 		$entries = LdapAuthenticationPlugin::ldap_get_entries( $this->ldapconn, $info );
-		if ( $entries ){
+		if ( $entries ) {
 			// We need to shift because the first entry will be a count
 			array_shift( $entries );
 			// Let's get a list of both full dn groups and shortname groups
@@ -1797,7 +1795,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 					# so as the user is currently not a member of the ldap group, he shall be removed from the local group
 					$user->removeGroup( $cGroup );
 				}
-			} else { # no, but maybe the user has recently been added to the ldap group?
+			} else {
+				# no, but maybe the user has recently been added to the ldap group?
 				$this->printDebug( "Checking to see if user is in: $cGroup", NONSENSITIVE );
 				if ( $this->hasLDAPGroup( $cGroup ) ) {
 					$this->printDebug( "Adding user to: $cGroup", NONSENSITIVE );
