@@ -94,7 +94,8 @@ $wgExtensionCredits['other'][] = [
 ];
 
 $wgAutoloadClasses['LdapAuthenticationPlugin'] = __DIR__ . '/LdapAuthenticationPlugin.php';
-$wgAutoloadClasses['LdapPrimaryAuthenticationProvider'] = __DIR__ . '/LdapPrimaryAuthenticationProvider.php';
+$wgAutoloadClasses['LdapPrimaryAuthenticationProvider'] =
+	__DIR__ . '/LdapPrimaryAuthenticationProvider.php';
 
 $wgMessagesDirs['LdapAuthentication'] = __DIR__ . '/i18n';
 
@@ -160,8 +161,13 @@ function AutoAuthSetup() {
 	$wgAuth->printDebug( "Entering AutoAuthSetup.", NONSENSITIVE );
 
 	# We need both authentication username and domain (bug 34787)
-	if ( $wgAuth->getConf( "AutoAuthUsername" ) !== "" && $wgAuth->getConf( "AutoAuthDomain" ) !== "" ) {
-		$wgAuth->printDebug( "wgLDAPAutoAuthUsername and wgLDAPAutoAuthDomain is not null, adding hooks.", NONSENSITIVE );
+	if ( $wgAuth->getConf( "AutoAuthUsername" ) !== "" &&
+		$wgAuth->getConf( "AutoAuthDomain" ) !== ""
+	) {
+		$wgAuth->printDebug(
+			"wgLDAPAutoAuthUsername and wgLDAPAutoAuthDomain is not null, adding hooks.",
+			NONSENSITIVE
+		);
 		$wgHooks['UserLoadAfterLoadFromSession'][] = 'LdapAutoAuthentication::Authenticate';
 
 		// Disallow logout link

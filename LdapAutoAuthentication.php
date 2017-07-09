@@ -41,7 +41,10 @@ class LdapAutoAuthentication {
 		// get from LDAP.
 		$mungedUsername = $ldap->getCanonicalName( $autoauthname );
 
-		$ldap->printDebug( "User exists in LDAP; finding the user by name ($mungedUsername) in MediaWiki.", NONSENSITIVE );
+		$ldap->printDebug(
+			"User exists in LDAP; finding the user by name ($mungedUsername) in MediaWiki.",
+			NONSENSITIVE
+		);
 		$localId = User::idFromName( $mungedUsername );
 		$ldap->printDebug( "Got id ($localId).", NONSENSITIVE );
 
