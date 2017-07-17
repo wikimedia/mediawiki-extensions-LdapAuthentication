@@ -77,6 +77,7 @@ $wgLDAPAutoAuthUsername = "";
 $wgLDAPAutoAuthDomain = "";
 $wgPasswordResetRoutes['domain'] = true;
 $wgLDAPActiveDirectory = [];
+$wgLDAPGroupSearchPosixPrimaryGroup = false;
 
 define( "LDAPAUTHVERSION", "2.1.0" );
 
