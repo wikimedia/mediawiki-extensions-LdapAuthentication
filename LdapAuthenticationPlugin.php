@@ -1437,6 +1437,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			}
 			if ( !$bind ) {
 				$this->printDebug( "Failed to bind", NONSENSITIVE );
+				$this->fetchedUserInfo = false;
+				$this->userInfo = null;
 				return '';
 			}
 		}
@@ -1458,6 +1460,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		if ( LdapAuthenticationPlugin::ldap_count_entries( $this->ldapconn, $entry ) == 0 ) {
 			$this->printDebug( "Couldn't find an entry", NONSENSITIVE );
 			$this->fetchedUserInfo = false;
+			$this->userInfo = null;
 			return '';
 		}
 		$this->userInfo = LdapAuthenticationPlugin::ldap_get_entries( $this->ldapconn, $entry );
