@@ -520,11 +520,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$ret = true;
 			} else {
 				// Search for the entry.
-				$entry = LdapAuthenticationPlugin::ldap_read(
+				$entry = self::ldap_read(
 					$this->ldapconn, $searchstring, "objectclass=*"
 				);
 				if ( $entry &&
-					LdapAuthenticationPlugin::ldap_count_entries( $this->ldapconn, $entry ) > 0
+					self::ldap_count_entries( $this->ldapconn, $entry ) > 0
 				) {
 					$this->printDebug( "Found a matching user in LDAP", NONSENSITIVE );
 					$ret = true;
@@ -533,7 +533,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				}
 			}
 			// getSearchString is going to bind, but will not unbind
-			LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
+			self::ldap_unbind( $this->ldapconn );
 		}
 		return $ret;
 	}
@@ -588,7 +588,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$this->printDebug( "Using servers: $servers", SENSITIVE );
 
 		// Connect and set options
-		$this->ldapconn = LdapAuthenticationPlugin::ldap_connect( $servers );
+		$this->ldapconn = self::ldap_connect( $servers );
 		if ( !$this->ldapconn ) {
 			$this->printDebug( "PHP's LDAP connect method returned null, this likely implies a " .
 				"misconfiguration of the plugin.", NONSENSITIVE );
@@ -676,7 +676,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			// return true, and will let anyone in!
 			if ( '' == $this->userdn ) {
 				$this->printDebug( "User DN is blank", NONSENSITIVE );
-				LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
+				self::ldap_unbind( $this->ldapconn );
 				$this->markAuthFailed();
 				return false;
 			}
@@ -719,13 +719,13 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$this->printDebug( "Checking for auth attributes: $aa", NONSENSITIVE );
 				$filter = "(" . $aa . ")";
 				$attributes = [ "dn" ];
-				$entry = LdapAuthenticationPlugin::ldap_read(
+				$entry = self::ldap_read(
 					$this->ldapconn, $this->userdn, $filter, $attributes
 				);
-				$info = LdapAuthenticationPlugin::ldap_get_entries( $this->ldapconn, $entry );
+				$info = self::ldap_get_entries( $this->ldapconn, $entry );
 				if ( $info["count"] < 1 ) {
 					$this->printDebug( "Failed auth attribute check", NONSENSITIVE );
-					LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
+					self::ldap_unbind( $this->ldapconn );
 					$this->markAuthFailed();
 					return false;
 				}
@@ -734,14 +734,14 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$this->getGroups( $username );
 
 			if ( !$this->checkGroups() ) {
-				LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
+				self::ldap_unbind( $this->ldapconn );
 				$this->markAuthFailed();
 				return false;
 			}
 
 			$this->getPreferences();
 
-			LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
+			self::ldap_unbind( $this->ldapconn );
 		} else {
 			$this->markAuthFailed();
 			return false;
@@ -861,10 +861,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			// This doesn't do anything. $password isn't by reference
 			$password = '';
 
-			$success = LdapAuthenticationPlugin::ldap_modify(
+			$success = self::ldap_modify(
 				$this->ldapconn, $this->userdn, $values
 			);
-			LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
+			self::ldap_unbind( $this->ldapconn );
 			if ( $success ) {
 				$this->printDebug( "Successfully modified the user's password", NONSENSITIVE );
 				return true;
@@ -944,17 +944,17 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			}
 
 			if ( count( $values ) &&
-				LdapAuthenticationPlugin::ldap_modify( $this->ldapconn, $this->userdn, $values )
+				self::ldap_modify( $this->ldapconn, $this->userdn, $values )
 			) {
 				// We changed the user, we need to invalidate the memcache key
 				$key = wfMemcKey( 'ldapauthentication', 'userinfo', $this->userdn );
 				$wgMemc->delete( $key );
 				$this->printDebug( "Successfully modified the user's attributes", NONSENSITIVE );
-				LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
+				self::ldap_unbind( $this->ldapconn );
 				return true;
 			}
 			$this->printDebug( "Failed to modify the user's attributes", NONSENSITIVE );
-			LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
+			self::ldap_unbind( $this->ldapconn );
 		}
 		return false;
 	}
@@ -1056,7 +1056,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				} else {
 					$this->printDebug( "wgLDAPWriteLocation is not set, failing", NONSENSITIVE );
 					// getSearchString will bind, but will not unbind
-					LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
+					self::ldap_unbind( $this->ldapconn );
 					return false;
 				}
 			}
@@ -1113,32 +1113,32 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				$this->printDebug(
 					"Failed to add user because LDAPSetCreationValues returned false", NONSENSITIVE
 				);
-				LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
+				self::ldap_unbind( $this->ldapconn );
 				return false;
 			}
 
 			$this->printDebug( "Adding user", NONSENSITIVE );
-			if ( LdapAuthenticationPlugin::ldap_add( $this->ldapconn, $this->userdn, $values ) ) {
+			if ( self::ldap_add( $this->ldapconn, $this->userdn, $values ) ) {
 				$this->printDebug( "Successfully added user", NONSENSITIVE );
-				LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
+				self::ldap_unbind( $this->ldapconn );
 				return true;
 			}
-			$errno = LdapAuthenticationPlugin::ldap_errno( $this->ldapconn );
+			$errno = self::ldap_errno( $this->ldapconn );
 			# Constraint violation, let's allow other plugins a chance to retry
 			if ( $errno === 19 ) {
 				$result = false;
 				Hooks::run( 'LDAPRetrySetCreationValues',
 					[ $this, $username, &$values, $writeloc, &$this->userdn, &$result ] );
 				if ( $result &&
-					LdapAuthenticationPlugin::ldap_add( $this->ldapconn, $this->userdn, $values )
+					self::ldap_add( $this->ldapconn, $this->userdn, $values )
 				) {
 					$this->printDebug( "Successfully added user", NONSENSITIVE );
-					LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
+					self::ldap_unbind( $this->ldapconn );
 					return true;
 				}
 			}
 			$this->printDebug( "Failed to add user", NONSENSITIVE );
-			LdapAuthenticationPlugin::ldap_unbind( $this->ldapconn );
+			self::ldap_unbind( $this->ldapconn );
 		}
 		return false;
 	}
@@ -1454,16 +1454,16 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$attributes = [ "*", "memberof" ];
 		$base = $this->getBaseDN( USERDN );
 		$this->printDebug( "Using base: $base", SENSITIVE );
-		$entry = LdapAuthenticationPlugin::ldap_search(
+		$entry = self::ldap_search(
 			$this->ldapconn, $base, $filter, $attributes
 		);
-		if ( LdapAuthenticationPlugin::ldap_count_entries( $this->ldapconn, $entry ) == 0 ) {
+		if ( self::ldap_count_entries( $this->ldapconn, $entry ) == 0 ) {
 			$this->printDebug( "Couldn't find an entry", NONSENSITIVE );
 			$this->fetchedUserInfo = false;
 			$this->userInfo = null;
 			return '';
 		}
-		$this->userInfo = LdapAuthenticationPlugin::ldap_get_entries( $this->ldapconn, $entry );
+		$this->userInfo = self::ldap_get_entries( $this->ldapconn, $entry );
 		$this->fetchedUserInfo = true;
 		if ( isset( $this->userInfo[0][$searchattr] ) ) {
 			$username = $this->userInfo[0][$searchattr][0];
@@ -1507,10 +1507,10 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$key = wfMemcKey( 'ldapauthentication', 'userinfo', $userdn );
 		$userInfo = $wgMemc->get( $key );
 		if ( !is_array( $userInfo ) ) {
-			$entry = LdapAuthenticationPlugin::ldap_read(
+			$entry = self::ldap_read(
 				$this->ldapconn, $userdn, "objectclass=*", [ '*', 'memberof' ]
 			);
-			$userInfo = LdapAuthenticationPlugin::ldap_get_entries( $this->ldapconn, $entry );
+			$userInfo = self::ldap_get_entries( $this->ldapconn, $entry );
 			if ( $userInfo["count"] < 1 ) {
 				return null;
 			}
@@ -1783,8 +1783,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		if ( $dn != "*" && $this->getConf( 'ActiveDirectory' ) ) {
 			$PGfilter = "(&(distinguishedName=$value)(objectclass=user))";
 			$this->printDebug( "User Filter: $PGfilter", SENSITIVE );
-			$PGinfo = LdapAuthenticationPlugin::ldap_search( $this->ldapconn, $base, $PGfilter );
-			$PGentries = LdapAuthenticationPlugin::ldap_get_entries( $this->ldapconn, $PGinfo );
+			$PGinfo = self::ldap_search( $this->ldapconn, $base, $PGfilter );
+			$PGentries = self::ldap_get_entries( $this->ldapconn, $PGinfo );
 			if ( !empty( $PGentries[0] ) ) {
 				$Usid = $PGentries[0]['objectsid'][0];
 				$PGrid = $PGentries[0]['primarygroupid'][0];
@@ -1808,8 +1808,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 				}
 				$PGfilter = "(&(objectSid=$PGsid_string)(objectclass=$objectclass))";
 				$this->printDebug( "Primary Group Filter: $PGfilter", SENSITIVE );
-				$info = LdapAuthenticationPlugin::ldap_search( $this->ldapconn, $base, $PGfilter );
-				$PGentries = LdapAuthenticationPlugin::ldap_get_entries( $this->ldapconn, $info );
+				$info = self::ldap_search( $this->ldapconn, $base, $PGfilter );
+				$PGentries = self::ldap_get_entries( $this->ldapconn, $info );
 				array_shift( $PGentries );
 				$dnMember = strtolower( $PGentries[0]['dn'] );
 				$groups["dn"][] = $dnMember;
@@ -1827,7 +1827,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 		$filter = "(&($attribute=$value)(objectclass=$objectclass))";
 		$this->printDebug( "Search string: $filter", SENSITIVE );
-		$info = LdapAuthenticationPlugin::ldap_search( $this->ldapconn, $base, $filter );
+		$info = self::ldap_search( $this->ldapconn, $base, $filter );
 		if ( !$info ) {
 			$this->printDebug( "No entries returned from search.", SENSITIVE );
 			// Return an array so that other functions
@@ -1835,7 +1835,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return [ "short" => [], "dn" => [] ];
 		}
 
-		$entries = LdapAuthenticationPlugin::ldap_get_entries( $this->ldapconn, $info );
+		$entries = self::ldap_get_entries( $this->ldapconn, $info );
 		if ( $entries ) {
 			// We need to shift because the first entry will be a count
 			array_shift( $entries );
@@ -2017,9 +2017,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	function bindAs( $userdn = null, $password = null ) {
 		// Let's see if the user can authenticate.
 		if ( $userdn == null || $password == null ) {
-			$bind = LdapAuthenticationPlugin::ldap_bind( $this->ldapconn );
+			$bind = self::ldap_bind( $this->ldapconn );
 		} else {
-			$bind = LdapAuthenticationPlugin::ldap_bind( $this->ldapconn, $userdn, $password );
+			$bind = self::ldap_bind( $this->ldapconn, $userdn, $password );
 		}
 		if ( !$bind ) {
 			$this->printDebug( "Failed to bind as $userdn", NONSENSITIVE );
