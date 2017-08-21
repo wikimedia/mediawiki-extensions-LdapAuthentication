@@ -27,6 +27,7 @@ use MediaWiki\Auth\AuthenticationRequest;
 use MediaWiki\Auth\PasswordAuthenticationRequest;
 use MediaWiki\Auth\PasswordDomainAuthenticationRequest;
 use MediaWiki\Auth\AuthenticationResponse;
+use Wikimedia\ScopedCallback;
 
 /**
  * Primary authentication provider wrapper for LdapAuthentication
