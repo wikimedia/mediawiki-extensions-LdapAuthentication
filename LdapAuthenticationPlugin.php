@@ -1238,6 +1238,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$this->printDebug( "Username is: $username", NONSENSITIVE );
 			if ( $this->getConf( 'LowerCaseUsername' ) ) {
 				$canonicalname = ucfirst( strtolower( $canonicalname ) );
+				$canonicalname = str_replace( '_', ' ', $canonicalname ); //Underscore is invalid char in user name
 			} else {
 				# Fetch username, so that we can possibly use it.
 				$userInfo = $wgMemc->get( $key );
