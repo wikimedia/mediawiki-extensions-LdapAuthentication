@@ -2107,7 +2107,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	static function loadDomain( $user ) {
 		$user_id = $user->getId();
 		if ( $user_id != 0 ) {
-			$dbr = wfGetDB( DB_SLAVE );
+			$dbr = wfGetDB( DB_REPLICA );
 			$row = $dbr->selectRow(
 				'ldap_domains',
 				[ 'domain' ],
