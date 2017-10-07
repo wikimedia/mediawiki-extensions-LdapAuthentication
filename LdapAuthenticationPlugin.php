@@ -82,7 +82,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_bind
-	 * @param $ldapconn
+	 * @param resource $ldapconn
 	 * @param null $dn
 	 * @param null $password
 	 * @return bool
@@ -96,7 +96,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_unbind
-	 * @param $ldapconn
+	 * @param resource $ldapconn
 	 * @return bool
 	 */
 	public static function ldap_unbind( $ldapconn ) {
@@ -112,9 +112,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_modify
-	 * @param $ldapconn
-	 * @param $dn
-	 * @param $entry
+	 * @param resource $ldapconn
+	 * @param string $dn
+	 * @param array $entry
 	 * @return bool
 	 */
 	public static function ldap_modify( $ldapconn, $dn, $entry ) {
@@ -126,9 +126,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_add
-	 * @param $ldapconn
-	 * @param $dn
-	 * @param $entry
+	 * @param resource $ldapconn
+	 * @param string $dn
+	 * @param array $entry
 	 * @return bool
 	 */
 	public static function ldap_add( $ldapconn, $dn, $entry ) {
@@ -140,8 +140,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_delete
-	 * @param $ldapconn
-	 * @param $dn
+	 * @param resource $ldapconn
+	 * @param string $dn
 	 * @return bool
 	 */
 	public static function ldap_delete( $ldapconn, $dn ) {
@@ -153,14 +153,14 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_search
-	 * @param $ldapconn
-	 * @param $basedn
-	 * @param $filter
+	 * @param resource $ldapconn
+	 * @param string $basedn
+	 * @param string $filter
 	 * @param array|null $attributes
-	 * @param null $attrsonly
-	 * @param null $sizelimit
-	 * @param null $timelimit
-	 * @param null $deref
+	 * @param int|null $attrsonly
+	 * @param int|null $sizelimit
+	 * @param int|null $timelimit
+	 * @param int|null $deref
 	 * @return resource
 	 */
 	public static function ldap_search(
@@ -190,14 +190,14 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_read
-	 * @param $ldapconn
-	 * @param $basedn
-	 * @param $filter
+	 * @param resource $ldapconn
+	 * @param string $basedn
+	 * @param string $filter
 	 * @param array|null $attributes
-	 * @param null $attrsonly
-	 * @param null $sizelimit
-	 * @param null $timelimit
-	 * @param null $deref
+	 * @param int|null $attrsonly
+	 * @param int|null $sizelimit
+	 * @param int|null $timelimit
+	 * @param int|null $deref
 	 * @return resource
 	 */
 	public static function ldap_read(
@@ -227,15 +227,15 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_list
-	 * @param $ldapconn
-	 * @param $basedn
-	 * @param $filter
+	 * @param resource $ldapconn
+	 * @param string $basedn
+	 * @param string $filter
 	 * @param array|null $attributes
-	 * @param null $attrsonly
-	 * @param null $sizelimit
-	 * @param null $timelimit
-	 * @param null $deref
-	 * @return \resource
+	 * @param int|null $attrsonly
+	 * @param int|null $sizelimit
+	 * @param int|null $timelimit
+	 * @param int|null $deref
+	 * @return resource
 	 */
 	public static function ldap_list(
 		$ldapconn,
@@ -264,8 +264,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_get_entries
-	 * @param $ldapconn
-	 * @param $resultid
+	 * @param resource $ldapconn
+	 * @param resource $resultid
 	 * @return array
 	 */
 	public static function ldap_get_entries( $ldapconn, $resultid ) {
@@ -277,8 +277,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_count_entries
-	 * @param $ldapconn
-	 * @param $resultid
+	 * @param resource $ldapconn
+	 * @param resource $resultid
 	 * @return int
 	 */
 	public static function ldap_count_entries( $ldapconn, $resultid ) {
@@ -290,7 +290,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Wrapper for ldap_errno
-	 * @param $ldapconn
+	 * @param resource $ldapconn
 	 * @return int
 	 */
 	public static function ldap_errno( $ldapconn ) {
@@ -451,9 +451,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * Returns the item from $array at index $key if it is set,
 	 * else, it returns $default
 	 *
-	 * @param $array array
-	 * @param $key
-	 * @param $default mixed
+	 * @param array $array
+	 * @param string $key
+	 * @param mixed $default
 	 * @return mixed
 	 */
 	private static function setOrDefault( $array, $key, $default = '' ) {
@@ -466,9 +466,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 *
 	 * Use for sensitive data
 	 *
-	 * @param $array array
-	 * @param $key
-	 * @param $default mixed
+	 * @param array $array
+	 * @param string $key
+	 * @param mixed $default
 	 * @return mixed
 	 */
 	private static function setOrDefaultPrivate( $array, $key, $default = '' ) {
@@ -759,8 +759,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	/**
 	 * Modify options in the login template.
 	 *
-	 * @param UserLoginTemplate $template
-	 * @param $type
+	 * @param UserLoginTemplate &$template
+	 * @param string &$type
 	 */
 	public function modifyUITemplate( &$template, &$type ) {
 		$this->printDebug( "Entering modifyUITemplate", NONSENSITIVE );
@@ -993,6 +993,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * Disallow MediaWiki from setting local passwords in the database,
 	 * unless UseLocal is true. Warning: if you set $wgLDAPUseLocal,
 	 * it will cause MediaWiki to leak LDAP passwords into the local database.
+	 * @return bool
 	 */
 	public function allowSetLocalPassword() {
 		return $this->getConf( 'UseLocal' );
@@ -1214,7 +1215,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	/**
 	 * When a user logs in, update user with information from LDAP.
 	 *
-	 * @param $user User
+	 * @param User &$user
 	 * TODO: fix the setExternalID stuff
 	 */
 	public function updateUser( &$user ) {
@@ -1267,7 +1268,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * When creating a user account, initialize user with information from LDAP.
 	 * TODO: fix setExternalID stuff
 	 *
-	 * @param User $user
+	 * @param User &$user
 	 * @param bool $autocreate
 	 */
 	public function initUser( &$user, $autocreate = false ) {
@@ -1498,7 +1499,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	}
 
 	/**
-	 * @param $userdn string
+	 * @param string $userdn
 	 * @return array|null
 	 */
 	function getUserInfoStateless( $userdn ) {
@@ -1701,7 +1702,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * $searchedgroups is used for tail recursion and shouldn't be provided
 	 * when called externally.
 	 *
-	 * @param $groups
+	 * @param array $groups
 	 * @param array $searchedgroups
 	 * @return bool
 	 * @access private
@@ -1881,7 +1882,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * Helper function for updateUser() and initUser(). Adds users into MediaWiki security groups
 	 * based upon groups retreived from LDAP.
 	 *
-	 * @param User $user
+	 * @param User &$user
 	 * @access private
 	 */
 	function setGroups( &$user ) {

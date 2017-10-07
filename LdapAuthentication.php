@@ -103,7 +103,7 @@ $wgMessagesDirs['LdapAuthentication'] = __DIR__ . '/i18n';
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'efLdapAuthenticationSchemaUpdates';
 
 /**
- * @param $updater DatabaseUpdater
+ * @param DatabaseUpdater $updater
  * @return bool
  */
 function efLdapAuthenticationSchemaUpdates( $updater ) {

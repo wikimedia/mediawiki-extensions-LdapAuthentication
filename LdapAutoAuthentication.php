@@ -5,8 +5,8 @@ class LdapAutoAuthentication {
 	/**
 	 * Does the web server authentication piece of the LDAP plugin.
 	 *
-	 * @param $user User
-	 * @param $result bool
+	 * @param User $user
+	 * @param bool &$result
 	 * @return bool
 	 */
 	public static function Authenticate( $user, &$result = null ) {
@@ -69,8 +69,8 @@ class LdapAutoAuthentication {
 	}
 
 	/**
-	 * @param $user User
-	 * @param $mungedUsername String
+	 * @param User $user
+	 * @param string $mungedUsername
 	 * @return bool
 	 */
 	public static function attemptAddUser( $user, $mungedUsername ) {
@@ -103,8 +103,8 @@ class LdapAutoAuthentication {
 
 	/**
 	 * No logout link in MW
-	 * @param $personal_urls array
-	 * @param $title Title
+	 * @param array &$personal_urls
+	 * @param Title $title
 	 * @return bool
 	 */
 	public static function NoLogout( &$personal_urls, $title ) {
