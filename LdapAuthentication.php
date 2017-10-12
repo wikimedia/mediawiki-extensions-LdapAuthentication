@@ -139,38 +139,14 @@ define( "HIGHLYSENSITIVE", 3 );
  * @access public
  */
 function AutoAuthSetup() {
-	global $wgHooks;
-	global $wgAuth;
-	global $wgDisableAuthManager;
-
-	if ( class_exists( MediaWiki\Auth\AuthManager::class ) && empty( $wgDisableAuthManager ) ) {
-		/**
-		 * @todo If you want to make AutoAuthSetup() work in an AuthManager
-		 *  world, what you need to do is figure out how to do it with a
-		 *  SessionProvider instead of the hackiness below. You'll probably
-		 *  want an ImmutableSessionProviderWithCookie subclass where
-		 *  provideSessionInfo() does the first part of
-		 *  LdapAutoAuthentication::Authenticate() (stop before the $localId
-		 *  bit).
-		 */
-		throw new BadFunctionCallException( 'AutoAuthSetup() is not supported with AuthManager.' );
-	}
-
-	$wgAuth = LdapAuthenticationPlugin::getInstance();
-
-	$wgAuth->printDebug( "Entering AutoAuthSetup.", NONSENSITIVE );
-
-	# We need both authentication username and domain (bug 34787)
-	if ( $wgAuth->getConf( "AutoAuthUsername" ) !== "" &&
-		$wgAuth->getConf( "AutoAuthDomain" ) !== ""
-	) {
-		$wgAuth->printDebug(
-			"wgLDAPAutoAuthUsername and wgLDAPAutoAuthDomain is not null, adding hooks.",
-			NONSENSITIVE
-		);
-		$wgHooks['UserLoadAfterLoadFromSession'][] = 'LdapAutoAuthentication::Authenticate';
-
-		// Disallow logout link
-		$wgHooks['PersonalUrls'][] = 'LdapAutoAuthentication::NoLogout';
-	}
+	/**
+	 * @todo If you want to make AutoAuthSetup() work in an AuthManager
+	 *  world, what you need to do is figure out how to do it with a
+	 *  SessionProvider instead of the hackiness below. You'll probably
+	 *  want an ImmutableSessionProviderWithCookie subclass where
+	 *  provideSessionInfo() does the first part of
+	 *  LdapAutoAuthentication::Authenticate() (stop before the $localId
+	 *  bit).
+	 */
+	throw new BadFunctionCallException( 'AutoAuthSetup() is not supported with AuthManager.' );
 }
