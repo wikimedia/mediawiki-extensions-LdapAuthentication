@@ -90,7 +90,7 @@ $wgExtensionCredits['other'][] = [
 	'author' => 'Ryan Lane',
 	'descriptionmsg' => 'ldapauthentication-desc',
 	'url' => 'https://www.mediawiki.org/wiki/Extension:LDAP_Authentication',
-	'license-name' => 'GPL-2.0+',
+	'license-name' => 'GPL-2.0-or-later',
 ];
 
 $wgAutoloadClasses['LdapAuthenticationPlugin'] = __DIR__ . '/LdapAuthenticationPlugin.php';
