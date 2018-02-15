@@ -276,7 +276,7 @@ class LdapPrimaryAuthenticationProvider
 			if ( $failed ) {
 				throw new \UnexpectedValueException(
 					"LdapAuthenticationPlugin failed to reset password for $username in the following domains: "
-						. join( ' ', $failed )
+						. implode( ' ', $failed )
 				);
 			}
 		}
