@@ -762,7 +762,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	/**
 	 * Modify options in the login template.
 	 *
-	 * @param UserLoginTemplate &$template
+	 * @param BaseTemplate &$template
 	 * @param string &$type
 	 */
 	public function modifyUITemplate( &$template, &$type ) {
