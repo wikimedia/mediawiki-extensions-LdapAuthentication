@@ -6,7 +6,7 @@ class LdapAutoAuthentication {
 	 * Does the web server authentication piece of the LDAP plugin.
 	 *
 	 * @param User $user
-	 * @param bool &$result
+	 * @param bool|null &$result
 	 * @return bool
 	 */
 	public static function Authenticate( $user, &$result = null ) {

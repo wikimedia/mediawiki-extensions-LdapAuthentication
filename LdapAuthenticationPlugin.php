@@ -2036,8 +2036,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * Binds as $userdn with $password. This can be called with only the ldap
 	 * connection resource for an anonymous bind.
 	 *
-	 * @param string $userdn
-	 * @param string $password
+	 * @param string|null $userdn
+	 * @param string|null $password
 	 * @return bool
 	 * @access private
 	 */
