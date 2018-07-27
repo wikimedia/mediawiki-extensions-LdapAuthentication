@@ -36,118 +36,102 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	exit;
 }
 
-$wgLDAPDomainNames = [];
-$wgLDAPServerNames = [];
-$wgLDAPUseLocal = false;
-$wgLDAPEncryptionType = [];
-$wgLDAPOptions = [];
-$wgLDAPPort = [];
-$wgLDAPSearchStrings = [];
-$wgLDAPProxyAgent = [];
-$wgLDAPProxyAgentPassword = [];
-$wgLDAPSearchAttributes = [];
-$wgLDAPBaseDNs = [];
-$wgLDAPGroupBaseDNs = [];
-$wgLDAPUserBaseDNs = [];
-$wgLDAPWriterDN = [];
-$wgLDAPWriterPassword = [];
-$wgLDAPWriteLocation = [];
-$wgLDAPAddLDAPUsers = [];
-$wgLDAPUpdateLDAP = [];
-$wgLDAPPasswordHash = [];
-$wgLDAPMailPassword = [];
-$wgLDAPPreferences = [];
-$wgLDAPDisableAutoCreate = [];
-$wgLDAPDebug = 0;
-$wgLDAPGroupUseFullDN = [];
-$wgLDAPLowerCaseUsername = [];
-$wgLDAPGroupUseRetrievedUsername = [];
-$wgLDAPGroupObjectclass = [];
-$wgLDAPGroupAttribute = [];
-$wgLDAPGroupNameAttribute = [];
-$wgLDAPGroupsUseMemberOf = [];
-$wgLDAPUseLDAPGroups = [];
-$wgLDAPLocallyManagedGroups = [];
-$wgLDAPGroupsPrevail = [];
-$wgLDAPRequiredGroups = [];
-$wgLDAPExcludedGroups = [];
-$wgLDAPGroupSearchNestedGroups = [];
-$wgLDAPAuthAttribute = [];
-$wgLDAPAutoAuthUsername = "";
-$wgLDAPAutoAuthDomain = "";
-$wgPasswordResetRoutes['domain'] = true;
-$wgLDAPActiveDirectory = [];
-$wgLDAPGroupSearchPosixPrimaryGroup = false;
-
-define( "LDAPAUTHVERSION", "2.1.0" );
-
-/**
- * Add extension information to Special:Version
- */
-$wgExtensionCredits['other'][] = [
-	'path' => __FILE__,
-	'name' => 'LDAP Authentication Plugin',
-	'version' => LDAPAUTHVERSION,
-	'author' => 'Ryan Lane',
-	'descriptionmsg' => 'ldapauthentication-desc',
-	'url' => 'https://www.mediawiki.org/wiki/Extension:LDAP_Authentication',
-	'license-name' => 'GPL-2.0-or-later',
-];
-
-$wgAutoloadClasses['LdapAuthenticationPlugin'] = __DIR__ . '/LdapAuthenticationPlugin.php';
-$wgAutoloadClasses['LdapPrimaryAuthenticationProvider'] =
-	__DIR__ . '/LdapPrimaryAuthenticationProvider.php';
-
-$wgMessagesDirs['LdapAuthentication'] = __DIR__ . '/i18n';
-
-# Schema changes
-$wgHooks['LoadExtensionSchemaUpdates'][] = 'efLdapAuthenticationSchemaUpdates';
-
-/**
- * @param DatabaseUpdater $updater
- * @return bool
- */
-function efLdapAuthenticationSchemaUpdates( $updater ) {
-	$base = __DIR__;
-	switch ( $updater->getDB()->getType() ) {
-	case 'mysql':
-	case 'sqlite':
-		$updater->addExtensionTable( 'ldap_domains', "$base/schema/ldap-mysql.sql" );
-		break;
-	case 'postgres':
-		$updater->addExtensionTable( 'ldap_domains', "$base/schema/ldap-postgres.sql" );
-		break;
-	}
+if ( function_exists( 'wfLoadExtension' ) ) {
+	wfLoadExtension( 'LdapAuthentication' );
+	/* wfWarn(
+		'Deprecated PHP entry point used for LdapAuthentication extension. ' .
+		'Please use wfLoadExtension instead, ' .
+		'see https://www.mediawiki.org/wiki/Extension_registration for more details.'
+	); */
 	return true;
+} else {
+	die( 'This version of the LdapAuthentication extension requires MediaWiki 1.25+' );
 }
 
-// constants for search base
-define( "GROUPDN", 0 );
-define( "USERDN", 1 );
-define( "DEFAULTDN", 2 );
+class LdapAuthentication {
+    /**
+     * @param $updater DatabaseUpdater
+     * @return bool
+     */
+    static function onLoadExtensionSchemaUpdates( DatabaseUpdater $updater ) {
+        wfDebug('LdapAuthentication::onLoadExtensionSchemaUpdates: start');
 
-// constants for error reporting
-define( "NONSENSITIVE", 1 );
-define( "SENSITIVE", 2 );
-define( "HIGHLYSENSITIVE", 3 );
+        switch ( $updater->getDB()->getType() ) {
+        case 'mysql':
+        case 'sqlite':
+            $updater->addExtensionTable( 'ldap_domains', __DIR__ . '/schema/ldap-mysql.sql' );
+            break;
+        case 'postgres':
+            $updater->addExtensionTable( 'ldap_domains', __DIR__ . '/schema/ldap-postgres.sql' );
+            break;
+        }
+        return true;
+    }
 
-// The auto-auth code was originally derived from the SSL Authentication plugin
-// http://www.mediawiki.org/wiki/SSL_authentication
+    static function setup() {
+        global $wgAuth;
 
-/**
- * Sets up the auto-authentication piece of the LDAP plugin.
- *
- * @access public
- */
-function AutoAuthSetup() {
-	/**
-	 * @todo If you want to make AutoAuthSetup() work in an AuthManager
-	 *  world, what you need to do is figure out how to do it with a
-	 *  SessionProvider instead of the hackiness below. You'll probably
-	 *  want an ImmutableSessionProviderWithCookie subclass where
-	 *  provideSessionInfo() does the first part of
-	 *  LdapAutoAuthentication::Authenticate() (stop before the $localId
-	 *  bit).
-	 */
-	throw new BadFunctionCallException( 'AutoAuthSetup() is not supported with AuthManager.' );
+        define( "LDAPAUTHVERSION", "2.1.0" );
+
+        // constants for search base
+        define( "GROUPDN", 0 );
+        define( "USERDN", 1 );
+        define( "DEFAULTDN", 2 );
+
+        // constants for error reporting
+        define( "NONSENSITIVE", 1 );
+        define( "SENSITIVE", 2 );
+        define( "HIGHLYSENSITIVE", 3 );
+
+        wfDebug('LdapAuthentication::setup: start');
+        $wgAuth = new LdapAuthenticationPlugin();
+    }
+
+    // The auto-auth code was originally derived from the SSL Authentication plugin
+    // http://www.mediawiki.org/wiki/SSL_authentication
+
+    /**
+     * Sets up the auto-authentication piece of the LDAP plugin.
+     *
+     * @access public
+     */
+    function AutoAuthSetup() {
+        global $wgHooks;
+        global $wgAuth;
+        global $wgDisableAuthManager;
+
+        if ( class_exists( MediaWiki\Auth\AuthManager::class ) && empty( $wgDisableAuthManager ) ) {
+            /**
+             * @todo If you want to make AutoAuthSetup() work in an AuthManager
+             *  world, what you need to do is figure out how to do it with a
+             *  SessionProvider instead of the hackiness below. You'll probably
+             *  want an ImmutableSessionProviderWithCookie subclass where
+             *  provideSessionInfo() does the first part of
+             *  LdapAutoAuthentication::Authenticate() (stop before the $localId
+             *  bit).
+             */
+            throw new BadFunctionCallException( 'AutoAuthSetup() is not supported with AuthManager.' );
+        }
+
+        $wgAuth = LdapAuthenticationPlugin::getInstance();
+
+        $wgAuth->printDebug( "Entering AutoAuthSetup.", NONSENSITIVE );
+
+        # We need both authentication username and domain (bug 34787)
+        if ( $wgAuth->getConf( "AutoAuthUsername" ) !== "" &&
+            $wgAuth->getConf( "AutoAuthDomain" ) !== ""
+        ) {
+            $wgAuth->printDebug(
+                "wgLDAPAutoAuthUsername and wgLDAPAutoAuthDomain is not null, adding hooks.",
+                NONSENSITIVE
+            );
+            $wgHooks['UserLoadAfterLoadFromSession'][] = 'LdapAutoAuthentication::Authenticate';
+
+            // Disallow logout link
+            $wgHooks['PersonalUrls'][] = 'LdapAutoAuthentication::NoLogout';
+        }
+    }
+
 }
+
+

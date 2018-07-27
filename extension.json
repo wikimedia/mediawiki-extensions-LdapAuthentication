@@ -1,0 +1,80 @@
+{
+	"name": "LDAP Authentication Plugin",
+	"author": "Ryan Lane",
+	"url": "https://www.mediawiki.org/wiki/Extension:LDAP_Authentication",
+	"descriptionmsg": "LDAP authentication plugin with support for multiple LDAP authentication methods",
+	"license-name": "GPL-2.0+",
+	"type": "",
+	"version": "2.1.0",
+	"ConfigRegistry": {
+	},
+	"ExtensionFunctions": [
+	],
+	"AutoloadClasses": {
+        "LdapAuthentication": "LdapAuthentication.php",
+        "LdapAuthenticationPlugin": "LdapAuthenticationPlugin.php",
+        "LdapPrimaryAuthenticationProvider": "LdapPrimaryAuthenticationProvider.php"
+	},
+	"MessagesDirs": {
+		"LdapAuthentication": [
+			"i18n"
+		]
+	},	"ResourceModules": {
+	},
+	"ResourceFileModulePaths": {
+	},
+	"Hooks": {
+		"LoadExtensionSchemaUpdates": [
+			"LdapAuthentication::onLoadExtensionSchemaUpdates"
+		],
+        "AuthPluginSetup": [
+            "LdapAuthentication::setup"
+        ]
+	},
+	"config": {
+        "LDAPDomainNames": {},
+        "LDAPServerNames": {},
+        "LDAPUseLocal": false,
+        "LDAPEncryptionType": {},
+        "LDAPOptions": {},
+        "LDAPPort": {},
+        "LDAPSearchStrings": {},
+        "LDAPProxyAgent": {},
+        "LDAPProxyAgentPassword": {},
+        "LDAPSearchAttributes": {},
+        "LDAPBaseDNs": {},
+        "LDAPGroupBaseDNs": {},
+        "LDAPUserBaseDNs": {},
+        "LDAPWriterDN": {},
+        "LDAPWriterPassword": {},
+        "LDAPWriteLocation": {},
+        "LDAPAddLDAPUsers": {},
+        "LDAPUpdateLDAP": {},
+        "LDAPPasswordHash": {},
+        "LDAPMailPassword": {},
+        "LDAPPreferences": {},
+        "LDAPDisableAutoCreate": {},
+        "LDAPDebug": 0,
+        "LDAPGroupUseFullDN": {},
+        "LDAPLowerCaseUsername": {},
+        "LDAPGroupUseRetrievedUsername": {},
+        "LDAPGroupObjectclass": {},
+        "LDAPGroupAttribute": {},
+        "LDAPGroupNameAttribute": {},
+        "LDAPGroupsUseMemberOf": {},
+        "LDAPUseLDAPGroups": {},
+        "LDAPLocallyManagedGroups": {},
+        "LDAPGroupsPrevail": {},
+        "LDAPRequiredGroups": {},
+        "LDAPExcludedGroups": {},
+        "LDAPGroupSearchNestedGroups": {},
+        "LDAPAuthAttribute": {},
+        "LDAPAutoAuthUsername": "",
+        "LDAPAutoAuthDomain": "",
+        "PasswordResetRoutes": {
+            "domain": true
+        },
+        "LDAPActiveDirectory": {}
+	},
+	"manifest_version": 1
+}
