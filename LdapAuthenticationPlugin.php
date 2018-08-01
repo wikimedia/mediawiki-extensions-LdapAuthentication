@@ -2162,22 +2162,27 @@ class LdapAuthenticationPlugin {
 			$dbw = wfGetDB( DB_MASTER );
 			$olddomain = self::loadDomain( $user );
 			if ( $olddomain ) {
-				return $dbw->update(
+				// Check we really need to update domain.
+				// Otherwise we can receive an error when logging in with
+				// $wgReadOnly.
+				if ( $olddomain != $domain ) {
+					return $dbw->update(
+						'ldap_domains',
+						[ 'domain' => $domain ],
+						[ 'user_id' => $user_id ],
+						__METHOD__
+					);
+				}
+			} else {
+				return $dbw->insert(
 					'ldap_domains',
-					[ 'domain' => $domain ],
-					[ 'user_id' => $user_id ],
+					[
+						'domain' => $domain,
+						'user_id' => $user_id
+					],
 					__METHOD__
 				);
 			}
-
-			return $dbw->insert(
-				'ldap_domains',
-				[
-					'domain' => $domain,
-					'user_id' => $user_id
-				],
-				__METHOD__
-			);
 		}
 		return false;
 	}
