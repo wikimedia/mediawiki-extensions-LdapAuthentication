@@ -1906,7 +1906,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 
 	/**
 	 * Helper function for updateUser() and initUser(). Adds users into MediaWiki security groups
-	 * based upon groups retreived from LDAP.
+	 * based upon groups retrieved from LDAP.
 	 *
 	 * @param User &$user
 	 * @access private
