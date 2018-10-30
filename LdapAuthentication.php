@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2004 Ryan Lane <http://www.mediawiki.org/wiki/User:Ryan_lane>
+ * Copyright (C) 2004 Ryan Lane <https://www.mediawiki.org/wiki/User:Ryan_lane>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -132,7 +132,7 @@ define( "SENSITIVE", 2 );
 define( "HIGHLYSENSITIVE", 3 );
 
 // The auto-auth code was originally derived from the SSL Authentication plugin
-// http://www.mediawiki.org/wiki/SSL_authentication
+// https://www.mediawiki.org/wiki/SSL_authentication
 
 /**
  * Sets up the auto-authentication piece of the LDAP plugin.

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2004 Ryan Lane <http://www.mediawiki.org/wiki/User:Ryan_lane>
+ * Copyright (C) 2004 Ryan Lane <https://www.mediawiki.org/wiki/User:Ryan_lane>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
