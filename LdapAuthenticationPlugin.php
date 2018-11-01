@@ -755,7 +755,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		return true;
 	}
 
-	function markAuthFailed() {
+	public function markAuthFailed() {
 		$this->authFailed = true;
 	}
 
@@ -778,7 +778,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	/**
 	 * @return array
 	 */
-	function domainList() {
+	public function domainList() {
 		$tempDomArr = $this->getConf( 'DomainNames' );
 		if ( $this->getConf( 'UseLocal' ) ) {
 			$this->printDebug( "Allowing the local domain, adding it to the list.", NONSENSITIVE );
@@ -1400,9 +1400,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 *
 	 * @param string $username
 	 * @return string
-	 * @access private
 	 */
-	function getSearchString( $username ) {
+	private function getSearchString( $username ) {
 		$this->printDebug( "Entering getSearchString", NONSENSITIVE );
 		$ss = $this->getConf( 'SearchString' );
 		if ( $ss ) {
@@ -1486,7 +1485,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 *
 	 * @return bool
 	 */
-	function getUserInfo() {
+	public function getUserInfo() {
 		// Don't fetch the same data more than once
 		if ( $this->fetchedUserInfo ) {
 			return true;
@@ -1505,7 +1504,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param string $userdn
 	 * @return array|null
 	 */
-	function getUserInfoStateless( $userdn ) {
+	public function getUserInfoStateless( $userdn ) {
 		global $wgMemc;
 
 		$key = wfMemcKey( 'ldapauthentication', 'userinfo', $userdn );
@@ -1731,9 +1730,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param array $groups
 	 * @param array $searchedgroups
 	 * @return bool
-	 * @access private
 	 */
-	function searchNestedGroups( $groups, $searchedgroups = [ "dn" => [], "short" => [] ] ) {
+	private function searchNestedGroups( $groups, $searchedgroups = [ "dn" => [], "short" => [] ] ) {
 		$this->printDebug( "Entering searchNestedGroups", NONSENSITIVE );
 
 		// base case, no more groups left to check
@@ -1885,9 +1883,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 *
 	 * @param string $group
 	 * @return bool
-	 * @access private
 	 */
-	function hasLDAPGroup( $group ) {
+	private function hasLDAPGroup( $group ) {
 		$this->printDebug( "Entering hasLDAPGroup", NONSENSITIVE );
 		return in_array( strtolower( $group ), $this->userLDAPGroups["short"] );
 	}
@@ -1897,9 +1894,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 *
 	 * @param string $group
 	 * @return bool
-	 * @access private
 	 */
-	function isLDAPGroup( $group ) {
+	private function isLDAPGroup( $group ) {
 		$this->printDebug( "Entering isLDAPGroup", NONSENSITIVE );
 		return in_array( strtolower( $group ), $this->allLDAPGroups["short"] );
 	}
@@ -1909,9 +1905,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * based upon groups retrieved from LDAP.
 	 *
 	 * @param User &$user
-	 * @access private
 	 */
-	function setGroups( &$user ) {
+	private function setGroups( &$user ) {
 		global $wgGroupPermissions;
 
 		// TODO: this is *really* ugly code. clean it up!
@@ -1981,9 +1976,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 *
 	 * @param string $password
 	 * @return string
-	 * @access private
 	 */
-	function getPasswordHash( $password ) {
+	private function getPasswordHash( $password ) {
 		$this->printDebug( "Entering getPasswordHash", NONSENSITIVE );
 
 		// Set the password hashing based upon admin preference
@@ -2015,9 +2009,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param string $debugText
 	 * @param string $debugVal
 	 * @param Array|null $debugArr
-	 * @access private
 	 */
-	function printDebug( $debugText, $debugVal, $debugArr = null ) {
+	private function printDebug( $debugText, $debugVal, $debugArr = null ) {
 		if ( !function_exists( 'wfDebugLog' ) ) {
 			return;
 		}
@@ -2039,9 +2032,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param string|null $userdn
 	 * @param string|null $password
 	 * @return bool
-	 * @access private
 	 */
-	function bindAs( $userdn = null, $password = null ) {
+	private function bindAs( $userdn = null, $password = null ) {
 		// Let's see if the user can authenticate.
 		if ( $userdn == null || $password == null ) {
 			$bind = self::ldap_bind( $this->ldapconn );
@@ -2061,9 +2053,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * authenticating using the auto-authentication domain.
 	 *
 	 * @return bool
-	 * @access private
 	 */
-	function useAutoAuth() {
+	private function useAutoAuth() {
 		return $this->getDomain() == $this->getConf( 'AutoAuthDomain' );
 	}
 
@@ -2074,9 +2065,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 *
 	 * @param string $string
 	 * @return string
-	 * @access private
 	 */
-	function getLdapEscapedString( $string ) {
+	private function getLdapEscapedString( $string ) {
 		// Make the string LDAP compliant by escaping *, (, ) , \ & NUL
 		return str_replace(
 			[ "\\", "(", ")", "*", "\x00" ],
@@ -2090,9 +2080,8 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 *
 	 * @param int $type
 	 * @return string
-	 * @access private
 	 */
-	function getBaseDN( $type ) {
+	private function getBaseDN( $type ) {
 		$this->printDebug( "Entering getBaseDN", NONSENSITIVE );
 
 		$ret = '';
@@ -2131,7 +2120,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param User $user
 	 * @return string
 	 */
-	static function loadDomain( $user ) {
+	public static function loadDomain( $user ) {
 		$user_id = $user->getId();
 		if ( $user_id != 0 ) {
 			$dbr = wfGetDB( DB_REPLICA );
@@ -2154,7 +2143,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param string $domain
 	 * @return bool
 	 */
-	static function saveDomain( $user, $domain ) {
+	public static function saveDomain( $user, $domain ) {
 		$user_id = $user->getId();
 		if ( $user_id != 0 ) {
 			$dbw = wfGetDB( DB_MASTER );
