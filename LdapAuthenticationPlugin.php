@@ -2010,7 +2010,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param string $debugVal
 	 * @param Array|null $debugArr
 	 */
-	private function printDebug( $debugText, $debugVal, $debugArr = null ) {
+	public function printDebug( $debugText, $debugVal, $debugArr = null ) {
 		if ( !function_exists( 'wfDebugLog' ) ) {
 			return;
 		}
@@ -2033,7 +2033,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param string|null $password
 	 * @return bool
 	 */
-	private function bindAs( $userdn = null, $password = null ) {
+	public function bindAs( $userdn = null, $password = null ) {
 		// Let's see if the user can authenticate.
 		if ( $userdn == null || $password == null ) {
 			$bind = self::ldap_bind( $this->ldapconn );
@@ -2066,7 +2066,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param string $string
 	 * @return string
 	 */
-	private function getLdapEscapedString( $string ) {
+	public function getLdapEscapedString( $string ) {
 		// Make the string LDAP compliant by escaping *, (, ) , \ & NUL
 		return str_replace(
 			[ "\\", "(", ")", "*", "\x00" ],
@@ -2081,7 +2081,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @param int $type
 	 * @return string
 	 */
-	private function getBaseDN( $type ) {
+	public function getBaseDN( $type ) {
 		$this->printDebug( "Entering getBaseDN", NONSENSITIVE );
 
 		$ret = '';
