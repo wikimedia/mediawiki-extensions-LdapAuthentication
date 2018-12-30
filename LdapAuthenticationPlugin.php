@@ -1286,6 +1286,16 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			return;
 		}
 
+		if ( $autocreate && !$this->userExists( $user->mName ) ) {
+			// Generate a random password for the account under the assumption
+			// that either the caller will be setting a password immediately
+			// after using User::changeAuthenticationData or that other
+			// password recovery means will be used if the account is meant
+			// for interactive use.
+			$pwreq = MediaWiki\Auth\TemporaryPasswordAuthenticationRequest::newRandom();
+			$this->addUser( $user, $pwreq->password );
+		}
+
 		// The update user function does everything else we need done.
 		$this->updateUser( $user );
 
