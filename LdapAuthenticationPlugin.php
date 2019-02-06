@@ -1456,7 +1456,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			}
 		}
 
-		if ( ! $searchattr ) {
+		if ( !$searchattr ) {
 			$searchattr = $this->getConf( 'SearchAttribute' );
 		}
 		// we need to do a subbase search for the entry

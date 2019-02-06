@@ -136,8 +136,6 @@ define( "HIGHLYSENSITIVE", 3 );
 
 /**
  * Sets up the auto-authentication piece of the LDAP plugin.
- *
- * @access public
  */
 function AutoAuthSetup() {
 	/**
