@@ -74,9 +74,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return resource|false
 	 */
 	public static function ldap_connect( $hostname = null, $port = 389 ) {
-		wfSuppressWarnings();
+		Wikimedia\suppressWarnings();
 		$ret = ldap_connect( $hostname, $port );
-		wfRestoreWarnings();
+		Wikimedia\restoreWarnings();
 		return $ret;
 	}
 
@@ -88,9 +88,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return bool
 	 */
 	public static function ldap_bind( $ldapconn, $dn = null, $password = null ) {
-		wfSuppressWarnings();
+		Wikimedia\suppressWarnings();
 		$ret = ldap_bind( $ldapconn, $dn, $password );
-		wfRestoreWarnings();
+		Wikimedia\restoreWarnings();
 		return $ret;
 	}
 
@@ -101,9 +101,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 */
 	public static function ldap_unbind( $ldapconn ) {
 		if ( $ldapconn ) {
-			wfSuppressWarnings();
+			Wikimedia\suppressWarnings();
 			$ret = ldap_unbind( $ldapconn );
-			wfRestoreWarnings();
+			Wikimedia\restoreWarnings();
 		} else {
 			$ret = false;
 		}
@@ -118,9 +118,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return bool
 	 */
 	public static function ldap_modify( $ldapconn, $dn, $entry ) {
-		wfSuppressWarnings();
+		Wikimedia\suppressWarnings();
 		$ret = ldap_modify( $ldapconn, $dn, $entry );
-		wfRestoreWarnings();
+		Wikimedia\restoreWarnings();
 		return $ret;
 	}
 
@@ -132,9 +132,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return bool
 	 */
 	public static function ldap_add( $ldapconn, $dn, $entry ) {
-		wfSuppressWarnings();
+		Wikimedia\suppressWarnings();
 		$ret = ldap_add( $ldapconn, $dn, $entry );
-		wfRestoreWarnings();
+		Wikimedia\restoreWarnings();
 		return $ret;
 	}
 
@@ -145,9 +145,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return bool
 	 */
 	public static function ldap_delete( $ldapconn, $dn ) {
-		wfSuppressWarnings();
+		Wikimedia\suppressWarnings();
 		$ret = ldap_delete( $ldapconn, $dn );
-		wfRestoreWarnings();
+		Wikimedia\restoreWarnings();
 		return $ret;
 	}
 
@@ -173,7 +173,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$timelimit = null,
 		$deref = null
 	) {
-		wfSuppressWarnings();
+		Wikimedia\suppressWarnings();
 		$ret = ldap_search(
 			$ldapconn,
 			$basedn,
@@ -184,7 +184,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$timelimit,
 			$deref
 		);
-		wfRestoreWarnings();
+		Wikimedia\restoreWarnings();
 		return $ret;
 	}
 
@@ -210,7 +210,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$timelimit = null,
 		$deref = null
 	) {
-		wfSuppressWarnings();
+		Wikimedia\suppressWarnings();
 		$ret = ldap_read(
 			$ldapconn,
 			$basedn,
@@ -221,7 +221,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$timelimit,
 			$deref
 		);
-		wfRestoreWarnings();
+		Wikimedia\restoreWarnings();
 		return $ret;
 	}
 
@@ -247,7 +247,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 		$timelimit = null,
 		$deref = null
 	) {
-		wfSuppressWarnings();
+		Wikimedia\suppressWarnings();
 		$ret = ldap_list(
 			$ldapconn,
 			$basedn,
@@ -258,7 +258,7 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 			$timelimit,
 			$deref
 		);
-		wfRestoreWarnings();
+		Wikimedia\restoreWarnings();
 		return $ret;
 	}
 
@@ -269,9 +269,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return array
 	 */
 	public static function ldap_get_entries( $ldapconn, $resultid ) {
-		wfSuppressWarnings();
+		Wikimedia\suppressWarnings();
 		$ret = ldap_get_entries( $ldapconn, $resultid );
-		wfRestoreWarnings();
+		Wikimedia\restoreWarnings();
 		return $ret;
 	}
 
@@ -282,9 +282,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return int
 	 */
 	public static function ldap_count_entries( $ldapconn, $resultid ) {
-		wfSuppressWarnings();
+		Wikimedia\suppressWarnings();
 		$ret = ldap_count_entries( $ldapconn, $resultid );
-		wfRestoreWarnings();
+		Wikimedia\restoreWarnings();
 		return $ret;
 	}
 
@@ -294,9 +294,9 @@ class LdapAuthenticationPlugin extends AuthPlugin {
 	 * @return int
 	 */
 	public static function ldap_errno( $ldapconn ) {
-		wfSuppressWarnings();
+		Wikimedia\suppressWarnings();
 		$ret = ldap_errno( $ldapconn );
-		wfRestoreWarnings();
+		Wikimedia\restoreWarnings();
 		return $ret;
 	}
 
