@@ -63,5 +63,5 @@ class AttachLdapUser extends Maintenance {
 	}
 }
 
-$maintClass = "AttachLdapUser";
+$maintClass = AttachLdapUser::class;
 require_once RUN_MAINTENANCE_IF_MAIN;
