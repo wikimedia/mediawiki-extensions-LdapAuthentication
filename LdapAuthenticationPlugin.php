@@ -460,7 +460,7 @@ class LdapAuthenticationPlugin {
 	 * @return mixed
 	 */
 	private static function setOrDefault( $array, $key, $default = '' ) {
-		return isset( $array[$key] ) ? $array[$key] : $default;
+		return $array[$key] ?? $default;
 	}
 
 	/**
@@ -475,7 +475,7 @@ class LdapAuthenticationPlugin {
 	 * @return mixed
 	 */
 	private static function setOrDefaultPrivate( $array, $key, $default = '' ) {
-		return isset( $array[$key] ) ? $array[$key] : $default;
+		return $array[$key] ?? $default;
 	}
 
 	/**
