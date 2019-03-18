@@ -49,13 +49,7 @@ class LdapAutoAuthentication {
 		$ldap->printDebug( "Got id ($localId).", NONSENSITIVE );
 
 		// Is the user already in the database?
-		if ( !$localId ) {
-			$userAdded = self::attemptAddUser( $user, $mungedUsername );
-			if ( !$userAdded ) {
-				$result = false;
-				return false;
-			}
-		} else {
+		if ( $localId ) {
 			$ldap->printDebug( "User exists in local database, logging in.", NONSENSITIVE );
 			$user->setID( $localId );
 			$user->loadFromId();
@@ -63,6 +57,12 @@ class LdapAutoAuthentication {
 			$ldap->updateUser( $user );
 			wfSetupSession();
 			$result = true;
+		} else {
+			$userAdded = self::attemptAddUser( $user, $mungedUsername );
+			if ( !$userAdded ) {
+				$result = false;
+				return false;
+			}
 		}
 
 		return true;
