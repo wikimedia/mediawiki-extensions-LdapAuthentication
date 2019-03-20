@@ -78,6 +78,7 @@ $wgLDAPAutoAuthDomain = "";
 $wgPasswordResetRoutes['domain'] = true;
 $wgLDAPActiveDirectory = [];
 $wgLDAPGroupSearchPosixPrimaryGroup = false;
+$wgLDAPLockOnBlock = false;
 
 define( "LDAPAUTHVERSION", "2.1.0" );
 
@@ -94,11 +95,15 @@ $wgExtensionCredits['other'][] = [
 	'license-name' => 'GPL-2.0-or-later',
 ];
 
+$wgAutoloadClasses['LdapAuthenticationHooks'] = __DIR__ . '/LdapAuthenticationHooks.php';
 $wgAutoloadClasses['LdapAuthenticationPlugin'] = __DIR__ . '/LdapAuthenticationPlugin.php';
 $wgAutoloadClasses['LdapPrimaryAuthenticationProvider'] =
 	__DIR__ . '/LdapPrimaryAuthenticationProvider.php';
 
 $wgMessagesDirs['LdapAuthentication'] = __DIR__ . '/i18n';
+
+$wgHooks['BlockIpComplete'][] = 'LdapAuthenticationHooks::onBlockIpComplete';
+$wgHooks['UnblockUserComplete'][] = 'LdapAuthenticationHooks::onUnblockUserComplete';
 
 # Schema changes
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'efLdapAuthenticationSchemaUpdates';

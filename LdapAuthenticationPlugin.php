@@ -322,6 +322,9 @@ class LdapAuthenticationPlugin {
 		case 'AutoAuthDomain':
 			global $wgLDAPAutoAuthDomain;
 			return $wgLDAPAutoAuthDomain;
+		case 'LockOnBlock':
+			global $wgLDAPLockOnBlock;
+			return $wgLDAPLockOnBlock;
 		}
 
 		# Domain specific preferences
