@@ -79,6 +79,7 @@ $wgPasswordResetRoutes['domain'] = true;
 $wgLDAPActiveDirectory = [];
 $wgLDAPGroupSearchPosixPrimaryGroup = false;
 $wgLDAPLockOnBlock = false;
+$wgLDAPLockPasswordPolicy = "";
 
 define( "LDAPAUTHVERSION", "2.1.0" );
 
