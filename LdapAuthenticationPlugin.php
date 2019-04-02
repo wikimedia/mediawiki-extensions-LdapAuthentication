@@ -325,6 +325,9 @@ class LdapAuthenticationPlugin {
 		case 'LockOnBlock':
 			global $wgLDAPLockOnBlock;
 			return $wgLDAPLockOnBlock;
+		case 'LDAPLockPasswordPolicy':
+			global $wgLDAPLockPasswordPolicy;
+			return $wgLDAPLockPasswordPolicy;
 		}
 
 		# Domain specific preferences

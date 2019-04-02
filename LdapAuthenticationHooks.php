@@ -48,6 +48,9 @@ class LdapAuthenticationHooks {
 
 	/**
 	 * Lock/unlock an LDAP account via a 'pwdAccountLockedTime' attribute.
+	 * Optionally set a password policy. This should help cover some cases
+	 * pwdAccountLockedTime doesn't cover well like out-of-band (e.g. by an
+	 * admin) password resets.
 	 *
 	 * @param User $user User to lock/unlock
 	 * @param bool $lock True to lock, False to unlock
@@ -55,17 +58,25 @@ class LdapAuthenticationHooks {
 	 *   handler response
 	 */
 	private static function setLdapLockStatus( User $user, $lock ) {
-		$actionStr = $lock ? 'lock' : 'unlock';
-		// * '000001010000Z' means that the account has been locked
-		// permanently, and that only a password administrator can unlock the
-		// account.
-		// * empty array means delete the attribute
-		$lockData = $lock ? '000001010000Z' : [];
-
 		$ldap = static::getLDAP();
 		if ( !$ldap ) {
 			return 'Failed to initialize LDAP connection';
 		}
+
+		$ppolicy = $ldap->getConf( 'LDAPLockPasswordPolicy' );
+
+		$actionStr = $lock ? 'lock' : 'unlock';
+		// * '000001010000Z' means that the account has been locked
+		// permanently, and that only a password administrator can unlock the
+		// account.
+		// * If a password policy has been configured, apply that as well
+		// * empty array means delete the attribute
+		$lockData = [];
+		$lockData['pwdAccountLockedTime'] = $lock ? '000001010000Z' : [];
+		if ( $ppolicy ) {
+			$lockData['pwdPolicySubentry'] = $lock ? $ppolicy : [];
+		}
+
 		$userDN = $ldap->getUserDN( $user->getName() );
 		if ( !$userDN ) {
 			return "Failed to lookup DN for user {$user->getName()}";
@@ -75,8 +86,7 @@ class LdapAuthenticationHooks {
 		$success = LdapAuthenticationPlugin::ldap_modify(
 			$ldap->ldapconn,
 			$userDN,
-			[ 'pwdAccountLockedTime' => $lockData ]
-		);
+			$lockData );
 		if ( !$success ) {
 			$msg = "Failed to {$actionStr} LDAP account {$userDN}";
 			$errno = LdapAuthenticationPlugin::ldap_errno( $ldap->ldapconn );
