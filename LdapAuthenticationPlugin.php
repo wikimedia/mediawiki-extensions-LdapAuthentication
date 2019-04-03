@@ -346,11 +346,13 @@ class LdapAuthenticationPlugin {
 			if ( isset( $wgLDAPPort[$domain] ) ) {
 				$this->printDebug( "Using non-standard port: " . $wgLDAPPort[$domain], SENSITIVE );
 				return (string)$wgLDAPPort[$domain];
-			} elseif ( $this->getConf( 'EncryptionType' ) == 'ssl' ) {
-				return "636";
-			} else {
-				return "389";
 			}
+
+			if ( $this->getConf( 'EncryptionType' ) == 'ssl' ) {
+				return "636";
+			}
+
+			return "389";
 		case 'SearchString':
 			global $wgLDAPSearchStrings;
 			return self::setOrDefault( $wgLDAPSearchStrings, $domain );
@@ -986,13 +988,9 @@ class LdapAuthenticationPlugin {
 		$this->printDebug( "Entering allowPasswordChange", NONSENSITIVE );
 
 		// Local domains need to be able to change passwords
-		if ( $this->getConf( 'UseLocal' ) && 'local' == $this->getDomain() ) {
-			return true;
-		}
-		if ( $this->getConf( 'UpdateLDAP' ) || $this->getConf( 'MailPassword' ) ) {
-			return true;
-		}
-		return false;
+		return ( $this->getConf( 'UseLocal' ) && 'local' == $this->getDomain() )
+			|| $this->getConf( 'UpdateLDAP' )
+			|| $this->getConf( 'MailPassword' );
 	}
 
 	/**
@@ -1489,8 +1487,7 @@ class LdapAuthenticationPlugin {
 			);
 			$this->LDAPUsername = $username;
 		}
-		$userdn = $this->userInfo[0]["dn"];
-		return $userdn;
+		return $this->userInfo[0]["dn"];
 	}
 
 	/**
@@ -1764,21 +1761,21 @@ class LdapAuthenticationPlugin {
 				if ( in_array( $searchme, $searchedgroups["dn"] ) ) {
 					// We already searched this, move on
 					continue;
-				} else {
-					// We'll need to search this group's members now
-					$this->printDebug( "Adding $searchme to the list of groups (1)", SENSITIVE );
-					$groupstosearch["dn"][] = $searchme;
 				}
+
+				// We'll need to search this group's members now
+				$this->printDebug( "Adding $searchme to the list of groups (1)", SENSITIVE );
+				$groupstosearch["dn"][] = $searchme;
 			}
 			foreach ( $returnedgroups["short"] as $searchme ) {
 				if ( in_array( $searchme, $searchedgroups["short"] ) ) {
 					// We already searched this, move on
 					continue;
-				} else {
-					$this->printDebug( "Adding $searchme to the list of groups (2)", SENSITIVE );
-					// We'll need to search this group's members now
-					$groupstosearch["short"][] = $searchme;
 				}
+
+				$this->printDebug( "Adding $searchme to the list of groups (2)", SENSITIVE );
+				// We'll need to search this group's members now
+				$groupstosearch["short"][] = $searchme;
 			}
 		}
 		$searchedgroups = array_merge_recursive( $groups, $searchedgroups );
@@ -2021,7 +2018,7 @@ class LdapAuthenticationPlugin {
 	 *
 	 * @param string $debugText
 	 * @param string $debugVal
-	 * @param Array|null $debugArr
+	 * @param array|null $debugArr
 	 */
 	public function printDebug( $debugText, $debugVal, $debugArr = null ) {
 		if ( !function_exists( 'wfDebugLog' ) ) {
@@ -2109,10 +2106,10 @@ class LdapAuthenticationPlugin {
 				$ret = $this->getConf( 'BaseDN' );
 				if ( $ret ) {
 					return $ret;
-				} else {
-					$this->printDebug( "basedn is not set.", NONSENSITIVE );
-					return '';
 				}
+
+				$this->printDebug( "basedn is not set.", NONSENSITIVE );
+				return '';
 		}
 
 		if ( $ret == '' ) {
@@ -2123,10 +2120,10 @@ class LdapAuthenticationPlugin {
 			// We will never reach here if $type is self::DEFAULTDN, so to avoid code
 			// code duplication, we'll get the default by re-calling the function.
 			return $this->getBaseDN( DEFAULTDN );
-		} else {
-			$this->printDebug( "basedn is $ret", NONSENSITIVE );
-			return $ret;
 		}
+
+		$this->printDebug( "basedn is $ret", NONSENSITIVE );
+		return $ret;
 	}
 
 	/**
@@ -2168,16 +2165,16 @@ class LdapAuthenticationPlugin {
 					[ 'user_id' => $user_id ],
 					__METHOD__
 				);
-			} else {
-				return $dbw->insert(
-					'ldap_domains',
-					[
-						'domain' => $domain,
-						'user_id' => $user_id
-					],
-					__METHOD__
-				);
 			}
+
+			return $dbw->insert(
+				'ldap_domains',
+				[
+					'domain' => $domain,
+					'user_id' => $user_id
+				],
+				__METHOD__
+			);
 		}
 		return false;
 	}
