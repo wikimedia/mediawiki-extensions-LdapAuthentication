@@ -164,6 +164,7 @@ class LdapPrimaryAuthenticationProvider
 
 	public function beginPrimaryAuthentication( array $reqs ) {
 		$req = AuthenticationRequest::getRequestByClass( $reqs, $this->requestType );
+		'@phan-var PasswordAuthenticationRequest|PasswordDomainAuthenticationRequest|null $req';
 		if ( !$req || $req->username === null || $req->password === null ||
 			( $this->hasMultipleDomains && $req->domain === null )
 		) {
@@ -300,6 +301,7 @@ class LdapPrimaryAuthenticationProvider
 	public function providerAllowsAuthenticationDataChange(
 		AuthenticationRequest $req, $checkData = true
 	) {
+		'@phan-var PasswordAuthenticationRequest|PasswordDomainAuthenticationRequest|null $req';
 		if ( get_class( $req ) !== $this->requestType || (
 			$this->hasMultipleDomains && $req->domain === 'local' )
 		) {
@@ -351,6 +353,7 @@ class LdapPrimaryAuthenticationProvider
 	}
 
 	public function providerChangeAuthenticationData( AuthenticationRequest $req ) {
+		'@phan-var PasswordAuthenticationRequest|PasswordDomainAuthenticationRequest|null $req';
 		if ( get_class( $req ) === $this->requestType ) {
 			$username = $req->username !== null ? User::getCanonicalName( $req->username, 'usable' ) : false;
 			if ( $username === false ) {
@@ -392,6 +395,7 @@ class LdapPrimaryAuthenticationProvider
 		}
 
 		$req = AuthenticationRequest::getRequestByClass( $reqs, $this->requestType );
+		'@phan-var PasswordAuthenticationRequest|PasswordDomainAuthenticationRequest|null $req';
 		if ( !$req || $req->username === null || $req->password === null ||
 			( $this->hasMultipleDomains && $req->domain === null )
 		) {
