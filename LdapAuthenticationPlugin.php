@@ -865,7 +865,7 @@ class LdapAuthenticationPlugin {
 			if ( !$bind ) {
 				return false;
 			}
-			$values["userpassword"] = $pass;
+			$values = [ 'userpassword' => $pass ];
 
 			// Blank out the password in the database. We don't want to save
 			// domain credentials for security reasons.
@@ -1078,7 +1078,7 @@ class LdapAuthenticationPlugin {
 
 			// Set up LDAP objectclasses and attributes
 			// TODO: make objectclasses and attributes configurable
-			$values["uid"] = $username;
+			$values = [ 'uid' => $username ];
 			// sn is required for objectclass inetorgperson
 			$values["sn"] = $username;
 			$prefs = $this->getConf( 'Preferences' );
@@ -1742,7 +1742,7 @@ class LdapAuthenticationPlugin {
 	 *
 	 * @param array $groups
 	 * @param array $searchedgroups
-	 * @return bool
+	 * @return array
 	 */
 	private function searchNestedGroups( $groups, $searchedgroups = [ "dn" => [], "short" => [] ] ) {
 		$this->printDebug( "Entering searchNestedGroups", NONSENSITIVE );
