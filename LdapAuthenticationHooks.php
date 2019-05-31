@@ -16,6 +16,8 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
+use MediaWiki\Block\DatabaseBlock;
+
 class LdapAuthenticationHooks {
 
 	/**
@@ -100,15 +102,15 @@ class LdapAuthenticationHooks {
 	 * block is made against a specific user. Alternately, unlock the account
 	 * if a new block is placed replacing a prior indefinite block.
 	 *
-	 * @param Block $block The Block object that was saved
+	 * @param DatabaseBlock $block The block object that was saved
 	 * @param User $user The user who performed the unblock
-	 * @param Block|null $prior Previous block that was replaced
+	 * @param DatabaseBlock|null $prior Previous block that was replaced
 	 * @return null|bool|string Hook status
 	 */
-	public static function onBlockIpComplete( Block $block, User $user, $prior ) {
+	public static function onBlockIpComplete( DatabaseBlock $block, User $user, $prior ) {
 		global $wgLDAPLockOnBlock;
 		if ( $wgLDAPLockOnBlock ) {
-			if ( $block->getType() === Block::TYPE_USER
+			if ( $block->getType() === DatabaseBlock::TYPE_USER
 				&& $block->getExpiry() === 'infinity'
 				&& $block->isSitewide()
 			) {
@@ -125,14 +127,14 @@ class LdapAuthenticationHooks {
 	 * Inspect removed blocks and unlock the backing LDAP account when an
 	 * indefinite block is lifted against a specific user.
 	 *
-	 * @param Block $block the Block object that was saved
+	 * @param DatabaseBlock $block the block object that was saved
 	 * @param User $user The user who performed the unblock
 	 * @return null|bool|string Hook status
 	 */
-	public static function onUnblockUserComplete( Block $block, User $user ) {
+	public static function onUnblockUserComplete( DatabaseBlock $block, User $user ) {
 		global $wgLDAPLockOnBlock;
 		if ( $wgLDAPLockOnBlock
-			&& $block->getType() === Block::TYPE_USER
+			&& $block->getType() === DatabaseBlock::TYPE_USER
 			&& $block->getExpiry() === 'infinity'
 			&& $block->isSitewide()
 		) {
