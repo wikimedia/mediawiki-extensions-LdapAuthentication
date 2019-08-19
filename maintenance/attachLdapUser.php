@@ -40,7 +40,7 @@ use MediaWiki\Auth\AuthManager;
 class AttachLdapUser extends Maintenance {
 	public function __construct() {
 		parent::__construct();
-		$this->mDescription = "Attach an existing LDAP user to the local wiki";
+		$this->addDescription( "Attach an existing LDAP user to the local wiki" );
 		$this->addOption( 'user', 'Username', true, true );
 		$this->addOption( 'email', 'Email address', true, true );
 		$this->addOption( 'domain', 'LDAP domain', false, true );
