@@ -30,7 +30,7 @@ class LdapAuthenticationHooks {
 		$ldap = LdapAuthenticationPlugin::getInstance();
 		if ( $ldap->ldapconn === null ) {
 			if ( !$ldap->connect() ) {
-				$ldap->printDebug( 'Failed to connect to LDAP directory' );
+				$ldap->printDebug( 'Failed to connect to LDAP directory', NONSENSITIVE );
 				return false;
 			}
 		}
@@ -42,7 +42,7 @@ class LdapAuthenticationHooks {
 		}
 		$bind = $ldap->bindAs( $writer, $ldap->getConf( 'WriterPassword' ) );
 		if ( !$bind ) {
-			$ldap->printDebug( 'Failed to bind to directory as wgLDAPWriterDN' );
+			$ldap->printDebug( 'Failed to bind to directory as wgLDAPWriterDN', NONSENSITIVE );
 			return false;
 		}
 		return $ldap;

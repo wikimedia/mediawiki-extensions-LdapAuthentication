@@ -96,10 +96,10 @@ $wgExtensionCredits['other'][] = [
 	'license-name' => 'GPL-2.0-or-later',
 ];
 
-$wgAutoloadClasses['LdapAuthenticationHooks'] = __DIR__ . '/LdapAuthenticationHooks.php';
-$wgAutoloadClasses['LdapAuthenticationPlugin'] = __DIR__ . '/LdapAuthenticationPlugin.php';
+$wgAutoloadClasses['LdapAuthenticationHooks'] = __DIR__ . '/includes/LdapAuthenticationHooks.php';
+$wgAutoloadClasses['LdapAuthenticationPlugin'] = __DIR__ . '/includes/LdapAuthenticationPlugin.php';
 $wgAutoloadClasses['LdapPrimaryAuthenticationProvider'] =
-	__DIR__ . '/LdapPrimaryAuthenticationProvider.php';
+	__DIR__ . '/includes/LdapPrimaryAuthenticationProvider.php';
 
 $wgMessagesDirs['LdapAuthentication'] = __DIR__ . '/i18n';
 
