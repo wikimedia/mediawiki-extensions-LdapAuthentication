@@ -107,25 +107,8 @@ $wgHooks['BlockIpComplete'][] = 'LdapAuthenticationHooks::onBlockIpComplete';
 $wgHooks['UnblockUserComplete'][] = 'LdapAuthenticationHooks::onUnblockUserComplete';
 
 # Schema changes
-$wgHooks['LoadExtensionSchemaUpdates'][] = 'efLdapAuthenticationSchemaUpdates';
-
-/**
- * @param DatabaseUpdater $updater
- * @return bool
- */
-function efLdapAuthenticationSchemaUpdates( $updater ) {
-	$base = __DIR__;
-	switch ( $updater->getDB()->getType() ) {
-	case 'mysql':
-	case 'sqlite':
-		$updater->addExtensionTable( 'ldap_domains', "$base/schema/ldap-mysql.sql" );
-		break;
-	case 'postgres':
-		$updater->addExtensionTable( 'ldap_domains', "$base/schema/ldap-postgres.sql" );
-		break;
-	}
-	return true;
-}
+$wgHooks['LoadExtensionSchemaUpdates'][] =
+	'LdapAuthenticationHooks::onLoadExtensionSchemaUpdates';
 
 // constants for search base
 define( "GROUPDN", 0 );
