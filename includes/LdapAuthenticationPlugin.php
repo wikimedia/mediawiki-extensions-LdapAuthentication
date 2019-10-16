@@ -2040,7 +2040,8 @@ class LdapAuthenticationPlugin {
 			if ( isset( $debugArr ) ) {
 				$debugText = $debugText . " " . implode( "::", $debugArr );
 			}
-			wfDebugLog( 'ldap', LDAPAUTHVERSION . ' ' . $debugText, false );
+			/* Update second parameter when bumping versions */
+			wfDebugLog( 'ldap', '2.2.0' . ' ' . $debugText, false );
 		}
 	}
 

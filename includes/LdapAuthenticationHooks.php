@@ -142,6 +142,21 @@ class LdapAuthenticationHooks {
 		}
 	}
 
+	public static function onRegistration() {
+		global $wgPasswordResetRoutes;
+		$wgPasswordResetRoutes['domain'] = true;
+
+		// constants for search base
+		define( "GROUPDN", 0 );
+		define( "USERDN", 1 );
+		define( "DEFAULTDN", 2 );
+
+		// constants for error reporting
+		define( "NONSENSITIVE", 1 );
+		define( "SENSITIVE", 2 );
+		define( "HIGHLYSENSITIVE", 3 );
+	}
+
 	/**
 	 * @param DatabaseUpdater $updater
 	 * @return bool

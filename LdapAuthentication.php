@@ -32,99 +32,11 @@
  * Support is available at https://www.mediawiki.org/wiki/Extension_talk:LDAP_Authentication
  */
 
-if ( !defined( 'MEDIAWIKI' ) ) {
-	exit;
-}
-
-$wgLDAPDomainNames = [];
-$wgLDAPServerNames = [];
-$wgLDAPUseLocal = false;
-$wgLDAPEncryptionType = [];
-$wgLDAPOptions = [];
-$wgLDAPPort = [];
-$wgLDAPSearchStrings = [];
-$wgLDAPProxyAgent = [];
-$wgLDAPProxyAgentPassword = [];
-$wgLDAPSearchAttributes = [];
-$wgLDAPBaseDNs = [];
-$wgLDAPGroupBaseDNs = [];
-$wgLDAPUserBaseDNs = [];
-$wgLDAPWriterDN = [];
-$wgLDAPWriterPassword = [];
-$wgLDAPWriteLocation = [];
-$wgLDAPAddLDAPUsers = [];
-$wgLDAPUpdateLDAP = [];
-$wgLDAPPasswordHash = [];
-$wgLDAPMailPassword = [];
-$wgLDAPPreferences = [];
-$wgLDAPDisableAutoCreate = [];
-$wgLDAPDebug = 0;
-$wgLDAPGroupUseFullDN = [];
-$wgLDAPLowerCaseUsername = [];
-$wgLDAPGroupUseRetrievedUsername = [];
-$wgLDAPGroupObjectclass = [];
-$wgLDAPGroupAttribute = [];
-$wgLDAPGroupNameAttribute = [];
-$wgLDAPGroupsUseMemberOf = [];
-$wgLDAPUseLDAPGroups = [];
-$wgLDAPLocallyManagedGroups = [];
-$wgLDAPGroupsPrevail = [];
-$wgLDAPRequiredGroups = [];
-$wgLDAPExcludedGroups = [];
-$wgLDAPGroupSearchNestedGroups = [];
-$wgLDAPAuthAttribute = [];
-$wgLDAPAutoAuthUsername = "";
-$wgLDAPAutoAuthDomain = "";
-$wgPasswordResetRoutes['domain'] = true;
-$wgLDAPActiveDirectory = [];
-$wgLDAPGroupSearchPosixPrimaryGroup = false;
-$wgLDAPLockOnBlock = false;
-$wgLDAPLockPasswordPolicy = "";
-
-define( "LDAPAUTHVERSION", "2.1.0" );
-
-/**
- * Add extension information to Special:Version
- */
-$wgExtensionCredits['other'][] = [
-	'path' => __FILE__,
-	'name' => 'LDAP Authentication Plugin',
-	'version' => LDAPAUTHVERSION,
-	'author' => 'Ryan Lane',
-	'descriptionmsg' => 'ldapauthentication-desc',
-	'url' => 'https://www.mediawiki.org/wiki/Extension:LDAP_Authentication',
-	'license-name' => 'GPL-2.0-or-later',
-];
-
-$wgAutoloadClasses['LdapAuthenticationHooks'] = __DIR__ . '/includes/LdapAuthenticationHooks.php';
-$wgAutoloadClasses['LdapAuthenticationPlugin'] = __DIR__ . '/includes/LdapAuthenticationPlugin.php';
-$wgAutoloadClasses['LdapPrimaryAuthenticationProvider'] =
-	__DIR__ . '/includes/LdapPrimaryAuthenticationProvider.php';
-
-$wgMessagesDirs['LdapAuthentication'] = __DIR__ . '/i18n';
-
-$wgHooks['BlockIpComplete'][] = 'LdapAuthenticationHooks::onBlockIpComplete';
-$wgHooks['UnblockUserComplete'][] = 'LdapAuthenticationHooks::onUnblockUserComplete';
-
-# Schema changes
-$wgHooks['LoadExtensionSchemaUpdates'][] =
-	'LdapAuthenticationHooks::onLoadExtensionSchemaUpdates';
-
-// constants for search base
-define( "GROUPDN", 0 );
-define( "USERDN", 1 );
-define( "DEFAULTDN", 2 );
-
-// constants for error reporting
-define( "NONSENSITIVE", 1 );
-define( "SENSITIVE", 2 );
-define( "HIGHLYSENSITIVE", 3 );
-
-// The auto-auth code was originally derived from the SSL Authentication plugin
-// https://www.mediawiki.org/wiki/SSL_authentication
-
 /**
  * Sets up the auto-authentication piece of the LDAP plugin.
+ *
+ * This has been broken for numerous versions and will be removed when this PHP entry point is
+ * removed in the near future.
  */
 function AutoAuthSetup() {
 	/**
@@ -137,4 +49,18 @@ function AutoAuthSetup() {
 	 *  bit).
 	 */
 	throw new BadFunctionCallException( 'AutoAuthSetup() is not supported with AuthManager.' );
+}
+
+if ( function_exists( 'wfLoadExtension' ) ) {
+	wfLoadExtension( 'LdapAuthentication' );
+	// Keep i18n globals so mergeMessageFileList.php doesn't break
+	$wgMessagesDirs['LdapAuthentication'] = __DIR__ . '/i18n';
+	/* wfWarn(
+		'Deprecated PHP entry point used for LdapAuthentication extension. '.
+		'Please use wfLoadExtension instead, ' .
+		'see https://www.mediawiki.org/wiki/Extension_registration for more details.'
+	); */
+	return;
+} else {
+	die( 'This version of the LdapAuthentication extension requires MediaWiki 1.29+' );
 }
