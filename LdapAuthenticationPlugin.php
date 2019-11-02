@@ -267,6 +267,7 @@ class LdapAuthenticationPlugin {
 	 * @param resource $ldapconn
 	 * @param resource $resultid
 	 * @return array
+	 * @phan-return array<int|string,int|array<int|string,string|int|array<int|string,int|string>>>
 	 */
 	public static function ldap_get_entries( $ldapconn, $resultid ) {
 		Wikimedia\suppressWarnings();
@@ -703,7 +704,8 @@ class LdapAuthenticationPlugin {
 				}
 				$result = true;
 				Hooks::run( 'ChainAuth', [ $username, $password, &$result ] );
-				if ( $result == false ) {
+				// @phan-suppress-next-line PhanImpossibleCondition False positive
+				if ( !$result ) {
 					return false;
 				}
 
@@ -1117,6 +1119,7 @@ class LdapAuthenticationPlugin {
 			# Let other extensions modify the user object before creation
 			Hooks::run( 'LDAPSetCreationValues',
 				[ $this, $username, &$values, $writeloc, &$this->userdn, &$result ] );
+			// @phan-suppress-next-line PhanImpossibleCondition False positive
 			if ( !$result ) {
 				$this->printDebug(
 					"Failed to add user because LDAPSetCreationValues returned false", NONSENSITIVE
@@ -1137,6 +1140,7 @@ class LdapAuthenticationPlugin {
 				$result = false;
 				Hooks::run( 'LDAPRetrySetCreationValues',
 					[ $this, $username, &$values, $writeloc, &$this->userdn, &$result ] );
+				// @phan-suppress-next-line PhanImpossibleCondition False positive
 				if ( $result &&
 					self::ldap_add( $this->ldapconn, $this->userdn, $values )
 				) {
@@ -1516,6 +1520,8 @@ class LdapAuthenticationPlugin {
 	/**
 	 * @param string $userdn
 	 * @return array|null
+	 * @phan-return ?array<int|string,int|array<int|string,string|int|array<int|string,int|string>>>
+	 * @todo Use getWithSetCallback
 	 */
 	public function getUserInfoStateless( $userdn ) {
 		global $wgMemc;
