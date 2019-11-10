@@ -2002,11 +2002,6 @@ class LdapAuthenticationPlugin {
 		// Set the password hashing based upon admin preference
 		switch ( $this->getConf( 'PasswordHash' ) ) {
 			case 'crypt':
-				// https://bugs.php.net/bug.php?id=55439
-				if ( crypt( 'password', '$1$U7AjYB.O$' ) == '$1$U7AjYB.O' ) {
-					die( 'The version of PHP in use has a broken crypt function. Please upgrade ' .
-						'your installation of PHP, or use another encryption function for LDAP.' );
-				}
 				$pass = '{CRYPT}' . crypt( $password );
 				break;
 			case 'clear':
