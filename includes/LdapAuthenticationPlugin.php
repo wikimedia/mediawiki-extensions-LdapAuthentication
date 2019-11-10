@@ -770,22 +770,6 @@ class LdapAuthenticationPlugin {
 	}
 
 	/**
-	 * Modify options in the login template.
-	 *
-	 * @param BaseTemplate &$template
-	 * @param string &$type
-	 */
-	public function modifyUITemplate( &$template, &$type ) {
-		$this->printDebug( "Entering modifyUITemplate", NONSENSITIVE );
-		$template->set( 'create', $this->getConf( 'AddLDAPUsers' ) );
-		$template->set( 'usedomain', true );
-		$template->set( 'useemail', $this->getConf( 'MailPassword' ) );
-		$template->set( 'canreset', $this->getConf( 'MailPassword' ) );
-		$template->set( 'domainnames', $this->domainList() );
-		Hooks::run( 'LDAPModifyUITemplate', [ &$template ] );
-	}
-
-	/**
 	 * @return array
 	 */
 	public function domainList() {
