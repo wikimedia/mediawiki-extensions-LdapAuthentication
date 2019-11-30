@@ -44,6 +44,7 @@ class AttachLdapUser extends Maintenance {
 		$this->addOption( 'user', 'Username', true, true );
 		$this->addOption( 'email', 'Email address', true, true );
 		$this->addOption( 'domain', 'LDAP domain', false, true );
+		$this->requireExtension( 'LDAP Authentication Plugin' );
 	}
 
 	public function execute() {
