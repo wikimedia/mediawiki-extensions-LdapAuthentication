@@ -2005,7 +2005,7 @@ class LdapAuthenticationPlugin {
 	 * is the level at which you want to print the information.
 	 *
 	 * @param string $debugText
-	 * @param string $debugVal
+	 * @param int $debugVal One of NONSENSITIVE, SENSITIVE or HIGHLYSENSITIVE
 	 * @param array|null $debugArr
 	 */
 	public function printDebug( $debugText, $debugVal, $debugArr = null ) {
