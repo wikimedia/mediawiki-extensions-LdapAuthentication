@@ -545,7 +545,7 @@ class LdapAuthenticationPlugin {
 				}
 			}
 			// getSearchString is going to bind, but will not unbind
-			self::ldap_unbind( $this->ldapconn );
+			$this->unbind();
 		}
 		return $ret;
 	}
@@ -688,7 +688,7 @@ class LdapAuthenticationPlugin {
 			// return true, and will let anyone in!
 			if ( '' == $this->userdn ) {
 				$this->printDebug( "User DN is blank", NONSENSITIVE );
-				self::ldap_unbind( $this->ldapconn );
+				$this->unbind();
 				$this->markAuthFailed();
 				return false;
 			}
@@ -738,7 +738,7 @@ class LdapAuthenticationPlugin {
 				$info = self::ldap_get_entries( $this->ldapconn, $entry );
 				if ( $info["count"] < 1 ) {
 					$this->printDebug( "Failed auth attribute check", NONSENSITIVE );
-					self::ldap_unbind( $this->ldapconn );
+					$this->unbind();
 					$this->markAuthFailed();
 					return false;
 				}
@@ -747,14 +747,13 @@ class LdapAuthenticationPlugin {
 			$this->getGroups( $username );
 
 			if ( !$this->checkGroups() ) {
-				self::ldap_unbind( $this->ldapconn );
+				$this->unbind();
 				$this->markAuthFailed();
 				return false;
 			}
 
 			$this->getPreferences();
-
-			self::ldap_unbind( $this->ldapconn );
+			$this->unbind();
 		} else {
 			$this->markAuthFailed();
 			return false;
@@ -861,7 +860,7 @@ class LdapAuthenticationPlugin {
 			$success = self::ldap_modify(
 				$this->ldapconn, $this->userdn, $values
 			);
-			self::ldap_unbind( $this->ldapconn );
+			$this->unbind();
 			if ( $success ) {
 				$this->printDebug( "Successfully modified the user's password", NONSENSITIVE );
 				return true;
@@ -947,11 +946,11 @@ class LdapAuthenticationPlugin {
 				$key = wfMemcKey( 'ldapauthentication', 'userinfo', $this->userdn );
 				$wgMemc->delete( $key );
 				$this->printDebug( "Successfully modified the user's attributes", NONSENSITIVE );
-				self::ldap_unbind( $this->ldapconn );
+				$this->unbind();
 				return true;
 			}
 			$this->printDebug( "Failed to modify the user's attributes", NONSENSITIVE );
-			self::ldap_unbind( $this->ldapconn );
+			$this->unbind();
 		}
 		return false;
 	}
@@ -1050,7 +1049,7 @@ class LdapAuthenticationPlugin {
 				} else {
 					$this->printDebug( "wgLDAPWriteLocation is not set, failing", NONSENSITIVE );
 					// getSearchString will bind, but will not unbind
-					self::ldap_unbind( $this->ldapconn );
+					$this->unbind();
 					return false;
 				}
 			}
@@ -1108,14 +1107,14 @@ class LdapAuthenticationPlugin {
 				$this->printDebug(
 					"Failed to add user because LDAPSetCreationValues returned false", NONSENSITIVE
 				);
-				self::ldap_unbind( $this->ldapconn );
+				$this->unbind();
 				return false;
 			}
 
 			$this->printDebug( "Adding user", NONSENSITIVE );
 			if ( self::ldap_add( $this->ldapconn, $this->userdn, $values ) ) {
 				$this->printDebug( "Successfully added user", NONSENSITIVE );
-				self::ldap_unbind( $this->ldapconn );
+				$this->unbind();
 				return true;
 			}
 			$errno = self::ldap_errno( $this->ldapconn );
@@ -1129,12 +1128,12 @@ class LdapAuthenticationPlugin {
 					self::ldap_add( $this->ldapconn, $this->userdn, $values )
 				) {
 					$this->printDebug( "Successfully added user", NONSENSITIVE );
-					self::ldap_unbind( $this->ldapconn );
+					$this->unbind();
 					return true;
 				}
 			}
 			$this->printDebug( "Failed to add user", NONSENSITIVE );
-			self::ldap_unbind( $this->ldapconn );
+			$this->unbind();
 		}
 		return false;
 	}
@@ -2045,6 +2044,18 @@ class LdapAuthenticationPlugin {
 		}
 		$this->boundAs = $userdn;
 		return true;
+	}
+
+	/**
+	 * Unbind and destroy the current LDAP connection.
+	 * @return void
+	 */
+	public function unbind() {
+		self::ldap_unbind( $this->ldapconn );
+		// ldap_unbind marks the connection resource as unusable, so discard
+		// it so that we know to recreate it when needed in the future.
+		$this->ldapconn = null;
+		$this->boundAs = null;
 	}
 
 	/**
