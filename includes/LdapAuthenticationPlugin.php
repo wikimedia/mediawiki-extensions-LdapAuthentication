@@ -69,7 +69,7 @@ class LdapAuthenticationPlugin {
 
 	/**
 	 * Wrapper for ldap_connect
-	 * @param null $hostname
+	 * @param string|null $hostname
 	 * @param int $port
 	 * @return resource|false
 	 */
@@ -83,8 +83,8 @@ class LdapAuthenticationPlugin {
 	/**
 	 * Wrapper for ldap_bind
 	 * @param resource $ldapconn
-	 * @param null $dn
-	 * @param null $password
+	 * @param string|null $dn
+	 * @param string|null $password
 	 * @return bool
 	 */
 	public static function ldap_bind( $ldapconn, $dn = null, $password = null ) {
@@ -814,7 +814,7 @@ class LdapAuthenticationPlugin {
 	 * Return true if successful.
 	 *
 	 * @param User $user
-	 * @param string $password
+	 * @param string|null $password
 	 * @return bool
 	 */
 	public function setPassword( $user, $password ) {
@@ -1678,6 +1678,7 @@ class LdapAuthenticationPlugin {
 							}
 						}
 					}
+					// @phan-suppress-next-line PhanTypePossiblyInvalidDimOffset dn is always set
 					$this->printDebug( "Got the following groups:", SENSITIVE, $groups["dn"] );
 
 					$this->userLDAPGroups = $groups;
@@ -1709,7 +1710,7 @@ class LdapAuthenticationPlugin {
 						$this->printDebug( "Couldn't get the user's primary group.", NONSENSITIVE );
 					} else {
 						$primary_group_dn = strtolower( $entries[0]["dn"] );
-						$this->printDebug( "Got the user's primary group:", SENSITIVE, $primary_group_dn );
+						$this->printDebug( "Got the user's primary group:" . $primary_group_dn, SENSITIVE );
 						$this->userLDAPGroups["dn"][] = $primary_group_dn;
 						$nameattribute = strtolower( $this->getConf( 'GroupNameAttribute' ) );
 						$this->userLDAPGroups["short"][] = $entries[0][$nameattribute][0];
@@ -1876,6 +1877,7 @@ class LdapAuthenticationPlugin {
 			}
 		}
 
+		// @phan-suppress-next-line PhanTypePossiblyInvalidDimOffset dn is always set
 		$this->printDebug( "Returned groups:", SENSITIVE, $groups["dn"] );
 		return $groups;
 	}
@@ -2117,7 +2119,7 @@ class LdapAuthenticationPlugin {
 
 	/**
 	 * @param User $user
-	 * @return string
+	 * @return string|null
 	 */
 	public static function loadDomain( $user ) {
 		$user_id = $user->getId();
