@@ -1491,7 +1491,7 @@ class LdapAuthenticationPlugin {
 			return true;
 		}
 		$userInfo = $this->getUserInfoStateless( $this->userdn );
-		if ( is_null( $userInfo ) ) {
+		if ( $userInfo === null ) {
 			$this->fetchedUserInfo = false;
 		} else {
 			$this->fetchedUserInfo = true;
@@ -1533,13 +1533,13 @@ class LdapAuthenticationPlugin {
 		// Retrieve preferences
 		$prefs = $this->getConf( 'Preferences' );
 		if ( !$prefs ) {
-			return null;
+			return;
 		}
 		if ( !$this->getUserInfo() ) {
 			$this->printDebug(
 				"Failed to get preferences, the user's entry wasn't found.", NONSENSITIVE
 			);
-			return null;
+			return;
 		}
 		$this->printDebug( "Retrieving preferences", NONSENSITIVE );
 		foreach ( array_keys( $prefs ) as $key ) {
