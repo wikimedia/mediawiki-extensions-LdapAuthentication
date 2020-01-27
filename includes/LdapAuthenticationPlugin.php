@@ -1149,8 +1149,6 @@ class LdapAuthenticationPlugin {
 	 * @return string
 	 */
 	public function getDomain() {
-		global $wgUser;
-
 		$this->printDebug( "Entering getDomain", NONSENSITIVE );
 
 		# If there's only a single domain set, there's no reason
@@ -1169,10 +1167,10 @@ class LdapAuthenticationPlugin {
 		}
 		# If the session domain isn't set, the user may have been logged
 		# in with a token, check the user options.
-		# If $wgUser isn't defined yet, it might be due to an LDAPAutoAuthDomain config.
-		if ( isset( $wgUser ) && $wgUser->isLoggedIn() && $wgUser->getToken( false ) ) {
+		$user = RequestContext::getMain()->getUser();
+		if ( $user->isLoggedIn() && $user->getToken( false ) ) {
 			$this->printDebug( "Pulling domain from user options.", NONSENSITIVE );
-			$domain = self::loadDomain( $wgUser );
+			$domain = self::loadDomain( $user );
 			if ( $domain ) {
 				return $domain;
 			}
