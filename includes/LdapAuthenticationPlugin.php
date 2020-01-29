@@ -1677,7 +1677,6 @@ class LdapAuthenticationPlugin {
 							}
 						}
 					}
-					// @phan-suppress-next-line PhanTypePossiblyInvalidDimOffset dn is always set
 					$this->printDebug( "Got the following groups:", SENSITIVE, $groups["dn"] );
 
 					$this->userLDAPGroups = $groups;
@@ -1876,7 +1875,6 @@ class LdapAuthenticationPlugin {
 			}
 		}
 
-		// @phan-suppress-next-line PhanTypePossiblyInvalidDimOffset dn is always set
 		$this->printDebug( "Returned groups:", SENSITIVE, $groups["dn"] );
 		return $groups;
 	}
