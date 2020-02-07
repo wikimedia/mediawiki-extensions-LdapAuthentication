@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * http://www.gnu.org/copyleft/gpl.html
  */
+use MediaWiki\MediaWikiServices;
 
 class LdapAuthenticationPlugin {
 
@@ -878,8 +879,6 @@ class LdapAuthenticationPlugin {
 	 * @return bool
 	 */
 	public function updateExternalDB( $user ) {
-		global $wgMemc;
-
 		$this->printDebug( "Entering updateExternalDB", NONSENSITIVE );
 		if ( !$this->getConf( 'UpdateLDAP' ) || $this->getDomain() == 'local' ) {
 			$this->printDebug(
@@ -943,8 +942,10 @@ class LdapAuthenticationPlugin {
 				self::ldap_modify( $this->ldapconn, $this->userdn, $values )
 			) {
 				// We changed the user, we need to invalidate the memcache key
-				$key = wfMemcKey( 'ldapauthentication', 'userinfo', $this->userdn );
-				$wgMemc->delete( $key );
+				$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
+				$key = $cache->makeKey( 'ldapauthentication-userinfo', $this->userdn );
+				$cache->delete( $key );
+
 				$this->printDebug( "Successfully modified the user's attributes", NONSENSITIVE );
 				$this->unbind();
 				return true;
@@ -1321,14 +1322,11 @@ class LdapAuthenticationPlugin {
 	 * @return string
 	 */
 	public function getCanonicalName( $username ) {
-		global $wgMemc;
-
 		$this->printDebug( "Entering getCanonicalName", NONSENSITIVE );
 		if ( User::isIP( $username ) ) {
 			$this->printDebug( "Username is an IP, not munging.", NONSENSITIVE );
 			return $username;
 		}
-		$key = wfMemcKey( 'ldapauthentication', 'canonicalname', $username );
 		$canonicalname = $username;
 		if ( $username != '' ) {
 			$this->printDebug( "Username is: $username", NONSENSITIVE );
@@ -1336,51 +1334,45 @@ class LdapAuthenticationPlugin {
 				$canonicalname = ucfirst( strtolower( $canonicalname ) );
 			} else {
 				# Fetch username, so that we can possibly use it.
-				$userInfo = $wgMemc->get( $key );
-				if ( is_array( $userInfo ) ) {
-					$this->printDebug( "Fetched userInfo from memcache.", NONSENSITIVE );
-					if ( $userInfo["username"] == $username ) {
-						$this->printDebug(
-							"Username matched a key in memcache, using the fetched name: " .
-								$userInfo["canonicalname"],
-							NONSENSITIVE
-						);
-						return $userInfo["canonicalname"];
-					}
-				}
-				if ( $this->validDomain( $this->getDomain() ) && $this->connect() ) {
-					// Try to pull the username from LDAP. In the case of straight binds,
-					// try to fetch the username by search before bind.
-					$this->userdn = $this->getUserDN( $username, true );
-					$hookSetUsername = $this->LDAPUsername;
-					Hooks::run( 'SetUsernameAttributeFromLDAP',
-						[ &$hookSetUsername, $this->userInfo ] );
-					if ( is_string( $hookSetUsername ) ) {
-						$this->printDebug(
-							"Username munged by hook: $hookSetUsername", NONSENSITIVE
-						);
-						$this->LDAPUsername = $hookSetUsername;
-					} else {
-						$this->printDebug(
-							"Fetched username is not a string (check your hook code...). " .
-							"This message can be safely ignored if you do not have the " .
-							"SetUsernameAttributeFromLDAP hook defined.", NONSENSITIVE
-						);
-					}
-				}
+				$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
+				$userInfo = $cache->getWithSetCallback(
+					$cache->makeKey( 'ldapauthentication-canonicalname', $username ),
+					$cache::TTL_DAY,
+					function () use ( $username ) {
+						$canonicalname = $username;
 
-				// We want to use the username returned by LDAP
-				// if it exists
-				if ( $this->LDAPUsername != '' ) {
-					$canonicalname = ucfirst( $this->LDAPUsername );
-					$this->printDebug( "Using LDAPUsername: $canonicalname", NONSENSITIVE );
-				}
+						if ( $this->validDomain( $this->getDomain() ) && $this->connect() ) {
+							// Try to pull the username from LDAP. In the case of straight binds,
+							// try to fetch the username by search before bind.
+							$this->userdn = $this->getUserDN( $username, true );
+							$hookSetUsername = $this->LDAPUsername;
+							Hooks::run( 'SetUsernameAttributeFromLDAP',
+								[ &$hookSetUsername, $this->userInfo ] );
+							if ( is_string( $hookSetUsername ) ) {
+								$this->printDebug(
+									"Username munged by hook: $hookSetUsername", NONSENSITIVE
+								);
+								$this->LDAPUsername = $hookSetUsername;
+							} else {
+								$this->printDebug(
+									"Fetched username is not a string (check your hook code...). " .
+									"This message can be safely ignored if you do not have the " .
+									"SetUsernameAttributeFromLDAP hook defined.", NONSENSITIVE
+								);
+							}
+						}
 
-				$wgMemc->set(
-					$key,
-					[ "username" => $username, "canonicalname" => $canonicalname ],
-					3600 * 24
+						// We want to use the username returned by LDAP if it exists
+						if ( $this->LDAPUsername != '' ) {
+							$canonicalname = ucfirst( $this->LDAPUsername );
+							$this->printDebug( "Using LDAPUsername: $canonicalname", NONSENSITIVE );
+						}
+
+						return [ 'username' => $username, 'canonicalname' => $canonicalname ];
+					}
 				);
+
+				$canonicalname = $userInfo['canonicalname'];
 			}
 		}
 		$this->printDebug( "Munged username: $canonicalname", NONSENSITIVE );
@@ -1504,24 +1496,30 @@ class LdapAuthenticationPlugin {
 	 * @param string $userdn
 	 * @return array|null
 	 * @phan-return ?array<int|string,int|array<int|string,string|int|array<int|string,int|string>>>
-	 * @todo Use getWithSetCallback
 	 */
 	public function getUserInfoStateless( $userdn ) {
-		global $wgMemc;
+		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
 
-		$key = wfMemcKey( 'ldapauthentication', 'userinfo', $userdn );
-		$userInfo = $wgMemc->get( $key );
-		if ( !is_array( $userInfo ) ) {
-			$entry = self::ldap_read(
-				$this->ldapconn, $userdn, "objectclass=*", [ '*', 'memberof' ]
-			);
-			$userInfo = self::ldap_get_entries( $this->ldapconn, $entry );
-			if ( $userInfo["count"] < 1 ) {
-				return null;
+		return $cache->getWithSetCallback(
+			$cache->makeKey( 'ldapauthentication-userinfo', $userdn ),
+			$cache::TTL_DAY,
+			function ( $oldValue, &$ttl ) use ( $userdn, $cache ) {
+				$entry = self::ldap_read(
+					$this->ldapconn,
+					$userdn,
+					"objectclass=*",
+					[ '*', 'memberof' ]
+				);
+				$userInfo = self::ldap_get_entries( $this->ldapconn, $entry );
+				if ( $userInfo["count"] < 1 ) {
+					$ttl = $cache::TTL_UNCACHEABLE;
+
+					return null;
+				}
+
+				return $userInfo;
 			}
-			$wgMemc->set( $key, $userInfo, 3600 * 24 );
-		}
-		return $userInfo;
+		);
 	}
 
 	/**
