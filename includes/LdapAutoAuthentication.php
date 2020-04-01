@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\Session\SessionManager;
+
 class LdapAutoAuthentication {
 
 	/**
@@ -50,12 +52,13 @@ class LdapAutoAuthentication {
 
 		// Is the user already in the database?
 		if ( $localId ) {
+			$session = SessionManager::getGlobalSession();
 			$ldap->printDebug( "User exists in local database, logging in.", NONSENSITIVE );
 			$user->setID( $localId );
 			$user->loadFromId();
 			$user->setCookies();
 			$ldap->updateUser( $user );
-			wfSetupSession();
+			$session->persist();
 			$result = true;
 		} else {
 			$userAdded = self::attemptAddUser( $user, $mungedUsername );
@@ -85,13 +88,15 @@ class LdapAutoAuthentication {
 		// Checks passed, create the user
 		$user->loadDefaults( $mungedUsername );
 		$status = $user->addToDatabase();
+
 		if ( $status !== null && !$status->isOK() ) {
 			$ldap->printDebug( "Creation failed: " . $status->getWikiText(), NONSENSITIVE );
 			return false;
 		}
+		$session = SessionManager::getGlobalSession();
 		$ldap->initUser( $user, true );
 		$user->setCookies();
-		wfSetupSession();
+		$session->persist();
 		# Update user count
 		$ssUpdate = new SiteStatsUpdate( 0, 0, 0, 0, 1 );
 		$ssUpdate->doUpdate();
