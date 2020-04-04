@@ -27,6 +27,7 @@ if ( getenv( 'MW_INSTALL_PATH' ) ) {
 require_once "$IP/maintenance/Maintenance.php";
 
 use MediaWiki\Auth\AuthManager;
+use MediaWiki\MediaWikiServices;
 
 /**
  * Attach an existing LDAP account to the local wiki with all expected log
@@ -59,7 +60,13 @@ class AttachLdapUser extends Maintenance {
 		$_SESSION['wsDomain'] = $domain;
 
 		$user = User::newFromName( $ldap->LDAPUsername, 'creatable' );
-		AuthManager::singleton()->autoCreateUser(
+		if ( method_exists( MediaWikiServices::class, 'getAuthManager' ) ) {
+			// MediaWiki 1.35+
+			$authManager = MediaWikiServices::getInstance()->getAuthManager();
+		} else {
+			$authManager = AuthManager::singleton();
+		}
+		$authManager->autoCreateUser(
 			$user, LdapPrimaryAuthenticationProvider::class, false );
 	}
 }
