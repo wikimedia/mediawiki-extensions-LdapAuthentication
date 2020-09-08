@@ -56,14 +56,8 @@ class LdapAuthenticationPlugin {
 	 * @return LdapAuthenticationPlugin
 	 */
 	public static function getInstance() {
-		global $wgAuth;
-
 		if ( self::$instance === null ) {
-			if ( $wgAuth instanceof LdapAuthenticationPlugin ) {
-				self::$instance = $wgAuth;
-			} else {
-				self::$instance = new LdapAuthenticationPlugin;
-			}
+			self::$instance = new LdapAuthenticationPlugin;
 		}
 		return self::$instance;
 	}
