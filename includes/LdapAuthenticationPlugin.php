@@ -641,7 +641,7 @@ class LdapAuthenticationPlugin {
 		$this->printDebug( "Entering authenticate for username $username", NONSENSITIVE );
 
 		// We don't handle local authentication
-		if ( 'local' == $this->getDomain() ) {
+		if ( $this->getDomain() == 'local' ) {
 			$this->printDebug( "User is using a local domain", SENSITIVE );
 			return false;
 		}
@@ -670,7 +670,7 @@ class LdapAuthenticationPlugin {
 		// tricked if someone is supplying one when using password auth.
 		// auto-authentication is handled by the webserver; a blank password
 		// here is wanted.
-		if ( '' == $password && !$this->useAutoAuth() ) {
+		if ( $password == '' && !$this->useAutoAuth() ) {
 			$this->printDebug( "User used a blank password", NONSENSITIVE );
 			return false;
 		}
@@ -681,7 +681,7 @@ class LdapAuthenticationPlugin {
 			// It is possible that getSearchString will return an
 			// empty string; if this happens, the bind will ALWAYS
 			// return true, and will let anyone in!
-			if ( '' == $this->userdn ) {
+			if ( $this->userdn == '' ) {
 				$this->printDebug( "User DN is blank", NONSENSITIVE );
 				$this->unbind();
 				$this->markAuthFailed();
@@ -971,7 +971,7 @@ class LdapAuthenticationPlugin {
 		$this->printDebug( "Entering allowPasswordChange", NONSENSITIVE );
 
 		// Local domains need to be able to change passwords
-		return ( $this->getConf( 'UseLocal' ) && 'local' == $this->getDomain() )
+		return ( $this->getConf( 'UseLocal' ) && $this->getDomain() == 'local' )
 			|| $this->getConf( 'UpdateLDAP' )
 			|| $this->getConf( 'MailPassword' );
 	}
@@ -999,7 +999,7 @@ class LdapAuthenticationPlugin {
 	public function addUser( $user, $password, $email = '', $realname = '' ) {
 		$this->printDebug( "Entering addUser", NONSENSITIVE );
 
-		if ( !$this->getConf( 'AddLDAPUsers' ) || 'local' == $this->getDomain() ) {
+		if ( !$this->getConf( 'AddLDAPUsers' ) || $this->getDomain() == 'local' ) {
 			$this->printDebug( "Either the user is using a local domain, or the wiki isn't " .
 				"allowing users to be added to LDAP", NONSENSITIVE );
 
@@ -1033,7 +1033,7 @@ class LdapAuthenticationPlugin {
 		if ( $this->connect() ) {
 			$writeloc = $this->getConf( 'WriteLocation' );
 			$this->userdn = $this->getSearchString( $username );
-			if ( '' == $this->userdn ) {
+			if ( $this->userdn == '' ) {
 				$this->printDebug(
 					"userdn is blank, attempting to use wgLDAPWriteLocation", NONSENSITIVE
 				);
@@ -1192,7 +1192,7 @@ class LdapAuthenticationPlugin {
 	public function validDomain( $domain ) {
 		$this->printDebug( "Entering validDomain", NONSENSITIVE );
 		if ( in_array( $domain, $this->getConf( 'DomainNames' ) ) ||
-			( $this->getConf( 'UseLocal' ) && 'local' == $domain )
+			( $this->getConf( 'UseLocal' ) && $domain == 'local' )
 		) {
 			$this->printDebug( "User is using a valid domain ($domain).", NONSENSITIVE );
 			return true;
@@ -1267,7 +1267,7 @@ class LdapAuthenticationPlugin {
 			$this->printDebug( "User didn't successfully authenticate, exiting.", NONSENSITIVE );
 			return;
 		}
-		if ( 'local' == $this->getDomain() ) {
+		if ( $this->getDomain() == 'local' ) {
 			$this->printDebug( "User is using a local domain", NONSENSITIVE );
 			return;
 		}
