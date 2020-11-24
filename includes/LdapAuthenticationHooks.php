@@ -163,22 +163,11 @@ class LdapAuthenticationHooks {
 	 */
 	public static function onLoadExtensionSchemaUpdates( DatabaseUpdater $updater ) {
 		$base = dirname( __DIR__ );
-		switch ( $updater->getDB()->getType() ) {
-			case 'mysql':
-			case 'sqlite':
-				$updater->addExtensionTable(
-					'ldap_domains',
-					"$base/schema/ldap-mysql.sql"
-				);
-			break;
+		$updater->addExtensionTable(
+			'ldap_domains',
+			"$base/schema/{$updater->getDB()->getType()}/tables-generated.sql"
+		);
 
-			case 'postgres':
-				$updater->addExtensionTable(
-					'ldap_domains',
-					"$base/schema/ldap-postgres.sql"
-				);
-				break;
-		}
 		return true;
 	}
 
