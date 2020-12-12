@@ -1,0 +1,33 @@
+[
+	{
+		"name": "ldap_domains",
+		"columns": [
+			{
+				"name": "domain_id",
+				"comment": "IF for domain",
+				"type": "integer",
+				"options": { "notnull": true }
+			},
+			{
+				"name": "domain",
+				"comment": "Domain itself",
+				"type": "string",
+				"options": { "length": 255, "notnull": true }
+			},
+			{
+				"name": "user_id",
+				"comment": "User to which this domain belongs",
+				"type": "integer",
+				"options": { "notnull": true }
+			}
+		],
+		"indexes": [
+			{
+				"name": "user_id",
+				"columns": [ "user_id" ],
+				"unique": false
+			}
+		],
+		"pk": [ "domain_id" ]
+	}
+]
