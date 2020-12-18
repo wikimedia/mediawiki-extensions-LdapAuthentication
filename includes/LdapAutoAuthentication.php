@@ -16,7 +16,7 @@ class LdapAutoAuthentication {
 
 		$ldap->printDebug( "Entering AutoAuthentication.", NONSENSITIVE );
 
-		if ( $user->isLoggedIn() ) {
+		if ( $user->isRegistered() ) {
 			$ldap->printDebug( "User is already logged in.", NONSENSITIVE );
 			return true;
 		}
