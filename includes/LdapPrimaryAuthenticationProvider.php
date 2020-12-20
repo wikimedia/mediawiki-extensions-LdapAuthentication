@@ -46,7 +46,9 @@ use Wikimedia\ScopedCallback;
 class LdapPrimaryAuthenticationProvider
 	extends AbstractPasswordPrimaryAuthenticationProvider
 {
+	/** @var bool */
 	private $hasMultipleDomains;
+	/** @var string */
 	private $requestType;
 
 	public function __construct() {

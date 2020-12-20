@@ -21,39 +21,49 @@ use MediaWiki\MediaWikiServices;
 
 class LdapAuthenticationPlugin {
 
+	/** @var self|null */
 	private static $instance = null;
 
-	// ldap connection resource
+	/** @var resource|null ldap connection resource */
 	public $ldapconn;
 
-	// preferences
-	public $email, $lang, $realname, $nickname, $externalid;
+	/** @var string|null */
+	public $email;
+	/** @var string|null */
+	public $lang;
+	/** @var string|null */
+	public $realname;
+	/** @var string|null */
+	public $nickname;
+	/** @var string|null */
+	public $externalid;
 
-	// username pulled from ldap
-	public $LDAPUsername;
+	/** @var string username pulled from ldap */
+	public $LDAPUsername = '';
 
-	// userdn pulled from ldap
-	public $userdn;
+	/** @var string userdn pulled from ldap */
+	public $userdn = '';
 
-	// groups pulled from ldap
-	public $userLDAPGroups;
-	public $allLDAPGroups;
+	/** @var string[][] groups pulled from ldap */
+	public $userLDAPGroups = [];
+	/** @var string[][] groups pulled from ldap */
+	public $allLDAPGroups = [];
 
-	// boolean to test for failed auth
+	/** @var bool|null to test for failed auth */
 	public $authFailed;
 
-	// boolean to test for fetched user info
+	/** @var bool|null to test for fetched user info */
 	public $fetchedUserInfo;
 
-	// the user's entry and all attributes
+	/** @var array|null the user's entry and all attributes */
 	public $userInfo;
 
-	// the user we are currently bound as
+	/** @var string|null the user we are currently bound as */
 	public $boundAs;
 
 	/**
 	 * Fetch the singleton instance of LdapAuthenticationPlugin
-	 * @return LdapAuthenticationPlugin
+	 * @return self
 	 */
 	public static function getInstance() {
 		if ( self::$instance === null ) {

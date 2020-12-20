@@ -24,7 +24,7 @@ class LdapAuthenticationHooks {
 	 * Get an LdapAuthenticationPlugin instance that is connected to the LDAP
 	 * directory and bound as the wgLDAPWriterDN user.
 	 *
-	 * @return LdapAuthenticationPlugin|bool LDAP connection or false if initialization fails
+	 * @return LdapAuthenticationPlugin|false LDAP connection or false if initialization fails
 	 */
 	private static function getLDAP() {
 		$ldap = LdapAuthenticationPlugin::getInstance();
