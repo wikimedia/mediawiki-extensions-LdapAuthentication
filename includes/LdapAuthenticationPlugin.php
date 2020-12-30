@@ -1985,6 +1985,7 @@ class LdapAuthenticationPlugin {
 		// Set the password hashing based upon admin preference
 		switch ( $this->getConf( 'PasswordHash' ) ) {
 			case 'crypt':
+				// @phan-suppress-next-line PhanParamTooFewInternal FIXME Second arg is optional but emit E_NOTICE
 				$pass = '{CRYPT}' . crypt( $password );
 				break;
 			case 'clear':
