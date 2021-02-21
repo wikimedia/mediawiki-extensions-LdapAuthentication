@@ -27,6 +27,8 @@ use MediaWiki\Auth\AuthenticationResponse;
 use MediaWiki\Auth\AuthManager;
 use MediaWiki\Auth\PasswordAuthenticationRequest;
 use MediaWiki\Auth\PasswordDomainAuthenticationRequest;
+use MediaWiki\MediaWikiServices;
+use MediaWiki\User\UserNameUtils;
 use Wikimedia\ScopedCallback;
 
 /**
@@ -173,7 +175,8 @@ class LdapPrimaryAuthenticationProvider
 			return AuthenticationResponse::newAbstain();
 		}
 
-		$username = User::getCanonicalName( $req->username, 'usable' );
+		$userNameUtils = MediaWikiServices::getInstance()->getUserNameUtils();
+		$username = $userNameUtils->getCanonical( $req->username, UserNameUtils::RIGOR_USABLE );
 		if ( $username === false ) {
 			return AuthenticationResponse::newAbstain();
 		}
@@ -203,7 +206,8 @@ class LdapPrimaryAuthenticationProvider
 	}
 
 	public function testUserCanAuthenticate( $username ) {
-		$username = User::getCanonicalName( $username, 'usable' );
+		$userNameUtils = MediaWikiServices::getInstance()->getUserNameUtils();
+		$username = $userNameUtils->getCanonical( $username, UserNameUtils::RIGOR_USABLE );
 		if ( $username === false ) {
 			return false;
 		}
@@ -240,7 +244,8 @@ class LdapPrimaryAuthenticationProvider
 	}
 
 	public function providerRevokeAccessForUser( $username ) {
-		$username = User::getCanonicalName( $username, 'usable' );
+		$userNameUtils = MediaWikiServices::getInstance()->getUserNameUtils();
+		$username = $userNameUtils->getCanonical( $username, UserNameUtils::RIGOR_USABLE );
 		if ( $username === false ) {
 			return;
 		}
@@ -270,7 +275,8 @@ class LdapPrimaryAuthenticationProvider
 	}
 
 	public function testUserExists( $username, $flags = User::READ_NORMAL ) {
-		$username = User::getCanonicalName( $username, 'usable' );
+		$userNameUtils = MediaWikiServices::getInstance()->getUserNameUtils();
+		$username = $userNameUtils->getCanonical( $username, UserNameUtils::RIGOR_USABLE );
 		if ( $username === false ) {
 			return false;
 		}
@@ -335,7 +341,8 @@ class LdapPrimaryAuthenticationProvider
 				}
 			}
 
-			$username = User::getCanonicalName( $req->username, 'usable' );
+			$userNameUtils = MediaWikiServices::getInstance()->getUserNameUtils();
+			$username = $userNameUtils->getCanonical( $req->username, UserNameUtils::RIGOR_USABLE );
 			if ( $username !== false ) {
 				$sv = \StatusValue::newGood();
 				if ( $req->password !== null ) {
@@ -357,7 +364,9 @@ class LdapPrimaryAuthenticationProvider
 	public function providerChangeAuthenticationData( AuthenticationRequest $req ) {
 		'@phan-var PasswordAuthenticationRequest|PasswordDomainAuthenticationRequest|null $req';
 		if ( get_class( $req ) === $this->requestType ) {
-			$username = $req->username !== null ? User::getCanonicalName( $req->username, 'usable' ) : false;
+			$userNameUtils = MediaWikiServices::getInstance()->getUserNameUtils();
+			$username = $req->username !== null ?
+			$userNameUtils->getCanonical( $req->username, UserNameUtils::RIGOR_USABLE ) : false;
 			if ( $username === false ) {
 				return;
 			}
@@ -404,7 +413,8 @@ class LdapPrimaryAuthenticationProvider
 			return AuthenticationResponse::newAbstain();
 		}
 
-		$username = User::getCanonicalName( $req->username, 'usable' );
+		$userNameUtils = MediaWikiServices::getInstance()->getUserNameUtils();
+		$username = $userNameUtils->getCanonical( $req->username, UserNameUtils::RIGOR_USABLE );
 		if ( $username === false ) {
 			return AuthenticationResponse::newAbstain();
 		}
