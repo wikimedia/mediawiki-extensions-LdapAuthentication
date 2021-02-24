@@ -1325,7 +1325,8 @@ class LdapAuthenticationPlugin {
 	 */
 	public function getCanonicalName( $username ) {
 		$this->printDebug( "Entering getCanonicalName", NONSENSITIVE );
-		if ( User::isIP( $username ) ) {
+		$userNameUtils = MediaWikiServices::getInstance()->getUserNameUtils();
+		if ( $userNameUtils->isIP( $username ) ) {
 			$this->printDebug( "Username is an IP, not munging.", NONSENSITIVE );
 			return $username;
 		}
