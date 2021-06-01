@@ -17,6 +17,7 @@
  */
 
 use MediaWiki\Block\DatabaseBlock;
+use MediaWiki\User\UserIdentity;
 
 class LdapAuthenticationHooks {
 
@@ -54,12 +55,12 @@ class LdapAuthenticationHooks {
 	 * pwdAccountLockedTime doesn't cover well like out-of-band (e.g. by an
 	 * admin) password resets.
 	 *
-	 * @param User $user User to lock/unlock
+	 * @param UserIdentity $user UserIdentity to lock/unlock
 	 * @param bool $lock True to lock, False to unlock
 	 * @return null|bool|string status of operation, suitable for use as a Hook
 	 *   handler response
 	 */
-	private static function setLdapLockStatus( User $user, $lock ) {
+	private static function setLdapLockStatus( UserIdentity $user, $lock ) {
 		$ldap = static::getLDAP();
 		if ( !$ldap ) {
 			return 'Failed to initialize LDAP connection';
@@ -114,7 +115,8 @@ class LdapAuthenticationHooks {
 				&& $block->getExpiry() === 'infinity'
 				&& $block->isSitewide()
 			) {
-				return static::setLdapLockStatus( $block->getTarget(), true );
+				// @phan-suppress-next-line PhanTypeMismatchArgumentNullable $user can't be null
+				return static::setLdapLockStatus( $block->getTargetUserIdentity(), true );
 			} elseif ( $prior ) {
 				// New block replaced a prior block. Process the prior block
 				// as though it was explicitly removed.
@@ -138,7 +140,8 @@ class LdapAuthenticationHooks {
 			&& $block->getExpiry() === 'infinity'
 			&& $block->isSitewide()
 		) {
-			return static::setLdapLockStatus( $block->getTarget(), false );
+			// @phan-suppress-next-line PhanTypeMismatchArgumentNullable $user can't be null
+			return static::setLdapLockStatus( $block->getTargetUserIdentity(), false );
 		}
 	}
 

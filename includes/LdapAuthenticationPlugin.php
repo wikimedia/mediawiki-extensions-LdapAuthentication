@@ -2159,7 +2159,7 @@ class LdapAuthenticationPlugin {
 	public static function saveDomain( $user, $domain ) {
 		$user_id = $user->getId();
 		if ( $user_id != 0 ) {
-			$dbw = wfGetDB( DB_MASTER );
+			$dbw = wfGetDB( DB_PRIMARY );
 			$olddomain = self::loadDomain( $user );
 			if ( $olddomain ) {
 				// Check we really need to update domain.
