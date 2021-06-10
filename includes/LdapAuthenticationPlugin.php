@@ -1911,7 +1911,7 @@ class LdapAuthenticationPlugin {
 	 */
 	private function setGroups( &$user ) {
 		global $wgGroupPermissions;
-		$services = MediaWikiServices::getInstance();
+		$userGroupManager = MediaWikiServices::getInstance()->getUserGroupManager();
 
 		// TODO: this is *really* ugly code. clean it up!
 		$this->printDebug( "Entering setGroups.", NONSENSITIVE );
@@ -1930,8 +1930,8 @@ class LdapAuthenticationPlugin {
 		}
 
 		# add groups permissions
-		$localAvailGrps = $services->getUserGroupManager()->listAllGroups();
-		$localUserGrps = $user->getEffectiveGroups();
+		$localAvailGrps = $userGroupManager->listAllGroups();
+		$localUserGrps = $userGroupManager->getUserEffectiveGroups( $user );
 		$defaultLocallyManagedGrps = [ 'bot', 'sysop', 'bureaucrat' ];
 		$locallyManagedGrps = $this->getConf( 'LocallyManagedGroups' );
 		if ( $locallyManagedGrps ) {
@@ -1962,14 +1962,14 @@ class LdapAuthenticationPlugin {
 					# the ldap group overrides the local group
 					# so as the user is currently not a member of the ldap group,
 					# he shall be removed from the local group
-					$services->getUserGroupManager()->removeUserFromGroup( $user, $cGroup );
+					$userGroupManager->removeUserFromGroup( $user, $cGroup );
 				}
 			} else {
 				# no, but maybe the user has recently been added to the ldap group?
 				$this->printDebug( "Checking to see if user is in: $cGroup", NONSENSITIVE );
 				if ( $this->hasLDAPGroup( $cGroup ) ) {
 					$this->printDebug( "Adding user to: $cGroup", NONSENSITIVE );
-					$services->getUserGroupManager()->addUserToGroup( $user, $cGroup );
+					$userGroupManager->addUserToGroup( $user, $cGroup );
 				}
 			}
 		}
