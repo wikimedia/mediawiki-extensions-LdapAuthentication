@@ -1224,13 +1224,14 @@ class LdapAuthenticationPlugin {
 
 		if ( $this->getConf( 'Preferences' ) ) {
 			$this->printDebug( "Setting user preferences.", NONSENSITIVE );
+			$userOptionsManager = MediaWikiServices::getInstance()->getUserOptionsManager();
 			if ( is_string( $this->lang ) ) {
 				$this->printDebug( "Setting language.", NONSENSITIVE );
-				$user->setOption( 'language', $this->lang );
+				$userOptionsManager->setOption( $user, 'language', $this->lang );
 			}
 			if ( is_string( $this->nickname ) ) {
 				$this->printDebug( "Setting nickname.", NONSENSITIVE );
-				$user->setOption( 'nickname', $this->nickname );
+				$userOptionsManager->setOption( $user, 'nickname', $this->nickname );
 			}
 			if ( is_string( $this->realname ) ) {
 				$this->printDebug( "Setting realname.", NONSENSITIVE );
