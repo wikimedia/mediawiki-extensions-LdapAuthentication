@@ -3,10 +3,9 @@
 -- Do not modify this file directly.
 -- See https://www.mediawiki.org/wiki/Manual:Schema_changes
 CREATE TABLE /*_*/ldap_domains (
-  domain_id INTEGER NOT NULL,
+  domain_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   domain VARCHAR(255) NOT NULL,
-  user_id INTEGER NOT NULL,
-  PRIMARY KEY(domain_id)
+  user_id INTEGER NOT NULL
 );
 
 CREATE INDEX user_id ON /*_*/ldap_domains (user_id);

@@ -3,7 +3,7 @@
 -- Do not modify this file directly.
 -- See https://www.mediawiki.org/wiki/Manual:Schema_changes
 CREATE TABLE ldap_domains (
-  domain_id INT NOT NULL,
+  domain_id SERIAL NOT NULL,
   domain VARCHAR(255) NOT NULL,
   user_id INT NOT NULL,
   PRIMARY KEY(domain_id)
