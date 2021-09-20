@@ -4,9 +4,9 @@
 		"columns": [
 			{
 				"name": "domain_id",
-				"comment": "IF for domain",
+				"comment": "ID for domain",
 				"type": "integer",
-				"options": { "notnull": true }
+				"options": { "notnull": true, "autoincrement": true }
 			},
 			{
 				"name": "domain",
