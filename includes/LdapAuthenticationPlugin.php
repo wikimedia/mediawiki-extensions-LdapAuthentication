@@ -904,8 +904,9 @@ class LdapAuthenticationPlugin {
 
 		$this->email = $user->getEmail();
 		$this->realname = $user->getRealName();
-		$this->nickname = $user->getOption( 'nickname' );
-		$this->lang = $user->getOption( 'language' );
+		$userOptionsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
+		$this->nickname = $userOptionsLookup->getOption( $user, 'nickname' );
+		$this->lang = $userOptionsLookup->getOption( $user, 'language' );
 		if ( $this->connect() ) {
 			$this->userdn = $this->getSearchString( $user->getName() );
 			$this->printDebug( "Binding as the writerDN", NONSENSITIVE );
