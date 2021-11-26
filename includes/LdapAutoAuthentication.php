@@ -98,7 +98,7 @@ class LdapAutoAuthentication {
 		$user->setCookies();
 		$session->persist();
 		# Update user count
-		$ssUpdate = new SiteStatsUpdate( 0, 0, 0, 0, 1 );
+		$ssUpdate = SiteStatsUpdate::factory( [ 'users' => 1 ] );
 		$ssUpdate->doUpdate();
 
 		return true;
