@@ -1138,7 +1138,7 @@ class LdapAuthenticationPlugin {
 					return true;
 				}
 			}
-			$this->printDebug( "Failed to add user", NONSENSITIVE );
+			$this->printDebug( "Failed to add user (errno $errno)", NONSENSITIVE );
 			$this->unbind();
 		}
 		return false;
