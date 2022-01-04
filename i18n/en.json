@@ -4,5 +4,10 @@
 			"Ryan Lane"
 		]
 	},
-	"ldapauthentication-desc": "LDAP authentication plugin with support for multiple LDAP authentication methods"
+	"ldapauthentication-desc": "LDAP authentication plugin with support for multiple LDAP authentication methods",
+	"authmanager-authplugin-setpass-failed-title": "Password change failed",
+	"authmanager-authplugin-setpass-failed-message": "The authentication plugin denied the password change.",
+	"authmanager-authplugin-create-fail": "The authentication plugin denied the account creation.",
+	"authmanager-authplugin-setpass-denied": "The authentication plugin does not allow changing passwords.",
+	"authmanager-authplugin-setpass-bad-domain": "Invalid domain."
 }

@@ -6,5 +6,10 @@
 			"Umherirrender"
 		]
 	},
-	"ldapauthentication-desc": "{{desc|name=LDAP Authentication|url=https://www.mediawiki.org/wiki/Extension:LDAP_Authentication}}"
+	"ldapauthentication-desc": "{{desc|name=LDAP Authentication|url=https://www.mediawiki.org/wiki/Extension:LDAP_Authentication}}",
+	"authmanager-authplugin-setpass-failed-title": "Title of error page from AuthManager if AuthPlugin returns false from its setPassword() method.",
+	"authmanager-authplugin-setpass-failed-message": "Text of error page from AuthManager if AuthPlugin returns false from its setPassword() method.",
+	"authmanager-authplugin-create-fail": "Error message from AuthManager if the AuthPlugin returns false from its addUser() method.",
+	"authmanager-authplugin-setpass-denied": "Error message from AuthManager if the AuthPlugin returns false from its allowPasswordChange() method.",
+	"authmanager-authplugin-setpass-bad-domain": "Error message from AuthManager if the AuthPlugin rejects the passed domain."
 }
