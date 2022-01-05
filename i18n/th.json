@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Horus"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "การเปลี่ยนรหัสผ่านล้มเหลว",
+	"authmanager-authplugin-setpass-failed-message": "ปลั๊กอินการพิสูจน์ตัวจริงปฏิเสธการเปลี่ยนรหัสผ่าน",
+	"authmanager-authplugin-create-fail": "ปลั๊กอินการพิสูจน์ตัวจริงปฏิเสธการสร้างบัญชี",
+	"authmanager-authplugin-setpass-denied": "ปลั๊กอินการพิสูจน์ตัวจริงไม่อนุญาตการเปลี่ยนรหัสผ่าน",
+	"authmanager-authplugin-setpass-bad-domain": "โดเมนไม่สมเหตุสมผล"
+}

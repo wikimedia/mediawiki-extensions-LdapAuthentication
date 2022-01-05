@@ -2,8 +2,14 @@
 	"@metadata": {
 		"authors": [
 			"Imre",
-			"Kghbln"
+			"Kghbln",
+			"Metalhead64"
 		]
 	},
-	"ldapauthentication-desc": "Ermöglicht die LDAP-Authentifizierung mit Hilfe mehrerer Authentifizierungsmethoden"
+	"ldapauthentication-desc": "Ermöglicht die LDAP-Authentifizierung mit Hilfe mehrerer Authentifizierungsmethoden",
+	"authmanager-authplugin-setpass-failed-title": "Passwortänderung fehlgeschlagen",
+	"authmanager-authplugin-setpass-failed-message": "Das Authentifizierungs-Plugin hat die Passwortänderung abgelehnt.",
+	"authmanager-authplugin-create-fail": "Das Authentifizierungs-Plugin hat die Benutzerkontenerstellung abgelehnt.",
+	"authmanager-authplugin-setpass-denied": "Das Authentifizierungs-Plugin erlaubt keine Passwortänderungen.",
+	"authmanager-authplugin-setpass-bad-domain": "Ungültige Domain."
 }

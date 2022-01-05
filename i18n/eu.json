@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Mikel Ibaiba"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "Ezin izan da pasahitza aldatu",
+	"authmanager-authplugin-setpass-failed-message": "Autentifikazio pluginak pasahitza aldatzea ukatu du.",
+	"authmanager-authplugin-create-fail": "Autentifikazio pluginak kontua sortzea ukatu du.",
+	"authmanager-authplugin-setpass-denied": "Autentifikazio pluginak pasahitza aldatzerik ez du ahalbidetzen.",
+	"authmanager-authplugin-setpass-bad-domain": "Balio ez duen domeinua."
+}

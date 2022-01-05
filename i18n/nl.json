@@ -1,8 +1,15 @@
 {
 	"@metadata": {
 		"authors": [
+			"Huhbakker",
+			"Mainframe98",
 			"Siebrand"
 		]
 	},
-	"ldapauthentication-desc": "LDAP-authenticatieplug-in met ondersteuning voor meerdere LDAP-authenticatiemethoden"
+	"ldapauthentication-desc": "LDAP-authenticatieplug-in met ondersteuning voor meerdere LDAP-authenticatiemethoden",
+	"authmanager-authplugin-setpass-failed-title": "Wachtwoord wijzigen is mislukt",
+	"authmanager-authplugin-setpass-failed-message": "De verificatie-invoegtoepassing heeft het wijzigen van het wachtwoord geweigerd.",
+	"authmanager-authplugin-create-fail": "De verificatie-invoegtoepassing heeft geweigerd uw account aan te maken.",
+	"authmanager-authplugin-setpass-denied": "De verificatie-invoegtoepassing staat het wijzigen van wachtwoorden niet toe.",
+	"authmanager-authplugin-setpass-bad-domain": "Ongeldig domein."
 }

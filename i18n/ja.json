@@ -2,8 +2,14 @@
 	"@metadata": {
 		"authors": [
 			"Aotake",
+			"Otokoume",
 			"Shirayuki"
 		]
 	},
-	"ldapauthentication-desc": "複数の LDAP 認証方式対応の LDAP 認証プラグイン"
+	"ldapauthentication-desc": "複数の LDAP 認証方式対応の LDAP 認証プラグイン",
+	"authmanager-authplugin-setpass-failed-title": "パスワードの変更に失敗しました",
+	"authmanager-authplugin-setpass-failed-message": "パスワードの変更は、認証プラグインによって拒否されました。",
+	"authmanager-authplugin-create-fail": "アカウントの作成は、認証プラグインによって拒否されました。",
+	"authmanager-authplugin-setpass-denied": "パスワードの変更は、認証プラグインによって許可されていません。",
+	"authmanager-authplugin-setpass-bad-domain": "無効なドメインです。"
 }

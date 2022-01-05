@@ -4,5 +4,7 @@
 			"Joetaras"
 		]
 	},
-	"ldapauthentication-desc": "plugin de autendicazione LDAP cu 'u supporte pe autendicaziune multeple de metode LDAP"
+	"ldapauthentication-desc": "plugin de autendicazione LDAP cu 'u supporte pe autendicaziune multeple de metode LDAP",
+	"authmanager-authplugin-setpass-failed-title": "Cangiamende d'a passuord fallite",
+	"authmanager-authplugin-setpass-bad-domain": "Dominie invalide."
 }

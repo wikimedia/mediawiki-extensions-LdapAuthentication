@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"Jayprakash12345",
+			"Sfic"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "पासवर्ड बदलाव विफल हुआ।",
+	"authmanager-authplugin-setpass-failed-message": "प्रमाणन प्लगइन ने पासवर्ड बदलाव से इनकार किया।",
+	"authmanager-authplugin-create-fail": "प्रमाणीकरण प्लग इन ने खाता निर्माण को अस्वीकार कर दिया।",
+	"authmanager-authplugin-setpass-denied": "प्रमाणन प्लगइन पासवर्ड बदलने की अनुमति नहीं देता है",
+	"authmanager-authplugin-setpass-bad-domain": "अमान्य जालस्थल।"
+}

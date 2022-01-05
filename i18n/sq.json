@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Arianit"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "Ndryshimi i fjalëkalimit dështoi",
+	"authmanager-authplugin-setpass-failed-message": "Plugin-i i autentikimit mohoi ndërrimin e fjalëkalimit.",
+	"authmanager-authplugin-create-fail": "Plugin-i i autentikimit mohoi krijimin e llogarisë.",
+	"authmanager-authplugin-setpass-denied": "Plugin-i i autentikimit nuk lejon ndërrimin e fjalëkalimeve.",
+	"authmanager-authplugin-setpass-bad-domain": "Domen i pavlefshëm."
+}

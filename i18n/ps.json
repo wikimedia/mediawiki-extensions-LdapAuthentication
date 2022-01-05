@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Amjad Khan"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "د پټنوم بدلون ترسره نشو",
+	"authmanager-authplugin-setpass-failed-message": "د تایید کولو پلگ ان د پاسورډ بدلون رد کړ.",
+	"authmanager-authplugin-create-fail": "د تایید کولو پلگ ان د حساب جوړولو انکار رد کړ.",
+	"authmanager-authplugin-setpass-denied": "د تاییدولو فلګن بدل شوي پټنوم اجازه نلري.",
+	"authmanager-authplugin-setpass-bad-domain": "ناباوره ډومین."
+}

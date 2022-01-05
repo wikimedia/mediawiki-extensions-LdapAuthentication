@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Uchup19"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "Parobahan kecap sandi gagal",
+	"authmanager-authplugin-setpass-bad-domain": "Domain teu sah."
+}

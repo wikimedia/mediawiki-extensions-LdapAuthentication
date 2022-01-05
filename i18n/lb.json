@@ -4,5 +4,7 @@
 			"Robby"
 		]
 	},
-	"ldapauthentication-desc": "Authentifikatiouns-Plugin fir LDAP mat Ënnerstëtzung fir multipel LDAP Authentifikatiouns-Methoden"
+	"ldapauthentication-desc": "Authentifikatiouns-Plugin fir LDAP mat Ënnerstëtzung fir multipel LDAP Authentifikatiouns-Methoden",
+	"authmanager-authplugin-setpass-failed-title": "Änner vum Passwuert huet net funktionéiert",
+	"authmanager-authplugin-setpass-bad-domain": "Net valabelen Domain."
 }

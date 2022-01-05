@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Dbc334"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "Sprememba gesla je spodletela",
+	"authmanager-authplugin-setpass-failed-message": "Vtičnik za overitev je zavrnil spremembo gesla.",
+	"authmanager-authplugin-create-fail": "Vtičnik za overitev je zavrnil ustvarjanje računa.",
+	"authmanager-authplugin-setpass-denied": "Vtičnik za overitev ne dovoljuje spreminjanje gesel.",
+	"authmanager-authplugin-setpass-bad-domain": "Neveljavna domena."
+}

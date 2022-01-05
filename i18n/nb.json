@@ -1,8 +1,14 @@
 {
 	"@metadata": {
 		"authors": [
+			"Jon Harald Søby",
 			"Nghtwlkr"
 		]
 	},
-	"ldapauthentication-desc": "Programutvidelse for LDAP-autentisering med støtte for flere LDAP-autentiseringsmetoder"
+	"ldapauthentication-desc": "Programutvidelse for LDAP-autentisering med støtte for flere LDAP-autentiseringsmetoder",
+	"authmanager-authplugin-setpass-failed-title": "Passordendring mislyktes",
+	"authmanager-authplugin-setpass-failed-message": "Autentiseringspluginen avviste passordendringen.",
+	"authmanager-authplugin-create-fail": "Autentiseringspluginen avviste kontoopprettelsen.",
+	"authmanager-authplugin-setpass-denied": "Autentiseringspluginen tillater ikke endring av passord.",
+	"authmanager-authplugin-setpass-bad-domain": "Ugyldig domene."
 }

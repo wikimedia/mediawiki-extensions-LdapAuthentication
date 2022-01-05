@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"C.R."
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "'O cagnamento d' 'a password è ghiuto malamente",
+	"authmanager-authplugin-setpass-failed-message": "'O plugin 'autenticazione nun ave lassato 'o cagnamento d' 'a password.",
+	"authmanager-authplugin-create-fail": "'O plugin autenticazione nun lassaie crià ll'utenza.",
+	"authmanager-authplugin-setpass-denied": "'O plugin autenticazione nun premmettesse 'e cagnà 'e password.",
+	"authmanager-authplugin-setpass-bad-domain": "Dominio invalido."
+}

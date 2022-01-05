@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"HalanTul"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "Аһарыгы уларытар табыллыбата",
+	"authmanager-authplugin-setpass-failed-message": "Аутентификация былаҕыына аһарыгы уларытары бобор.",
+	"authmanager-authplugin-create-fail": "Аутентификация былаҕыына бэлиэтэнэри бобор.",
+	"authmanager-authplugin-setpass-denied": "Аутентификация былаҕыына аһарыгы уларытары бобор.",
+	"authmanager-authplugin-setpass-bad-domain": "Алҕастаах домен."
+}

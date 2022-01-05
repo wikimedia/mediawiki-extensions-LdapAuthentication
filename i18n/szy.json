@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": []
+	},
+	"authmanager-authplugin-setpass-failed-title": "misumad mima mungangaw",
+	"authmanager-authplugin-setpass-failed-message": "zencen cait ihekal makai misaimed tu mima.",
+	"authmanager-authplugin-create-fail": "zencen cait ihekal makai patizeng tu canghaw.",
+	"authmanager-authplugin-setpass-denied": "zencen cait ihekal caay mahasa misumad tu mima.",
+	"authmanager-authplugin-setpass-bad-domain": "la’cusay a calay-subal(wangyi)."
+}

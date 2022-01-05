@@ -1,8 +1,14 @@
 {
 	"@metadata": {
 		"authors": [
-			"EugeneZelenko"
+			"EugeneZelenko",
+			"Red Winged Duck"
 		]
 	},
-	"ldapauthentication-desc": "Дапаўненьне LDAP-аўтэнтыфікацыі з падтрымкай некалькіх мэтадаў аўтэнтыфікацыі LDAP"
+	"ldapauthentication-desc": "Дапаўненьне LDAP-аўтэнтыфікацыі з падтрымкай некалькіх мэтадаў аўтэнтыфікацыі LDAP",
+	"authmanager-authplugin-setpass-failed-title": "Памылка зьмены паролю",
+	"authmanager-authplugin-setpass-failed-message": "Дадатак аўтэнтыфікацыі адмовіў зьмену паролю.",
+	"authmanager-authplugin-create-fail": "Дадатак аўтэнтыфікацыі адмовіў у стварэньні рахунку.",
+	"authmanager-authplugin-setpass-denied": "Дадатак аўтэнтыфікацыі не дазваляе зьмяняць паролі.",
+	"authmanager-authplugin-setpass-bad-domain": "Няслушны дамэн."
 }

@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Katxis"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "Cambia de clave ia fali",
+	"authmanager-authplugin-setpass-failed-message": "La estendente de autentici ia rejeta la cambia de clave.",
+	"authmanager-authplugin-create-fail": "La estendente de autentici ia rejeta la crea de conta.",
+	"authmanager-authplugin-setpass-denied": "La estendente de autentici no permete cambia claves.",
+	"authmanager-authplugin-setpass-bad-domain": "Domina nonvalida."
+}

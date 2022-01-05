@@ -4,5 +4,6 @@
 			"Cedric31"
 		]
 	},
-	"ldapauthentication-desc": "Plugin d'autentificacion LDAP amb supòrt de metòdes d'autentificacion LDAP multiples"
+	"ldapauthentication-desc": "Plugin d'autentificacion LDAP amb supòrt de metòdes d'autentificacion LDAP multiples",
+	"authmanager-authplugin-setpass-bad-domain": "Domeni invalid."
 }

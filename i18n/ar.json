@@ -4,5 +4,10 @@
 			"Meno25"
 		]
 	},
-	"ldapauthentication-desc": "إضافة تحقيق LDAP بدعم لوسائل تحقيق LDAP متعددة"
+	"ldapauthentication-desc": "إضافة تحقيق LDAP بدعم لوسائل تحقيق LDAP متعددة",
+	"authmanager-authplugin-setpass-failed-title": "تغيير كلمة السر فشل",
+	"authmanager-authplugin-setpass-failed-message": "إضافة التحقق رفضت تغيير كلمة السر.",
+	"authmanager-authplugin-create-fail": "إضافة التحقق رفضت إنشاء الحساب.",
+	"authmanager-authplugin-setpass-denied": "إضافة التحقق لا تسمح بتغيير كلمات السر.",
+	"authmanager-authplugin-setpass-bad-domain": "نطاق غير صحيح."
 }

@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Muhammad Shuaib"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "پاس ورڈ کی تبدیلی ناکام رہی",
+	"authmanager-authplugin-setpass-failed-message": "تصدیقی ہلگ ان نے پاس ورڈ کی تبدیلی کو رد کر دیا۔",
+	"authmanager-authplugin-create-fail": "تصدیقی ہلگ ان نے کھاتہ سازی کو رد کر دیا۔",
+	"authmanager-authplugin-setpass-denied": "تصدیقی ہلگ ان میں پاس ورڈ کی تبدیلی کی اجازت نہیں ہے۔",
+	"authmanager-authplugin-setpass-bad-domain": "نادرست ڈومین۔"
+}

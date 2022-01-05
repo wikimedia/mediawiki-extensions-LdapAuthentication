@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Eitvys200"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "Slaptažodžio keitimas nepavyko",
+	"authmanager-authplugin-setpass-bad-domain": "Negalimas domenas."
+}

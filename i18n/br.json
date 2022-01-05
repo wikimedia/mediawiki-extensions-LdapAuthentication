@@ -4,5 +4,10 @@
 			"Fulup"
 		]
 	},
-	"ldapauthentication-desc": "Adveziant gwiriekaat LDAP ennañ meur a hentenn wiriekaat LDAP"
+	"ldapauthentication-desc": "Adveziant gwiriekaat LDAP ennañ meur a hentenn wiriekaat LDAP",
+	"authmanager-authplugin-setpass-failed-title": "C'hwitet eo bet ar cheñchamant ger-tremen",
+	"authmanager-authplugin-setpass-failed-message": "Nac'het eo bet cheñch ar ger-tremen gant an adveziant dilesa.",
+	"authmanager-authplugin-create-fail": "Nac'het eo bet krouiñ ar gont gant an adveziant dilesa.",
+	"authmanager-authplugin-setpass-denied": "N'eo ket aotreet cheñch gerioù-tremen gant an adveziant dilesa.",
+	"authmanager-authplugin-setpass-bad-domain": "Domani direizh."
 }

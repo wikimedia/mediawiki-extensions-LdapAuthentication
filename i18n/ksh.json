@@ -4,5 +4,7 @@
 			"Purodha"
 		]
 	},
-	"ldapauthentication-desc": "Dat Zohsatzprojramm för et Enlogge övver <i lang=\"en\">LDAP</i> löht ungerscheidlijje Mettoohde zoh, för et Prööfe, wä wä es."
+	"ldapauthentication-desc": "Dat Zohsatzprojramm för et Enlogge övver <i lang=\"en\">LDAP</i> löht ungerscheidlijje Mettoohde zoh, för et Prööfe, wä wä es.",
+	"authmanager-authplugin-setpass-failed-title": "Dat Paßwoot ze änndere hät nit jeflupp",
+	"authmanager-authplugin-setpass-bad-domain": "Onjöltijje Domäijn"
 }

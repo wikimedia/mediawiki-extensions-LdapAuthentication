@@ -1,8 +1,15 @@
 {
 	"@metadata": {
 		"authors": [
-			"Centerlink"
+			"01miki10",
+			"Centerlink",
+			"Nike"
 		]
 	},
-	"ldapauthentication-desc": "LDAP-todentamisliitännäinen useiden LDAP-todennustapojen tuella"
+	"ldapauthentication-desc": "LDAP-todentamisliitännäinen useiden LDAP-todennustapojen tuella",
+	"authmanager-authplugin-setpass-failed-title": "Salasanan muuttaminen epäonnistui",
+	"authmanager-authplugin-setpass-failed-message": "Varmennuslisäosa esti salasanan muuttamisen.",
+	"authmanager-authplugin-create-fail": "Varmennuslisäosa esti tunnuksen luonnin.",
+	"authmanager-authplugin-setpass-denied": "Varmennuslisäosa ei salli salasanojen muuttamista.",
+	"authmanager-authplugin-setpass-bad-domain": "Virheellinen domain."
 }

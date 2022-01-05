@@ -2,8 +2,14 @@
 	"@metadata": {
 		"authors": [
 			"Revi",
+			"Ykhwong",
 			"아라"
 		]
 	},
-	"ldapauthentication-desc": "다양한 LDAP 인증 방식을 지원하는 LDAP 인증 플러그인"
+	"ldapauthentication-desc": "다양한 LDAP 인증 방식을 지원하는 LDAP 인증 플러그인",
+	"authmanager-authplugin-setpass-failed-title": "비밀번호 변경 실패",
+	"authmanager-authplugin-setpass-failed-message": "인증 플러그인이 비밀번호 변경을 거부했습니다.",
+	"authmanager-authplugin-create-fail": "인증 플러그인이 계정 만들기를 거부했습니다.",
+	"authmanager-authplugin-setpass-denied": "인증 플러그인이 비밀번호 변경을 허용하지 않습니다.",
+	"authmanager-authplugin-setpass-bad-domain": "잘못된 도메인."
 }

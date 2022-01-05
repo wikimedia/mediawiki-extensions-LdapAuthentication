@@ -2,8 +2,14 @@
 	"@metadata": {
 		"authors": [
 			"Anakmalaysia",
-			"Cwlin0416"
+			"Cwlin0416",
+			"LNDDYL"
 		]
 	},
-	"ldapauthentication-desc": "支援多種 LDAP 認證方法的 LDAP 認證擴充套件"
+	"ldapauthentication-desc": "支援多種 LDAP 認證方法的 LDAP 認證擴充套件",
+	"authmanager-authplugin-setpass-failed-title": "密碼變更失敗",
+	"authmanager-authplugin-setpass-failed-message": "認証外掛已拒絕密碼變更。",
+	"authmanager-authplugin-create-fail": "認証外掛已拒絕帳號建立。",
+	"authmanager-authplugin-setpass-denied": "驗證外掛程式不允許變更密碼。",
+	"authmanager-authplugin-setpass-bad-domain": "無效網域。"
 }

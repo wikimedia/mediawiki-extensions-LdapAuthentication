@@ -1,8 +1,14 @@
 {
 	"@metadata": {
 		"authors": [
+			"Liuxinyu970226",
 			"Yanmiao liu"
 		]
 	},
-	"ldapauthentication-desc": "具有多种LDAP认证方法支持的LDAP认证插件"
+	"ldapauthentication-desc": "具有多种LDAP认证方法支持的LDAP认证插件",
+	"authmanager-authplugin-setpass-failed-title": "密码更改失败",
+	"authmanager-authplugin-setpass-failed-message": "身份验证插件拒绝了密码更改。",
+	"authmanager-authplugin-create-fail": "身份验证插件拒绝了账户创建。",
+	"authmanager-authplugin-setpass-denied": "身份验证插件不允许更改密码。",
+	"authmanager-authplugin-setpass-bad-domain": "无效域。"
 }

@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Lam-ang"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "Napaay ti panagbaliw ti kontrasenias",
+	"authmanager-authplugin-setpass-failed-message": "Ti plugin ti pammasingked ket di nangipalubos ti panagbaliw ti kontrasenias.",
+	"authmanager-authplugin-create-fail": "Ti plugin ti pammasingked ket di nangipalubos ti panagpartuat ti pakabilangan.",
+	"authmanager-authplugin-setpass-denied": "Ti plugin ti pammasingked ket saan a mangipalubos iti panagbaliw kadagiti kontrasenias.",
+	"authmanager-authplugin-setpass-bad-domain": "Imbalido a dominio."
+}

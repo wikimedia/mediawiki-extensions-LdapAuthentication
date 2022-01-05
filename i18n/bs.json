@@ -1,8 +1,14 @@
 {
 	"@metadata": {
 		"authors": [
-			"CERminator"
+			"CERminator",
+			"Srđan"
 		]
 	},
-	"ldapauthentication-desc": "Proširenje LDAP autentifikacije sa podrškom za mnoge metode LDAP autentifikacije"
+	"ldapauthentication-desc": "Proširenje LDAP autentifikacije sa podrškom za mnoge metode LDAP autentifikacije",
+	"authmanager-authplugin-setpass-failed-title": "Promjena lozinke nije uspjela",
+	"authmanager-authplugin-setpass-failed-message": "Dodatak za autentifikaciju odbio je promjenu lozinke.",
+	"authmanager-authplugin-create-fail": "Dodatak za autentifikaciju odbio je pravljenje računa.",
+	"authmanager-authplugin-setpass-denied": "Dodatak za autentifikaciju ne dozvoljava mijenjanje lozinki.",
+	"authmanager-authplugin-setpass-bad-domain": "Neispravna domena."
 }

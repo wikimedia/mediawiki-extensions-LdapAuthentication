@@ -1,8 +1,15 @@
 {
 	"@metadata": {
 		"authors": [
-			"IvanLanin"
+			"Hidayatsrf",
+			"IvanLanin",
+			"Rachmat04"
 		]
 	},
-	"ldapauthentication-desc": "Pengaya otentikasi LDAP dengan dukungan untuk berbagai metode otentikasi LDAP"
+	"ldapauthentication-desc": "Pengaya otentikasi LDAP dengan dukungan untuk berbagai metode otentikasi LDAP",
+	"authmanager-authplugin-setpass-failed-title": "Penggantian kata sandi gagal",
+	"authmanager-authplugin-setpass-failed-message": "Plugin autentikasi mencegah pengubahan pasword.",
+	"authmanager-authplugin-create-fail": "Plugin autentikasi mencegah pembuatan akun.",
+	"authmanager-authplugin-setpass-denied": "Plugin autentikasi tidak memperbolehkan mengubah kata kunci.",
+	"authmanager-authplugin-setpass-bad-domain": "Domain tidak sah."
 }

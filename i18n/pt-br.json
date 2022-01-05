@@ -1,8 +1,14 @@
 {
 	"@metadata": {
 		"authors": [
+			"Eduardoaddad",
 			"Giro720"
 		]
 	},
-	"ldapauthentication-desc": "''Plugin'' de autenticação LDAP, com suporte para vários métodos de autenticação"
+	"ldapauthentication-desc": "''Plugin'' de autenticação LDAP, com suporte para vários métodos de autenticação",
+	"authmanager-authplugin-setpass-failed-title": "Falha na alteração da senha",
+	"authmanager-authplugin-setpass-failed-message": "O plugin de autenticação negou a alteração da senha.",
+	"authmanager-authplugin-create-fail": "O plugin de autenticação negou a criação da conta.",
+	"authmanager-authplugin-setpass-denied": "O plugin de autenticação não permite alterar senhas.",
+	"authmanager-authplugin-setpass-bad-domain": "Domínio inválido."
 }

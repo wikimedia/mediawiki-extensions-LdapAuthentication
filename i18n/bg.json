@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"ShockD",
+			"Termininja"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "Промяната на паролата е неуспешна",
+	"authmanager-authplugin-setpass-bad-domain": "Невалиден домейн."
+}

@@ -1,8 +1,14 @@
 {
 	"@metadata": {
 		"authors": [
-			"Boivie"
+			"Boivie",
+			"WikiPhoenix"
 		]
 	},
-	"ldapauthentication-desc": "LDAP-autentiseringsplugin med stöd för flera LDAP-autentiseringsmetoder"
+	"ldapauthentication-desc": "LDAP-autentiseringsplugin med stöd för flera LDAP-autentiseringsmetoder",
+	"authmanager-authplugin-setpass-failed-title": "Kunde inte ändra lösenordet",
+	"authmanager-authplugin-setpass-failed-message": "Insticksmodulen för autentisering nekade lösenordsändringen.",
+	"authmanager-authplugin-create-fail": "Insticksmodulen för autentisering nekade skapande av konto.",
+	"authmanager-authplugin-setpass-denied": "Insticksmodulen för autentisering tillåter inte ändring av lösenord.",
+	"authmanager-authplugin-setpass-bad-domain": "Ogiltig domän."
 }

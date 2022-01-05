@@ -1,8 +1,14 @@
 {
 	"@metadata": {
 		"authors": [
-			"Blahma"
+			"Blahma",
+			"Psychoslave"
 		]
 	},
-	"ldapauthentication-desc": "LDAP-aŭtentiga kromprogramo kun subteno de pluraj LDAP-aŭtentigaj metodoj"
+	"ldapauthentication-desc": "LDAP-aŭtentiga kromprogramo kun subteno de pluraj LDAP-aŭtentigaj metodoj",
+	"authmanager-authplugin-setpass-failed-title": "Pasvorta ŝanĝo malsukcesis",
+	"authmanager-authplugin-setpass-failed-message": "La aŭtentikigado kromprogramo neis la pasvortan ŝanĝon.",
+	"authmanager-authplugin-create-fail": "La kromprogramo de aŭtentikigado neis la keon de konto.",
+	"authmanager-authplugin-setpass-denied": "La kromprogramaro de aŭtentikigado ne permisas ŝanĝadon de pasvorto.",
+	"authmanager-authplugin-setpass-bad-domain": "Malvalida domajno."
 }

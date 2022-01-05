@@ -1,8 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"Paucabot"
+			"Paucabot",
+			"Toniher"
 		]
 	},
-	"ldapauthentication-desc": "Connector d'autentificació LDAP amb suport per a diversos mètodes d'autenticació LDAP"
+	"ldapauthentication-desc": "Connector d'autentificació LDAP amb suport per a diversos mètodes d'autenticació LDAP",
+	"authmanager-authplugin-setpass-failed-title": "El canvi de contrasenya ha fallat",
+	"authmanager-authplugin-setpass-bad-domain": "Domini invàlid."
 }

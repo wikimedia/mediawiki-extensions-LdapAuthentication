@@ -4,5 +4,10 @@
 			"Minh Nguyen"
 		]
 	},
-	"ldapauthentication-desc": "Phần bổ trợ xác thực LDAP hỗ trợ nhiều phương pháp xác thực LDAP"
+	"ldapauthentication-desc": "Phần bổ trợ xác thực LDAP hỗ trợ nhiều phương pháp xác thực LDAP",
+	"authmanager-authplugin-setpass-failed-title": "Thay đổi mật khẩu bị thất bại",
+	"authmanager-authplugin-setpass-failed-message": "Phần bổ trợ xác thực đã từ chối việc đổi mật khẩu.",
+	"authmanager-authplugin-create-fail": "Phần bổ trợ xác thực đã từ chối việc tạo tài khoản.",
+	"authmanager-authplugin-setpass-denied": "Phần bổ trợ xác thực không cho phép đổi mật khẩu.",
+	"authmanager-authplugin-setpass-bad-domain": "Tên miền không hợp lệ."
 }

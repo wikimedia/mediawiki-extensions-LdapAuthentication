@@ -1,9 +1,17 @@
 {
 	"@metadata": {
 		"authors": [
+			"Dgstranz",
+			"Fitoschido",
 			"Macofe",
+			"Rubentl134",
 			"Translationista"
 		]
 	},
-	"ldapauthentication-desc": "Complemento de autenticación LDAP que admite múltiples métodos de autenticación LDAP"
+	"ldapauthentication-desc": "Complemento de autenticación LDAP que admite múltiples métodos de autenticación LDAP",
+	"authmanager-authplugin-setpass-failed-title": "Error de cambio de contraseña",
+	"authmanager-authplugin-setpass-failed-message": "El complemento de autenticación denegó el cambio de contraseña.",
+	"authmanager-authplugin-create-fail": "El complemento de autenticación denegó la creación de la cuenta.",
+	"authmanager-authplugin-setpass-denied": "El complemento de autenticación no permite el cambio de contraseñas.",
+	"authmanager-authplugin-setpass-bad-domain": "El dominio no es válido."
 }

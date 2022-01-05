@@ -1,8 +1,14 @@
 {
 	"@metadata": {
 		"authors": [
+			"Elisardojm",
 			"Toliño"
 		]
 	},
-	"ldapauthentication-desc": "Complemento de autenticación LDAP con soporte para varios métodos de autenticación LDAP"
+	"ldapauthentication-desc": "Complemento de autenticación LDAP con soporte para varios métodos de autenticación LDAP",
+	"authmanager-authplugin-setpass-failed-title": "Fallou o cambio do contrasinal",
+	"authmanager-authplugin-setpass-failed-message": "O complemento de autenticación denegou o cambio de contrasinal.",
+	"authmanager-authplugin-create-fail": "O complemento de autenticación denegou a creación da conta.",
+	"authmanager-authplugin-setpass-denied": "O complemento de autenticación non permite o cambio de contrasinais.",
+	"authmanager-authplugin-setpass-bad-domain": "Dominio non válido."
 }

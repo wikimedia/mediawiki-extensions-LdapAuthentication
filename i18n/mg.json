@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"Jagwar"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "Tsy nahomby ny fanovana tenimiafina",
+	"authmanager-authplugin-setpass-failed-message": "Nandà ny fanovana tenimiafina ny plugin fampamantarana.",
+	"authmanager-authplugin-create-fail": "Nandà ny famoronan-kaonty ny plugin fampamantarana.",
+	"authmanager-authplugin-setpass-denied": "Tsy ahafahana manova tenimiafina ny plugin fampamantarana."
+}

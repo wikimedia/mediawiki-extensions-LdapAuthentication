@@ -4,5 +4,10 @@
 			"Xuacu"
 		]
 	},
-	"ldapauthentication-desc": "Complemento p'autenticación LDAP con sofitu pa dellos métodos d'autenticación LDAP"
+	"ldapauthentication-desc": "Complemento p'autenticación LDAP con sofitu pa dellos métodos d'autenticación LDAP",
+	"authmanager-authplugin-setpass-failed-title": "Falló'l cambiu de contraseña",
+	"authmanager-authplugin-setpass-failed-message": "El complementu d'autenticación refugó'l cambéu de contraseña.",
+	"authmanager-authplugin-create-fail": "El complementu d'autenticación refugó la creación de la cuenta.",
+	"authmanager-authplugin-setpass-denied": "El complementu de autenticación nun permite cambiar contraseñes.",
+	"authmanager-authplugin-setpass-bad-domain": "Dominiu inválidu."
 }

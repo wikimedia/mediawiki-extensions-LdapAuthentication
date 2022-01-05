@@ -1,8 +1,15 @@
 {
 	"@metadata": {
 		"authors": [
-			"HalphaZ"
+			"Beta16",
+			"HalphaZ",
+			"Matteocng"
 		]
 	},
-	"ldapauthentication-desc": "Plugin di autenticazione LDAP con supporto a diversi metodi di autenticazione LDAP"
+	"ldapauthentication-desc": "Plugin di autenticazione LDAP con supporto a diversi metodi di autenticazione LDAP",
+	"authmanager-authplugin-setpass-failed-title": "Modifica della password fallita",
+	"authmanager-authplugin-setpass-failed-message": "Il plugin di autenticazione ha impedito la modifica della password.",
+	"authmanager-authplugin-create-fail": "Il plugin di autenticazione ha impedito la creazione dell'utenza.",
+	"authmanager-authplugin-setpass-denied": "Il plugin di autenticazione non consente di cambiare le password.",
+	"authmanager-authplugin-setpass-bad-domain": "Dominio non valido."
 }

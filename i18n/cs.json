@@ -4,5 +4,10 @@
 			"Mormegil"
 		]
 	},
-	"ldapauthentication-desc": "Autentizační modul pro LDAP podporující několik autentizačních metod LDAP"
+	"ldapauthentication-desc": "Autentizační modul pro LDAP podporující několik autentizačních metod LDAP",
+	"authmanager-authplugin-setpass-failed-title": "Změna hesla se nezdařila",
+	"authmanager-authplugin-setpass-failed-message": "Autentizační modul změnu hesla zamítl.",
+	"authmanager-authplugin-create-fail": "Autentizační modul založení účtu zamítl.",
+	"authmanager-authplugin-setpass-denied": "Autentizační modul neumožňuje měnit hesla.",
+	"authmanager-authplugin-setpass-bad-domain": "Neplatná doména."
 }

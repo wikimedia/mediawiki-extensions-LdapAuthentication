@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Pikne"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "Parooli muutmine ebaõnnestus",
+	"authmanager-authplugin-setpass-failed-message": "Autentimise tarkvaralisa keeldus parooli muutmast.",
+	"authmanager-authplugin-create-fail": "Autentimise tarkvaralisa keeldus kontot loomast.",
+	"authmanager-authplugin-setpass-denied": "Autentimise tarkvaralisa ei luba paroole muuta.",
+	"authmanager-authplugin-setpass-bad-domain": "Vigane domeen."
+}

@@ -1,9 +1,15 @@
 {
 	"@metadata": {
 		"authors": [
+			"Gomoko",
 			"IAlex",
 			"Urhixidur"
 		]
 	},
-	"ldapauthentication-desc": "Extension d’authentification LDAP prenant en charge de multiples méthodes d’authentification LDAP"
+	"ldapauthentication-desc": "Extension d’authentification LDAP prenant en charge de multiples méthodes d’authentification LDAP",
+	"authmanager-authplugin-setpass-failed-title": "Échec du changement de mot de passe",
+	"authmanager-authplugin-setpass-failed-message": "Le module d’authentification a refusé le changement de mot de passe.",
+	"authmanager-authplugin-create-fail": "Le module d’authentification a refusé la création de compte.",
+	"authmanager-authplugin-setpass-denied": "Le module d’authentification ne permet pas la modification des mots de passe.",
+	"authmanager-authplugin-setpass-bad-domain": "Domaine non valide."
 }

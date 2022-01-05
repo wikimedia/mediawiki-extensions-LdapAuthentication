@@ -1,8 +1,14 @@
 {
 	"@metadata": {
 		"authors": [
+			"Guycn2",
 			"YaronSh"
 		]
 	},
-	"ldapauthentication-desc": "תוסף אימות LDAP עם תמיכה במספר שיטות LDAP לאימות"
+	"ldapauthentication-desc": "תוסף אימות LDAP עם תמיכה במספר שיטות LDAP לאימות",
+	"authmanager-authplugin-setpass-failed-title": "שינוי הסיסמה נכשל",
+	"authmanager-authplugin-setpass-failed-message": "תוסף האימות דחה את שינוי הסיסמה.",
+	"authmanager-authplugin-create-fail": "תוסף האימות דחה את יצירת החשבון.",
+	"authmanager-authplugin-setpass-denied": "תוסף האימות אינו מאפשר לשנות סיסמאות.",
+	"authmanager-authplugin-setpass-bad-domain": "דומיין לא תקין."
 }

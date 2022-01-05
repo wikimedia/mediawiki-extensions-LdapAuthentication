@@ -4,5 +4,10 @@
 			"McDutchie"
 		]
 	},
-	"ldapauthentication-desc": "Plugin pro authentication LDAP con supporto pro multiple methodos de authentication LDAP"
+	"ldapauthentication-desc": "Plugin pro authentication LDAP con supporto pro multiple methodos de authentication LDAP",
+	"authmanager-authplugin-setpass-failed-title": "Cambio de contrasigno fallite",
+	"authmanager-authplugin-setpass-failed-message": "Le modulo de authentication ha refusate le cambio de contrasigno.",
+	"authmanager-authplugin-create-fail": "Le modulo de authentication ha refusate le creation de conto.",
+	"authmanager-authplugin-setpass-denied": "Le modulo de authentication non permitte cambiar contrasignos.",
+	"authmanager-authplugin-setpass-bad-domain": "Dominio non valide."
 }

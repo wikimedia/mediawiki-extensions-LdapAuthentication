@@ -1,8 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
+			"Deryck Chan",
 			"Ktchankt"
 		]
 	},
-	"ldapauthentication-desc": "支援各種 LDAP 認證方法嘅 LDAP 認證插件"
+	"ldapauthentication-desc": "支援各種 LDAP 認證方法嘅 LDAP 認證插件",
+	"authmanager-authplugin-setpass-failed-title": "改唔到密碼"
 }

@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"BRUTE"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "პაროლის ცვლილება ვერ განხორციელდა",
+	"authmanager-authplugin-setpass-failed-message": "აუთენთიფიკაციის პლაგინმა უარყო პაროლის ცვლილება.",
+	"authmanager-authplugin-create-fail": "აუთენთიფიკაციის პლაგინმა უარყო ანგარიშის შექმნა.",
+	"authmanager-authplugin-setpass-denied": "აუთენთიფიკაციის პლაგინი არ იძლევა პაროლების გამოცვლის უფლებას.",
+	"authmanager-authplugin-setpass-bad-domain": "არასწორი დომეინი."
+}

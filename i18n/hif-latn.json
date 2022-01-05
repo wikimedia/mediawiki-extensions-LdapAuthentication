@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Smcnarayan"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "Pasword ke nai badle sakaa",
+	"authmanager-authplugin-setpass-failed-message": "The authentication plugin denied the password change.",
+	"authmanager-authplugin-create-fail": "The authentication plugin denied the account creation.",
+	"authmanager-authplugin-setpass-denied": "The authentication plugin does not allow changing passwords.",
+	"authmanager-authplugin-setpass-bad-domain": "Domain invalid hai."
+}

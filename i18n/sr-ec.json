@@ -1,8 +1,15 @@
 {
 	"@metadata": {
 		"authors": [
+			"BadDog",
+			"Prevodim",
 			"Михајло Анђелковић"
 		]
 	},
-	"ldapauthentication-desc": "Плагин за LDAP ауторизацију, са подршком за више метода LDAP ауторизације"
+	"ldapauthentication-desc": "Плагин за LDAP ауторизацију, са подршком за више метода LDAP ауторизације",
+	"authmanager-authplugin-setpass-failed-title": "Неуспешна промена лозинке",
+	"authmanager-authplugin-setpass-failed-message": "Додатак за потврду идентитета је одбио промену лозинке.",
+	"authmanager-authplugin-create-fail": "Додатак за потврду идентитета је одбио отварање налога.",
+	"authmanager-authplugin-setpass-denied": "Додатак за потврду идентитета не дозвољава мењање лозику.",
+	"authmanager-authplugin-setpass-bad-domain": "Неважећи домен."
 }

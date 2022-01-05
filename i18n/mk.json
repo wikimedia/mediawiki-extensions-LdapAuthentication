@@ -4,5 +4,10 @@
 			"Bjankuloski06"
 		]
 	},
-	"ldapauthentication-desc": "LDAP приклучок за потврдување со поддршка за повеќе методи на LDAP потврдување"
+	"ldapauthentication-desc": "LDAP приклучок за потврдување со поддршка за повеќе методи на LDAP потврдување",
+	"authmanager-authplugin-setpass-failed-title": "Промената на лозинката не успеа",
+	"authmanager-authplugin-setpass-failed-message": "Приклучокот за заверка ја одби промената на лозинката.",
+	"authmanager-authplugin-create-fail": "Приклучокот за заверка го одби создавањето на сметката.",
+	"authmanager-authplugin-setpass-denied": "Приклучокот за заверка не допушта менување на лозинки.",
+	"authmanager-authplugin-setpass-bad-domain": "Неважечки домен."
 }

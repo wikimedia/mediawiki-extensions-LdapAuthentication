@@ -1,8 +1,14 @@
 {
 	"@metadata": {
 		"authors": [
-			"Glanthor Reviol"
+			"Glanthor Reviol",
+			"R-Joe"
 		]
 	},
-	"ldapauthentication-desc": "LDAP hitelesítési bővítmény többféle LDAP azonosítási módszer támogatásával"
+	"ldapauthentication-desc": "LDAP hitelesítési bővítmény többféle LDAP azonosítási módszer támogatásával",
+	"authmanager-authplugin-setpass-failed-title": "Jelszó megváltoztatása nem sikerült",
+	"authmanager-authplugin-setpass-failed-message": "A hitelesítés beépülője megtagadta a jelszó módosítását.",
+	"authmanager-authplugin-create-fail": "A hitelesítés beépülője megtagadta a fiók létrehozását.",
+	"authmanager-authplugin-setpass-denied": "A hitelesítés beépülője nem teszi lehetővé a jelszó megváltoztatását.",
+	"authmanager-authplugin-setpass-bad-domain": "Érvénytelen domain."
 }

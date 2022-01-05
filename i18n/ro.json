@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"Lucdrei",
+			"Strainu"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "Schimbarea parolei a eșuat",
+	"authmanager-authplugin-setpass-failed-message": "Pluginul de autentificare a respins modificarea parolei.",
+	"authmanager-authplugin-create-fail": "Pluginul de autentificare a respins crearea contului.",
+	"authmanager-authplugin-setpass-denied": "Pluginul de autentificare nu permite schimbarea parolei.",
+	"authmanager-authplugin-setpass-bad-domain": "Domeniu invalid."
+}

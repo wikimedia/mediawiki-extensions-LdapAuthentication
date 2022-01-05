@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"আফতাবুজ্জামান"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "পাসওয়ার্ড পরিবর্তন ব্যর্থ হয়েছে",
+	"authmanager-authplugin-setpass-failed-message": "প্রমাণীকরণ প্লাগইন পাসওয়ার্ড পরিবর্তন করতে অস্বীকৃতি জানিয়েছে।",
+	"authmanager-authplugin-create-fail": "প্রমাণীকরণ প্লাগইন অ্যাকাউন্ট তৈরি করতে অস্বীকৃতি জানিয়েছে।",
+	"authmanager-authplugin-setpass-denied": "প্রমাণীকরণ প্লাগইন পাসওয়ার্ড পরিবর্তন করার অনুমতি দেয় না।",
+	"authmanager-authplugin-setpass-bad-domain": "অবৈধ ডোমেইন।"
+}

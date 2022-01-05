@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Praveenp"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "രഹസ്യവാക്ക് മാറ്റം പരാജയപ്പെട്ടു",
+	"authmanager-authplugin-setpass-bad-domain": "അസാധുവായ ഡൊമൈൻ."
+}

@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Artificial123"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "Памылка змены пароля",
+	"authmanager-authplugin-setpass-failed-message": "Убудова аўтэнтыфікацыі адмоўлена па змене пароля.",
+	"authmanager-authplugin-create-fail": "Убудова аўтэнтыфікацыі адмоўлена ў рэгістрацыі.",
+	"authmanager-authplugin-setpass-denied": "Убудова праверкі сапраўднасці не дазваляе змяняць паролі.",
+	"authmanager-authplugin-setpass-bad-domain": "Недапушчальны дамен."
+}

@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Giromin Cangiaxo"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "Modiffica da password fallia",
+	"authmanager-authplugin-setpass-failed-message": "O plugin d'aotenticaçion o l'ha impedio a modiffica da password.",
+	"authmanager-authplugin-create-fail": "O plugin d'aotenticaçion o l'ha impedio a creaçion de l'utença.",
+	"authmanager-authplugin-setpass-denied": "O plugin d'aotenticaçion o no consente de cangiâ e password.",
+	"authmanager-authplugin-setpass-bad-domain": "Dominnio non vallido."
+}

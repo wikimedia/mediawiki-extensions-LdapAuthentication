@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Chaduvari"
+		]
+	},
+	"authmanager-authplugin-setpass-failed-title": "సంకేతపదం మార్పు విఫలమైంది.",
+	"authmanager-authplugin-setpass-failed-message": "సంకేతపదం మార్పును ఆథెంటికేషన్ ప్లగిన్ తిరస్కరించింది.",
+	"authmanager-authplugin-create-fail": "ఖాతా సృష్టిని ఆథెంటికేషన్ ప్లగిన్ తిరస్కరించింది.",
+	"authmanager-authplugin-setpass-denied": "ఆథెంటికేషన్ ప్లగిన్ సంకేతపదం మార్పులను అనుమతించదు.",
+	"authmanager-authplugin-setpass-bad-domain": "తప్పు డొమెయిన్"
+}
