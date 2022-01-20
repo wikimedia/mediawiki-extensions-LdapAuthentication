@@ -1,10 +1,12 @@
 {
 	"@metadata": {
 		"authors": [
+			"Can",
 			"ToprakM",
 			"Vito Genovese"
 		]
 	},
 	"ldapauthentication-desc": "Birden çok LDAP kimlik doğrulama yöntemini destekleyen LDAP kimlik doğrulama eklentisi",
+	"authmanager-authplugin-setpass-failed-title": "Parola değişikliği başarısız",
 	"authmanager-authplugin-setpass-bad-domain": "Geçersiz alanadı."
 }
