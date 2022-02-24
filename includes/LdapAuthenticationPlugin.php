@@ -18,6 +18,7 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 use MediaWiki\MediaWikiServices;
+use Wikimedia\AtEase\AtEase;
 
 class LdapAuthenticationPlugin {
 
@@ -79,9 +80,9 @@ class LdapAuthenticationPlugin {
 	 * @return resource|false
 	 */
 	public static function ldap_connect( $hostname = null, $port = 389 ) {
-		Wikimedia\suppressWarnings();
+		AtEase::suppressWarnings();
 		$ret = ldap_connect( $hostname, $port );
-		Wikimedia\restoreWarnings();
+		AtEase::restoreWarnings();
 		return $ret;
 	}
 
@@ -93,9 +94,9 @@ class LdapAuthenticationPlugin {
 	 * @return bool
 	 */
 	public static function ldap_bind( $ldapconn, $dn = null, $password = null ) {
-		Wikimedia\suppressWarnings();
+		AtEase::suppressWarnings();
 		$ret = ldap_bind( $ldapconn, $dn, $password );
-		Wikimedia\restoreWarnings();
+		AtEase::restoreWarnings();
 		return $ret;
 	}
 
@@ -106,9 +107,9 @@ class LdapAuthenticationPlugin {
 	 */
 	public static function ldap_unbind( $ldapconn ) {
 		if ( $ldapconn ) {
-			Wikimedia\suppressWarnings();
+			AtEase::suppressWarnings();
 			$ret = ldap_unbind( $ldapconn );
-			Wikimedia\restoreWarnings();
+			AtEase::restoreWarnings();
 		} else {
 			$ret = false;
 		}
@@ -123,9 +124,9 @@ class LdapAuthenticationPlugin {
 	 * @return bool
 	 */
 	public static function ldap_modify( $ldapconn, $dn, $entry ) {
-		Wikimedia\suppressWarnings();
+		AtEase::suppressWarnings();
 		$ret = ldap_modify( $ldapconn, $dn, $entry );
-		Wikimedia\restoreWarnings();
+		AtEase::restoreWarnings();
 		return $ret;
 	}
 
@@ -137,9 +138,9 @@ class LdapAuthenticationPlugin {
 	 * @return bool
 	 */
 	public static function ldap_add( $ldapconn, $dn, $entry ) {
-		Wikimedia\suppressWarnings();
+		AtEase::suppressWarnings();
 		$ret = ldap_add( $ldapconn, $dn, $entry );
-		Wikimedia\restoreWarnings();
+		AtEase::restoreWarnings();
 		return $ret;
 	}
 
@@ -150,9 +151,9 @@ class LdapAuthenticationPlugin {
 	 * @return bool
 	 */
 	public static function ldap_delete( $ldapconn, $dn ) {
-		Wikimedia\suppressWarnings();
+		AtEase::suppressWarnings();
 		$ret = ldap_delete( $ldapconn, $dn );
-		Wikimedia\restoreWarnings();
+		AtEase::restoreWarnings();
 		return $ret;
 	}
 
@@ -178,7 +179,7 @@ class LdapAuthenticationPlugin {
 		$timelimit = null,
 		$deref = null
 	) {
-		Wikimedia\suppressWarnings();
+		AtEase::suppressWarnings();
 		$ret = ldap_search(
 			$ldapconn,
 			$basedn,
@@ -189,7 +190,7 @@ class LdapAuthenticationPlugin {
 			$timelimit,
 			$deref
 		);
-		Wikimedia\restoreWarnings();
+		AtEase::restoreWarnings();
 		return $ret;
 	}
 
@@ -215,7 +216,7 @@ class LdapAuthenticationPlugin {
 		$timelimit = null,
 		$deref = null
 	) {
-		Wikimedia\suppressWarnings();
+		AtEase::suppressWarnings();
 		$ret = ldap_read(
 			$ldapconn,
 			$basedn,
@@ -226,7 +227,7 @@ class LdapAuthenticationPlugin {
 			$timelimit,
 			$deref
 		);
-		Wikimedia\restoreWarnings();
+		AtEase::restoreWarnings();
 		return $ret;
 	}
 
@@ -252,7 +253,7 @@ class LdapAuthenticationPlugin {
 		$timelimit = null,
 		$deref = null
 	) {
-		Wikimedia\suppressWarnings();
+		AtEase::suppressWarnings();
 		$ret = ldap_list(
 			$ldapconn,
 			$basedn,
@@ -263,7 +264,7 @@ class LdapAuthenticationPlugin {
 			$timelimit,
 			$deref
 		);
-		Wikimedia\restoreWarnings();
+		AtEase::restoreWarnings();
 		return $ret;
 	}
 
@@ -275,9 +276,9 @@ class LdapAuthenticationPlugin {
 	 * @phan-return array<int|string,int|array<int|string,string|int|array<int|string,int|string>>>
 	 */
 	public static function ldap_get_entries( $ldapconn, $resultid ) {
-		Wikimedia\suppressWarnings();
+		AtEase::suppressWarnings();
 		$ret = ldap_get_entries( $ldapconn, $resultid );
-		Wikimedia\restoreWarnings();
+		AtEase::restoreWarnings();
 		return $ret;
 	}
 
@@ -288,9 +289,9 @@ class LdapAuthenticationPlugin {
 	 * @return int
 	 */
 	public static function ldap_count_entries( $ldapconn, $resultid ) {
-		Wikimedia\suppressWarnings();
+		AtEase::suppressWarnings();
 		$ret = ldap_count_entries( $ldapconn, $resultid );
-		Wikimedia\restoreWarnings();
+		AtEase::restoreWarnings();
 		return $ret;
 	}
 
@@ -300,9 +301,9 @@ class LdapAuthenticationPlugin {
 	 * @return int
 	 */
 	public static function ldap_errno( $ldapconn ) {
-		Wikimedia\suppressWarnings();
+		AtEase::suppressWarnings();
 		$ret = ldap_errno( $ldapconn );
-		Wikimedia\restoreWarnings();
+		AtEase::restoreWarnings();
 		return $ret;
 	}
 
