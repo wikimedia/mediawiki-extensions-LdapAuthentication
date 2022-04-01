@@ -8,8 +8,8 @@
 		]
 	},
 	"ldapauthentication-desc": "اعتبار افزونهٔ‌ ال‌دی‌ای‌پی با پشتیبانی برای چند زوش تأیید ال‌دی‌ای‌پی",
-	"authmanager-authplugin-setpass-failed-title": "تغییر گذرواژه ناموفق بود",
-	"authmanager-authplugin-setpass-failed-message": "افزونهٔ اعتبارسنجی، تغيير گذزواژه را مردود دانست",
+	"authmanager-authplugin-setpass-failed-title": "تغییر رمز عبور ناموفق بود",
+	"authmanager-authplugin-setpass-failed-message": "افزونهٔ اعتبارسنجی، تغيير رمز عبور را مردود دانست",
 	"authmanager-authplugin-create-fail": "افزونهٔ اعتبارسنجی ايجاد حساب را مردود دانست",
 	"authmanager-authplugin-setpass-denied": "افزونهٔ اعتبارسنجی اجازهٔ تغيير گذرواژه را نمی‌دهد",
 	"authmanager-authplugin-setpass-bad-domain": "دامنه نامعتبر است."
