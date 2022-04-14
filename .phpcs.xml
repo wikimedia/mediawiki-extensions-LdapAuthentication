@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ruleset>
 	<rule ref="./vendor/mediawiki/mediawiki-codesniffer/MediaWiki">
+		<exclude name="Generic.ControlStructures.DisallowYodaConditions.Found" />
 		<exclude name="MediaWiki.Commenting.FunctionComment.MissingDocumentationPublic" />
+		<exclude name="MediaWiki.Commenting.PropertyDocumentation.MissingDocumentationPrivate" />
+		<exclude name="MediaWiki.Commenting.PropertyDocumentation.MissingDocumentationPublic" />
+		<exclude name="MediaWiki.Commenting.PropertyDocumentation.WrongStyle" />
 		<exclude name="MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName" />
 		<exclude name="MediaWiki.Usage.DeprecatedGlobalVariables.Deprecated$wgAuth" />
+		<exclude name="PSR2.Classes.PropertyDeclaration.Multiple" />
+		<exclude name="PSR2.ControlStructures.SwitchDeclaration.BreakIndent" />
 	</rule>
 	<rule ref="MediaWiki.NamingConventions.PrefixedGlobalFunctions">
 		<properties>
