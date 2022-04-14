@@ -57,13 +57,13 @@ class LdapAuthenticationHooks {
 	 *
 	 * @param UserIdentity $user UserIdentity to lock/unlock
 	 * @param bool $lock True to lock, False to unlock
-	 * @return null|bool|string status of operation, suitable for use as a Hook
-	 *   handler response
+	 * @return bool True if successful, false otherwise
 	 */
 	private static function setLdapLockStatus( UserIdentity $user, $lock ) {
 		$ldap = static::getLDAP();
 		if ( !$ldap ) {
-			return 'Failed to initialize LDAP connection';
+			wfDebugLog( 'ldap', 'Failed to initialize LDAP connection' );
+			return false;
 		}
 
 		$ppolicy = $ldap->getConf( 'LDAPLockPasswordPolicy' );
@@ -82,7 +82,11 @@ class LdapAuthenticationHooks {
 
 		$userDN = $ldap->getUserDN( $user->getName() );
 		if ( !$userDN ) {
-			return "Failed to lookup DN for user {$user->getName()}";
+			$ldap->printDebug(
+				"Failed to lookup DN for user {$user->getName()}",
+				NONSENSITIVE
+			);
+			return false;
 		}
 		$ldap->printDebug(
 			"Attempting to {$actionStr} {$userDN}", NONSENSITIVE );
@@ -94,8 +98,9 @@ class LdapAuthenticationHooks {
 			$msg = "Failed to {$actionStr} LDAP account {$userDN}";
 			$errno = LdapAuthenticationPlugin::ldap_errno( $ldap->ldapconn );
 			$ldap->printDebug( $msg . ": LDAP errno {$errno}", NONSENSITIVE );
-			return $msg;
+			return false;
 		}
+		return true;
 	}
 
 	/**
@@ -106,7 +111,7 @@ class LdapAuthenticationHooks {
 	 * @param DatabaseBlock $block The block object that was saved
 	 * @param User $user The user who performed the unblock
 	 * @param DatabaseBlock|null $prior Previous block that was replaced
-	 * @return null|bool|string Hook status
+	 * @return bool True if successful, false otherwise
 	 */
 	public static function onBlockIpComplete( DatabaseBlock $block, User $user, $prior ) {
 		global $wgLDAPLockOnBlock;
@@ -131,7 +136,7 @@ class LdapAuthenticationHooks {
 	 *
 	 * @param DatabaseBlock $block the block object that was saved
 	 * @param User $user The user who performed the unblock
-	 * @return null|bool|string Hook status
+	 * @return bool True if successful, false otherwise
 	 */
 	public static function onUnblockUserComplete( DatabaseBlock $block, User $user ) {
 		global $wgLDAPLockOnBlock;
