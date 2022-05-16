@@ -7,10 +7,10 @@
 			"Namo"
 		]
 	},
-	"ldapauthentication-desc": "افزونهٔ‌ تأیید اعتبار LDAP با پشتیبانی برای چندین روش تأیید اعتبار LDAP",
+	"ldapauthentication-desc": "افزونهٔ‌ اصالت‌سنجی LDAP با پشتیبانی برای چندین روش اصالت‌سنجی LDAP",
 	"authmanager-authplugin-setpass-failed-title": "تغییر رمز عبور ناموفق بود",
-	"authmanager-authplugin-setpass-failed-message": "افزونهٔ تأیید اعتبار از تغيير رمز عبور را رد کرد.",
-	"authmanager-authplugin-create-fail": "افزونهٔ تأیید اعتبار ايجاد حساب را رد کرد.",
+	"authmanager-authplugin-setpass-failed-message": "افزونهٔ اصالت‌سنجی تغيير رمز عبور را رد کرد.",
+	"authmanager-authplugin-create-fail": "افزونهٔ اصالت‌سنجی ايجاد حساب را رد کرد.",
 	"authmanager-authplugin-setpass-denied": "افزونهٔ تأیید اعتبار اجازهٔ تغيير گذرواژه را نمی‌دهد.",
 	"authmanager-authplugin-setpass-bad-domain": "دامنه نامعتبر است."
 }
