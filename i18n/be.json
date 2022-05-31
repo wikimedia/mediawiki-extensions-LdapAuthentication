@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Artificial123",
+			"Chadyka"
+		]
+	},
+	"ldapauthentication-desc": "Дапаўненне LDAP-аўтэнтыфікацыі з падтрымкай некалькіх метадаў аўтэнтыфікацыі LDAP"
+}
