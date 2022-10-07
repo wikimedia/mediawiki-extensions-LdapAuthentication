@@ -19,6 +19,9 @@
 		"LdapAuthenticationPlugin": "includes/LdapAuthenticationPlugin.php",
 		"LdapPrimaryAuthenticationProvider": "includes/LdapPrimaryAuthenticationProvider.php"
 	},
+	"AutoloadNamespaces": {
+		"MediaWiki\\Extension\\LdapAuthentication\\": "includes/"
+	},
 	"Hooks": {
 		"BlockIpComplete": "LdapAuthenticationHooks::onBlockIpComplete",
 		"UnblockUserComplete": "LdapAuthenticationHooks::onUnblockUserComplete",

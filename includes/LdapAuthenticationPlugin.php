@@ -17,6 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * http://www.gnu.org/copyleft/gpl.html
  */
+
+use MediaWiki\Extension\LdapAuthentication\LdapAuthenticationException;
 use MediaWiki\MediaWikiServices;
 use Wikimedia\AtEase\AtEase;
 
@@ -559,17 +561,13 @@ class LdapAuthenticationPlugin {
 	/**
 	 * Connect to LDAP
 	 * @param string $domain
-	 * @return bool
+	 * @return true
 	 */
-	public function connect( $domain = '' ) {
+	public function connect( $domain = '' ): bool {
 		$this->printDebug( "Entering Connect", NONSENSITIVE );
 
 		if ( !function_exists( 'ldap_connect' ) ) {
-			$this->printDebug( "It looks like you are missing LDAP support; please ensure you " .
-				"have either compiled LDAP support in, or have enabled the module. If the " .
-				"authentication is working for you, the plugin isn't properly detecting the LDAP " .
-				"module, and you can safely ignore this message.", NONSENSITIVE );
-			return false;
+			throw new LdapAuthenticationException( "Missing PHP LDAP support" );
 		}
 
 		// Set the server string depending on whether we use ssl or not
@@ -599,8 +597,7 @@ class LdapAuthenticationPlugin {
 		}
 		$servers = trim( $servers );
 		if ( !$servers ) {
-			$this->printDebug( 'Empty server string, skipping connection', NONSENSITIVE );
-			return false;
+			throw new LdapAuthenticationException( 'No servers configured' );
 		}
 
 		$this->printDebug( "Using servers: $servers", SENSITIVE );
@@ -608,10 +605,9 @@ class LdapAuthenticationPlugin {
 		// Connect and set options
 		$this->ldapconn = self::ldap_connect( $servers );
 		if ( !$this->ldapconn ) {
-			$this->printDebug( "PHP's LDAP connect method returned null, this likely implies a " .
-				"misconfiguration of the plugin.", NONSENSITIVE );
-			return false;
+			throw new LdapAuthenticationException( 'Failed to connect to the LDAP server' );
 		}
+
 		ldap_set_option( $this->ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3 );
 		ldap_set_option( $this->ldapconn, LDAP_OPT_REFERRALS, 0 );
 
@@ -627,13 +623,14 @@ class LdapAuthenticationPlugin {
 		if ( $encryptionType == "tls" ) {
 			$this->printDebug( "Using TLS", SENSITIVE );
 			if ( !ldap_start_tls( $this->ldapconn ) ) {
-				$this->printDebug( "Failed to start TLS.", SENSITIVE );
-				return false;
+				throw new LdapAuthenticationException( 'Failed to enable TLS on the LDAP connection' );
 			}
 		}
 		$this->printDebug( "PHP's LDAP connect method returned true (note, this does not imply " .
 			"it connected to the server).", NONSENSITIVE );
 
+		// TODO: this method currently just throws exceptions if this fails, so
+		// we should be able to remove this return value
 		return true;
 	}
 
