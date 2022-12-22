@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
 use MediaWiki\Session\SessionManager;
 
 class LdapAutoAuthentication {
@@ -47,7 +48,9 @@ class LdapAutoAuthentication {
 			"User exists in LDAP; finding the user by name ($mungedUsername) in MediaWiki.",
 			NONSENSITIVE
 		);
-		$localId = User::idFromName( $mungedUsername );
+		$userIdentity = MediaWikiServices::getInstance()->getUserIdentityLookup()
+			->getUserIdentityByName( $mungedUsername );
+		$localId = $userIdentity ? $userIdentity->getId() : 0;
 		$ldap->printDebug( "Got id ($localId).", NONSENSITIVE );
 
 		// Is the user already in the database?
