@@ -1,12 +1,14 @@
 {
 	"@metadata": {
 		"authors": [
-			"Dbc334"
+			"Dbc334",
+			"Eleassar"
 		]
 	},
+	"ldapauthentication-desc": "Vtičnik za avtentikacijo LDAP s podporo za več načinov avtentikacije LDAP",
 	"authmanager-authplugin-setpass-failed-title": "Sprememba gesla je spodletela",
-	"authmanager-authplugin-setpass-failed-message": "Vtičnik za overitev je zavrnil spremembo gesla.",
-	"authmanager-authplugin-create-fail": "Vtičnik za overitev je zavrnil ustvarjanje računa.",
-	"authmanager-authplugin-setpass-denied": "Vtičnik za overitev ne dovoljuje spreminjanje gesel.",
+	"authmanager-authplugin-setpass-failed-message": "Avtentikacijski vtičnik je zavrnil spremembo gesla.",
+	"authmanager-authplugin-create-fail": "Avtentikacijski vtičnik je zavrnil ustvaritev računa.",
+	"authmanager-authplugin-setpass-denied": "Avtentikacijski vtičnik ne dovoljuje spreminjanja gesel.",
 	"authmanager-authplugin-setpass-bad-domain": "Neveljavna domena."
 }
