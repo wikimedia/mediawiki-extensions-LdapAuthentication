@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Dbc334",
+			"Eleassar"
+		]
+	},
+	"ldapauthentication-desc": "Vtičnik za avtentikacijo LDAP s podporo za več načinov avtentikacije LDAP"
+}
