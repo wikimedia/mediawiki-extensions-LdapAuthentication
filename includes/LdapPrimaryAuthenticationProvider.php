@@ -27,6 +27,7 @@ use MediaWiki\Auth\AuthenticationResponse;
 use MediaWiki\Auth\AuthManager;
 use MediaWiki\Auth\PasswordAuthenticationRequest;
 use MediaWiki\Auth\PasswordDomainAuthenticationRequest;
+use MediaWiki\MediaWikiServices;
 use Wikimedia\ScopedCallback;
 
 /**
@@ -58,10 +59,11 @@ class LdapPrimaryAuthenticationProvider
 			? PasswordDomainAuthenticationRequest::class
 			: PasswordAuthenticationRequest::class;
 
+		$hookContainer = MediaWikiServices::getInstance()->getHookContainer();
 		// Hooks to handle updating LDAP on various core events
-		\Hooks::register( 'UserSaveSettings', [ $this, 'onUserSaveSettings' ] );
-		\Hooks::register( 'UserLoggedIn', [ $this, 'onUserLoggedIn' ] );
-		\Hooks::register( 'LocalUserCreated', [ $this, 'onLocalUserCreated' ] );
+		$hookContainer->register( 'UserSaveSettings', [ $this, 'onUserSaveSettings' ] );
+		$hookContainer->register( 'UserLoggedIn', [ $this, 'onUserLoggedIn' ] );
+		$hookContainer->register( 'LocalUserCreated', [ $this, 'onLocalUserCreated' ] );
 	}
 
 	/**
