@@ -706,7 +706,8 @@ class LdapAuthenticationPlugin {
 					return false;
 				}
 				$result = true;
-				Hooks::run( 'ChainAuth', [ $username, $password, &$result ] );
+				MediaWikiServices::getInstance()->getHookContainer()
+					->run( 'ChainAuth', [ $username, $password, &$result ] );
 				// @phan-suppress-next-line PhanImpossibleCondition False positive
 				if ( !$result ) {
 					return false;
@@ -1104,7 +1105,8 @@ class LdapAuthenticationPlugin {
 
 			$result = true;
 			# Let other extensions modify the user object before creation
-			Hooks::run( 'LDAPSetCreationValues',
+			$hookContainer = MediaWikiServices::getInstance()->getHookContainer();
+			$hookContainer->run( 'LDAPSetCreationValues',
 				[ $this, $username, &$values, $writeloc, &$this->userdn, &$result ] );
 			// @phan-suppress-next-line PhanImpossibleCondition False positive
 			if ( !$result ) {
@@ -1125,7 +1127,7 @@ class LdapAuthenticationPlugin {
 			# Constraint violation, let's allow other plugins a chance to retry
 			if ( $errno === 19 ) {
 				$result = false;
-				Hooks::run( 'LDAPRetrySetCreationValues',
+				$hookContainer->run( 'LDAPRetrySetCreationValues',
 					[ $this, $username, &$values, $writeloc, &$this->userdn, &$result ] );
 				// @phan-suppress-next-line PhanImpossibleCondition False positive
 				if ( $result &&
@@ -1221,9 +1223,10 @@ class LdapAuthenticationPlugin {
 			return;
 		}
 
+		$services = MediaWikiServices::getInstance();
 		if ( $this->getConf( 'Preferences' ) ) {
 			$this->printDebug( "Setting user preferences.", NONSENSITIVE );
-			$userOptionsManager = MediaWikiServices::getInstance()->getUserOptionsManager();
+			$userOptionsManager = $services->getUserOptionsManager();
 			if ( is_string( $this->lang ) ) {
 				$this->printDebug( "Setting language.", NONSENSITIVE );
 				$userOptionsManager->setOption( $user, 'language', $this->lang );
@@ -1255,7 +1258,7 @@ class LdapAuthenticationPlugin {
 		}
 
 		# Let other extensions update the user
-		Hooks::run( 'LDAPUpdateUser', [ &$user ] );
+		$services->getHookContainer()->run( 'LDAPUpdateUser', [ &$user ] );
 
 		$this->printDebug( "Saving user settings.", NONSENSITIVE );
 		$user->saveSettings();
@@ -1349,8 +1352,8 @@ class LdapAuthenticationPlugin {
 							// try to fetch the username by search before bind.
 							$this->userdn = $this->getUserDN( $username, true );
 							$hookSetUsername = $this->LDAPUsername;
-							Hooks::run( 'SetUsernameAttributeFromLDAP',
-								[ &$hookSetUsername, $this->userInfo ] );
+							MediaWikiServices::getInstance()->getHookContainer()
+								->run( 'SetUsernameAttributeFromLDAP', [ &$hookSetUsername, $this->userInfo ] );
 							if ( is_string( $hookSetUsername ) ) {
 								$this->printDebug(
 									"Username munged by hook: $hookSetUsername", NONSENSITIVE
