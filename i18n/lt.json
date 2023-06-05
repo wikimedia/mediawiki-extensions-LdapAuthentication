@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Eitvys200",
+			"Nokeoo"
+		]
+	},
+	"ldapauthentication-desc": "LDAP autentifikavimo įskiepis, palaikantis kelis LDAP autentifikavimo metodus"
+}
