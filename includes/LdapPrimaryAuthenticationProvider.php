@@ -53,6 +53,9 @@ class LdapPrimaryAuthenticationProvider
 	/** @var string */
 	private $requestType;
 
+	/** @var string[] Users that are currently being created. */
+	private array $autoCreateInProcess = [];
+
 	public function __construct() {
 		parent::__construct();
 
@@ -118,6 +121,14 @@ class LdapPrimaryAuthenticationProvider
 	 * @codeCoverageIgnore
 	 */
 	public function onUserSaveSettings( $user ) {
+		if ( in_array( $user->getName(), $this->autoCreateInProcess ) ) {
+			$this->logger->debug(
+				'Not doing anything in onUserSaveSettings since the user creation is still in progress'
+			);
+
+			return;
+		}
+
 		$ldap = LdapAuthenticationPlugin::getInstance();
 		$reset = $this->setDomainForUser( $ldap, $user );
 		$ldap->updateExternalDB( $user );
@@ -143,6 +154,11 @@ class LdapPrimaryAuthenticationProvider
 	public function onLocalUserCreated( $user, $autocreated ) {
 		// For $autocreated, see self::autoCreatedAccount()
 		if ( !$autocreated ) {
+			$this->autoCreateInProcess = array_filter(
+				$this->autoCreateInProcess,
+				fn ( $entry ) => $entry !== $user->getId()
+			);
+
 			$ldap = LdapAuthenticationPlugin::getInstance();
 			$reset = $this->setDomainForUser( $ldap, $user );
 			$ldap->initUser( $user, $autocreated );
@@ -195,9 +211,15 @@ class LdapPrimaryAuthenticationProvider
 		}
 		$ldap->setDomain( $domain );
 
-		if ( $this->testUserCanAuthenticateInternal( $ldap, User::newFromName( $username ) ) &&
+		$user = User::newFromName( $username );
+
+		if ( $this->testUserCanAuthenticateInternal( $ldap, $user ) &&
 			$ldap->authenticate( $username, $req->password )
 		) {
+			if ( !$user->isRegistered() ) {
+				$this->autoCreateInProcess[] = $user->getName();
+			}
+
 			return AuthenticationResponse::newPass( $username );
 		}
 
@@ -434,6 +456,11 @@ class LdapPrimaryAuthenticationProvider
 	}
 
 	public function autoCreatedAccount( $user, $source ) {
+		$this->autoCreateInProcess = array_filter(
+			$this->autoCreateInProcess,
+			fn ( $entry ) => $entry !== $user->getId()
+		);
+
 		$ldap = LdapAuthenticationPlugin::getInstance();
 		$reset = $this->setDomainForUser( $ldap, $user );
 		$ldap->initUser( $user, true );
