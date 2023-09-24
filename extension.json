@@ -16,6 +16,7 @@
 	},
 	"AutoloadClasses": {
 		"LdapAuthenticationHooks": "includes/LdapAuthenticationHooks.php",
+		"LdapAuthenticationSchemaHooks": "includes/LdapAuthenticationSchemaHooks.php",
 		"LdapAuthenticationPlugin": "includes/LdapAuthenticationPlugin.php",
 		"LdapPrimaryAuthenticationProvider": "includes/LdapPrimaryAuthenticationProvider.php"
 	},
@@ -23,9 +24,17 @@
 		"MediaWiki\\Extension\\LdapAuthentication\\": "includes/"
 	},
 	"Hooks": {
-		"BlockIpComplete": "LdapAuthenticationHooks::onBlockIpComplete",
-		"UnblockUserComplete": "LdapAuthenticationHooks::onUnblockUserComplete",
-		"LoadExtensionSchemaUpdates": "LdapAuthenticationHooks::onLoadExtensionSchemaUpdates"
+		"BlockIpComplete": "main",
+		"UnblockUserComplete": "main",
+		"LoadExtensionSchemaUpdates": "schema"
+	},
+	"HookHandlers": {
+		"main": {
+			"class": "LdapAuthenticationHooks"
+		},
+		"schema": {
+			"class": "LdapAuthenticationSchemaHooks"
+		}
 	},
 	"config_prefix": "wgLDAP",
 	"config": {
