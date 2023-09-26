@@ -17,9 +17,14 @@
  */
 
 use MediaWiki\Block\DatabaseBlock;
+use MediaWiki\Hook\BlockIpCompleteHook;
+use MediaWiki\Hook\UnblockUserCompleteHook;
 use MediaWiki\User\UserIdentity;
 
-class LdapAuthenticationHooks {
+class LdapAuthenticationHooks implements
+	BlockIpCompleteHook,
+	UnblockUserCompleteHook
+{
 
 	/**
 	 * Get an LdapAuthenticationPlugin instance that is connected to the LDAP
@@ -113,7 +118,7 @@ class LdapAuthenticationHooks {
 	 * @param DatabaseBlock|null $prior Previous block that was replaced
 	 * @return bool True if successful, false otherwise
 	 */
-	public static function onBlockIpComplete( DatabaseBlock $block, User $user, $prior ) {
+	public function onBlockIpComplete( $block, $user, $prior ) {
 		global $wgLDAPLockOnBlock;
 		if ( $wgLDAPLockOnBlock ) {
 			if ( $block->getType() === DatabaseBlock::TYPE_USER
@@ -125,7 +130,7 @@ class LdapAuthenticationHooks {
 			} elseif ( $prior ) {
 				// New block replaced a prior block. Process the prior block
 				// as though it was explicitly removed.
-				return static::onUnblockUserComplete( $prior, $user );
+				return $this->onUnblockUserComplete( $prior, $user );
 			}
 		}
 	}
@@ -138,7 +143,7 @@ class LdapAuthenticationHooks {
 	 * @param User $user The user who performed the unblock
 	 * @return bool True if successful, false otherwise
 	 */
-	public static function onUnblockUserComplete( DatabaseBlock $block, User $user ) {
+	public function onUnblockUserComplete( $block, $user ) {
 		global $wgLDAPLockOnBlock;
 		if ( $wgLDAPLockOnBlock
 			&& $block->getType() === DatabaseBlock::TYPE_USER
@@ -160,20 +165,6 @@ class LdapAuthenticationHooks {
 		define( "NONSENSITIVE", 1 );
 		define( "SENSITIVE", 2 );
 		define( "HIGHLYSENSITIVE", 3 );
-	}
-
-	/**
-	 * @param DatabaseUpdater $updater
-	 * @return bool
-	 */
-	public static function onLoadExtensionSchemaUpdates( DatabaseUpdater $updater ) {
-		$base = dirname( __DIR__ );
-		$updater->addExtensionTable(
-			'ldap_domains',
-			"$base/schema/{$updater->getDB()->getType()}/tables-generated.sql"
-		);
-
-		return true;
 	}
 
 }
