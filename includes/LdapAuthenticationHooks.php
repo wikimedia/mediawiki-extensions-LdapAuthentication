@@ -151,9 +151,6 @@ class LdapAuthenticationHooks {
 	}
 
 	public static function onRegistration() {
-		global $wgPasswordResetRoutes;
-		$wgPasswordResetRoutes['domain'] = true;
-
 		// constants for search base
 		define( "GROUPDN", 0 );
 		define( "USERDN", 1 );
