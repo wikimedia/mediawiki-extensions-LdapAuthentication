@@ -27,6 +27,7 @@ if ( getenv( 'MW_INSTALL_PATH' ) ) {
 require_once "$IP/maintenance/Maintenance.php";
 
 use MediaWiki\MediaWikiServices;
+use MediaWiki\User\User;
 
 /**
  * Attach an existing LDAP account to the local wiki with all expected log

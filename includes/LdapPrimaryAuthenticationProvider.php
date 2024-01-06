@@ -28,6 +28,7 @@ use MediaWiki\Auth\AuthManager;
 use MediaWiki\Auth\PasswordAuthenticationRequest;
 use MediaWiki\Auth\PasswordDomainAuthenticationRequest;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\User\User;
 use MediaWiki\User\UserNameUtils;
 use Wikimedia\ScopedCallback;
 

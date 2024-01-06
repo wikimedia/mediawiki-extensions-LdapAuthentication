@@ -21,6 +21,7 @@
 use MediaWiki\Extension\LdapAuthentication\Hooks\HookRunner;
 use MediaWiki\Extension\LdapAuthentication\LdapAuthenticationException;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\User\User;
 use Wikimedia\AtEase\AtEase;
 
 class LdapAuthenticationPlugin {
