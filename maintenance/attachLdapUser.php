@@ -27,6 +27,7 @@ if ( getenv( 'MW_INSTALL_PATH' ) ) {
 require_once "$IP/maintenance/Maintenance.php";
 
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Permissions\UltimateAuthority;
 use MediaWiki\User\User;
 
 /**
@@ -61,8 +62,22 @@ class AttachLdapUser extends Maintenance {
 
 		$user = User::newFromName( $ldap->LDAPUsername, 'creatable' );
 		$authManager = MediaWikiServices::getInstance()->getAuthManager();
-		$authManager->autoCreateUser(
-			$user, LdapPrimaryAuthenticationProvider::class, false );
+		$status = $authManager->autoCreateUser(
+			$user,
+			LdapPrimaryAuthenticationProvider::class,
+			/* $login */ false,
+			/* log */ true,
+			new UltimateAuthority( User::newSystemUser( User::MAINTENANCE_SCRIPT_USER, [ 'steal' => true ] ) )
+		);
+
+		if ( !$status->isGood() ) {
+			$this->fatalError(
+				MediaWikiServices::getInstance()
+					->getFormatterFactory()
+					->getStatusFormatter( RequestContext::getMain() )
+					->getWikiText( $status )
+			);
+		}
 	}
 }
 
