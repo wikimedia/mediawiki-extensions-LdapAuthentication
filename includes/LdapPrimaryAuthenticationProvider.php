@@ -298,7 +298,7 @@ class LdapPrimaryAuthenticationProvider
 		}
 	}
 
-	public function testUserExists( $username, $flags = User::READ_NORMAL ) {
+	public function testUserExists( $username, $flags = IDBAccessObject::READ_NORMAL ) {
 		$userNameUtils = MediaWikiServices::getInstance()->getUserNameUtils();
 		$username = $userNameUtils->getCanonical( $username, UserNameUtils::RIGOR_USABLE );
 		if ( $username === false ) {
