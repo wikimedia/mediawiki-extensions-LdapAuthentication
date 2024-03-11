@@ -321,24 +321,24 @@ class LdapAuthenticationPlugin {
 	public function getConf( $preference, $domain = '' ) {
 		# Global preferences
 		switch ( $preference ) {
-		case 'DomainNames':
-			global $wgLDAPDomainNames;
-			return $wgLDAPDomainNames;
-		case 'UseLocal':
-			global $wgLDAPUseLocal;
-			return $wgLDAPUseLocal;
-		case 'AutoAuthUsername':
-			global $wgLDAPAutoAuthUsername;
-			return $wgLDAPAutoAuthUsername;
-		case 'AutoAuthDomain':
-			global $wgLDAPAutoAuthDomain;
-			return $wgLDAPAutoAuthDomain;
-		case 'LockOnBlock':
-			global $wgLDAPLockOnBlock;
-			return $wgLDAPLockOnBlock;
-		case 'LDAPLockPasswordPolicy':
-			global $wgLDAPLockPasswordPolicy;
-			return $wgLDAPLockPasswordPolicy;
+			case 'DomainNames':
+				global $wgLDAPDomainNames;
+				return $wgLDAPDomainNames;
+			case 'UseLocal':
+				global $wgLDAPUseLocal;
+				return $wgLDAPUseLocal;
+			case 'AutoAuthUsername':
+				global $wgLDAPAutoAuthUsername;
+				return $wgLDAPAutoAuthUsername;
+			case 'AutoAuthDomain':
+				global $wgLDAPAutoAuthDomain;
+				return $wgLDAPAutoAuthDomain;
+			case 'LockOnBlock':
+				global $wgLDAPLockOnBlock;
+				return $wgLDAPLockOnBlock;
+			case 'LDAPLockPasswordPolicy':
+				global $wgLDAPLockPasswordPolicy;
+				return $wgLDAPLockPasswordPolicy;
 		}
 
 		# Domain specific preferences
@@ -346,125 +346,125 @@ class LdapAuthenticationPlugin {
 			$domain = $this->getDomain();
 		}
 		switch ( $preference ) {
-		case 'ServerNames':
-			global $wgLDAPServerNames;
-			return self::setOrDefault( $wgLDAPServerNames, $domain );
-		case 'EncryptionType':
-			global $wgLDAPEncryptionType;
-			return self::setOrDefault( $wgLDAPEncryptionType, $domain, 'tls' );
-		case 'Options':
-			global $wgLDAPOptions;
-			return self::setOrDefault( $wgLDAPOptions, $domain, [] );
-		case 'Port':
-			global $wgLDAPPort;
-			if ( isset( $wgLDAPPort[$domain] ) ) {
-				$this->printDebug( "Using non-standard port: " . $wgLDAPPort[$domain], SENSITIVE );
-				return (string)$wgLDAPPort[$domain];
-			}
+			case 'ServerNames':
+				global $wgLDAPServerNames;
+				return self::setOrDefault( $wgLDAPServerNames, $domain );
+			case 'EncryptionType':
+				global $wgLDAPEncryptionType;
+				return self::setOrDefault( $wgLDAPEncryptionType, $domain, 'tls' );
+			case 'Options':
+				global $wgLDAPOptions;
+				return self::setOrDefault( $wgLDAPOptions, $domain, [] );
+			case 'Port':
+				global $wgLDAPPort;
+				if ( isset( $wgLDAPPort[$domain] ) ) {
+					$this->printDebug( "Using non-standard port: " . $wgLDAPPort[$domain], SENSITIVE );
+					return (string)$wgLDAPPort[$domain];
+				}
 
-			if ( $this->getConf( 'EncryptionType' ) == 'ssl' ) {
-				return "636";
-			}
+				if ( $this->getConf( 'EncryptionType' ) == 'ssl' ) {
+					return "636";
+				}
 
-			return "389";
-		case 'SearchString':
-			global $wgLDAPSearchStrings;
-			return self::setOrDefault( $wgLDAPSearchStrings, $domain );
-		case 'ProxyAgent':
-			global $wgLDAPProxyAgent;
-			return self::setOrDefault( $wgLDAPProxyAgent, $domain );
-		case 'ProxyAgentPassword':
-			global $wgLDAPProxyAgentPassword;
-			return self::setOrDefaultPrivate( $wgLDAPProxyAgentPassword, $domain );
-		case 'SearchAttribute':
-			global $wgLDAPSearchAttributes;
-			return self::setOrDefault( $wgLDAPSearchAttributes, $domain );
-		case 'BaseDN':
-			global $wgLDAPBaseDNs;
-			return self::setOrDefault( $wgLDAPBaseDNs, $domain );
-		case 'GroupBaseDN':
-			global $wgLDAPGroupBaseDNs;
-			return self::setOrDefault( $wgLDAPGroupBaseDNs, $domain );
-		case 'UserBaseDN':
-			global $wgLDAPUserBaseDNs;
-			return self::setOrDefault( $wgLDAPUserBaseDNs, $domain );
-		case 'WriterDN':
-			global $wgLDAPWriterDN;
-			return self::setOrDefault( $wgLDAPWriterDN, $domain );
-		case 'WriterPassword':
-			global $wgLDAPWriterPassword;
-			return self::setOrDefaultPrivate( $wgLDAPWriterPassword, $domain );
-		case 'WriteLocation':
-			global $wgLDAPWriteLocation;
-			return self::setOrDefault( $wgLDAPWriteLocation, $domain );
-		case 'AddLDAPUsers':
-			global $wgLDAPAddLDAPUsers;
-			return self::setOrDefault( $wgLDAPAddLDAPUsers, $domain, false );
-		case 'UpdateLDAP':
-			global $wgLDAPUpdateLDAP;
-			return self::setOrDefault( $wgLDAPUpdateLDAP, $domain, false );
-		case 'PasswordHash':
-			global $wgLDAPPasswordHash;
-			return self::setOrDefaultPrivate( $wgLDAPPasswordHash, $domain, 'clear' );
-		case 'MailPassword':
-			global $wgLDAPMailPassword;
-			return self::setOrDefaultPrivate( $wgLDAPMailPassword, $domain, false );
-		case 'Preferences':
-			global $wgLDAPPreferences;
-			return self::setOrDefault( $wgLDAPPreferences, $domain, [] );
-		case 'DisableAutoCreate':
-			global $wgLDAPDisableAutoCreate;
-			return self::setOrDefault( $wgLDAPDisableAutoCreate, $domain, false );
-		case 'GroupUseFullDN':
-			global $wgLDAPGroupUseFullDN;
-			return self::setOrDefault( $wgLDAPGroupUseFullDN, $domain, false );
-		case 'LowerCaseUsername':
-			global $wgLDAPLowerCaseUsername;
-			// Default set to true for backwards compatibility with
-			// versions < 2.0a
-			return self::setOrDefault( $wgLDAPLowerCaseUsername, $domain, true );
-		case 'GroupUseRetrievedUsername':
-			global $wgLDAPGroupUseRetrievedUsername;
-			return self::setOrDefault( $wgLDAPGroupUseRetrievedUsername, $domain, false );
-		case 'GroupObjectclass':
-			global $wgLDAPGroupObjectclass;
-			return self::setOrDefault( $wgLDAPGroupObjectclass, $domain );
-		case 'GroupAttribute':
-			global $wgLDAPGroupAttribute;
-			return self::setOrDefault( $wgLDAPGroupAttribute, $domain );
-		case 'GroupNameAttribute':
-			global $wgLDAPGroupNameAttribute;
-			return self::setOrDefault( $wgLDAPGroupNameAttribute, $domain );
-		case 'GroupsUseMemberOf':
-			global $wgLDAPGroupsUseMemberOf;
-			return self::setOrDefault( $wgLDAPGroupsUseMemberOf, $domain, false );
-		case 'UseLDAPGroups':
-			global $wgLDAPUseLDAPGroups;
-			return self::setOrDefault( $wgLDAPUseLDAPGroups, $domain, false );
-		case 'LocallyManagedGroups':
-			global $wgLDAPLocallyManagedGroups;
-			return self::setOrDefault( $wgLDAPLocallyManagedGroups, $domain, [] );
-		case 'GroupsPrevail':
-			global $wgLDAPGroupsPrevail;
-			return self::setOrDefault( $wgLDAPGroupsPrevail, $domain, false );
-		case 'RequiredGroups':
-			global $wgLDAPRequiredGroups;
-			return self::setOrDefault( $wgLDAPRequiredGroups, $domain, [] );
-		case 'ExcludedGroups':
-			global $wgLDAPExcludedGroups;
-			return self::setOrDefault( $wgLDAPExcludedGroups, $domain, [] );
-		case 'GroupSearchNestedGroups':
-			global $wgLDAPGroupSearchNestedGroups;
-			return self::setOrDefault( $wgLDAPGroupSearchNestedGroups, $domain, false );
-		case 'AuthAttribute':
-			global $wgLDAPAuthAttribute;
-			return self::setOrDefault( $wgLDAPAuthAttribute, $domain );
-		case 'ActiveDirectory':
-			global $wgLDAPActiveDirectory;
-			return self::setOrDefault( $wgLDAPActiveDirectory, $domain, false );
-		case 'GroupSearchPosixPrimaryGroup':
-			global $wgLDAPGroupSearchPosixPrimaryGroup;
-			return self::setOrDefault( $wgLDAPGroupSearchPosixPrimaryGroup, $domain, false );
+				return "389";
+			case 'SearchString':
+				global $wgLDAPSearchStrings;
+				return self::setOrDefault( $wgLDAPSearchStrings, $domain );
+			case 'ProxyAgent':
+				global $wgLDAPProxyAgent;
+				return self::setOrDefault( $wgLDAPProxyAgent, $domain );
+			case 'ProxyAgentPassword':
+				global $wgLDAPProxyAgentPassword;
+				return self::setOrDefaultPrivate( $wgLDAPProxyAgentPassword, $domain );
+			case 'SearchAttribute':
+				global $wgLDAPSearchAttributes;
+				return self::setOrDefault( $wgLDAPSearchAttributes, $domain );
+			case 'BaseDN':
+				global $wgLDAPBaseDNs;
+				return self::setOrDefault( $wgLDAPBaseDNs, $domain );
+			case 'GroupBaseDN':
+				global $wgLDAPGroupBaseDNs;
+				return self::setOrDefault( $wgLDAPGroupBaseDNs, $domain );
+			case 'UserBaseDN':
+				global $wgLDAPUserBaseDNs;
+				return self::setOrDefault( $wgLDAPUserBaseDNs, $domain );
+			case 'WriterDN':
+				global $wgLDAPWriterDN;
+				return self::setOrDefault( $wgLDAPWriterDN, $domain );
+			case 'WriterPassword':
+				global $wgLDAPWriterPassword;
+				return self::setOrDefaultPrivate( $wgLDAPWriterPassword, $domain );
+			case 'WriteLocation':
+				global $wgLDAPWriteLocation;
+				return self::setOrDefault( $wgLDAPWriteLocation, $domain );
+			case 'AddLDAPUsers':
+				global $wgLDAPAddLDAPUsers;
+				return self::setOrDefault( $wgLDAPAddLDAPUsers, $domain, false );
+			case 'UpdateLDAP':
+				global $wgLDAPUpdateLDAP;
+				return self::setOrDefault( $wgLDAPUpdateLDAP, $domain, false );
+			case 'PasswordHash':
+				global $wgLDAPPasswordHash;
+				return self::setOrDefaultPrivate( $wgLDAPPasswordHash, $domain, 'clear' );
+			case 'MailPassword':
+				global $wgLDAPMailPassword;
+				return self::setOrDefaultPrivate( $wgLDAPMailPassword, $domain, false );
+			case 'Preferences':
+				global $wgLDAPPreferences;
+				return self::setOrDefault( $wgLDAPPreferences, $domain, [] );
+			case 'DisableAutoCreate':
+				global $wgLDAPDisableAutoCreate;
+				return self::setOrDefault( $wgLDAPDisableAutoCreate, $domain, false );
+			case 'GroupUseFullDN':
+				global $wgLDAPGroupUseFullDN;
+				return self::setOrDefault( $wgLDAPGroupUseFullDN, $domain, false );
+			case 'LowerCaseUsername':
+				global $wgLDAPLowerCaseUsername;
+				// Default set to true for backwards compatibility with
+				// versions < 2.0a
+				return self::setOrDefault( $wgLDAPLowerCaseUsername, $domain, true );
+			case 'GroupUseRetrievedUsername':
+				global $wgLDAPGroupUseRetrievedUsername;
+				return self::setOrDefault( $wgLDAPGroupUseRetrievedUsername, $domain, false );
+			case 'GroupObjectclass':
+				global $wgLDAPGroupObjectclass;
+				return self::setOrDefault( $wgLDAPGroupObjectclass, $domain );
+			case 'GroupAttribute':
+				global $wgLDAPGroupAttribute;
+				return self::setOrDefault( $wgLDAPGroupAttribute, $domain );
+			case 'GroupNameAttribute':
+				global $wgLDAPGroupNameAttribute;
+				return self::setOrDefault( $wgLDAPGroupNameAttribute, $domain );
+			case 'GroupsUseMemberOf':
+				global $wgLDAPGroupsUseMemberOf;
+				return self::setOrDefault( $wgLDAPGroupsUseMemberOf, $domain, false );
+			case 'UseLDAPGroups':
+				global $wgLDAPUseLDAPGroups;
+				return self::setOrDefault( $wgLDAPUseLDAPGroups, $domain, false );
+			case 'LocallyManagedGroups':
+				global $wgLDAPLocallyManagedGroups;
+				return self::setOrDefault( $wgLDAPLocallyManagedGroups, $domain, [] );
+			case 'GroupsPrevail':
+				global $wgLDAPGroupsPrevail;
+				return self::setOrDefault( $wgLDAPGroupsPrevail, $domain, false );
+			case 'RequiredGroups':
+				global $wgLDAPRequiredGroups;
+				return self::setOrDefault( $wgLDAPRequiredGroups, $domain, [] );
+			case 'ExcludedGroups':
+				global $wgLDAPExcludedGroups;
+				return self::setOrDefault( $wgLDAPExcludedGroups, $domain, [] );
+			case 'GroupSearchNestedGroups':
+				global $wgLDAPGroupSearchNestedGroups;
+				return self::setOrDefault( $wgLDAPGroupSearchNestedGroups, $domain, false );
+			case 'AuthAttribute':
+				global $wgLDAPAuthAttribute;
+				return self::setOrDefault( $wgLDAPAuthAttribute, $domain );
+			case 'ActiveDirectory':
+				global $wgLDAPActiveDirectory;
+				return self::setOrDefault( $wgLDAPActiveDirectory, $domain, false );
+			case 'GroupSearchPosixPrimaryGroup':
+				global $wgLDAPGroupSearchPosixPrimaryGroup;
+				return self::setOrDefault( $wgLDAPGroupSearchPosixPrimaryGroup, $domain, false );
 		}
 		return '';
 	}
