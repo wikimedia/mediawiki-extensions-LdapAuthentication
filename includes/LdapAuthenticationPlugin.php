@@ -656,7 +656,7 @@ class LdapAuthenticationPlugin {
 			return false;
 		}
 
-		// Mediawiki munges the username before authenticate is called,
+		// MediaWiki munges the username before authenticate is called,
 		// this can mess with authentication, group pulling/restriction,
 		// preference pulling, etc. Let's allow the admin to use
 		// a lowercased username if needed.
