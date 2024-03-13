@@ -2138,12 +2138,15 @@ class LdapAuthenticationPlugin {
 	public static function loadDomain( $user ) {
 		$user_id = $user->getId();
 		if ( $user_id != 0 ) {
-			$dbr = wfGetDB( DB_REPLICA );
-			$row = $dbr->selectRow(
-				'ldap_domains',
-				[ 'domain' ],
-				[ 'user_id' => $user_id ],
-				__METHOD__ );
+			$row = MediaWikiServices::getInstance()
+				->getConnectionProvider()
+				->getReplicaDatabase()
+				->selectRow(
+					'ldap_domains',
+					[ 'domain' ],
+					[ 'user_id' => $user_id ],
+					__METHOD__
+				);
 
 			if ( $row ) {
 				return $row->domain;
@@ -2161,29 +2164,34 @@ class LdapAuthenticationPlugin {
 	public static function saveDomain( $user, $domain ) {
 		$user_id = $user->getId();
 		if ( $user_id != 0 ) {
-			$dbw = wfGetDB( DB_PRIMARY );
 			$olddomain = self::loadDomain( $user );
 			if ( $olddomain ) {
 				// Check we really need to update domain.
 				// Otherwise we can receive an error when logging in with
 				// $wgReadOnly.
 				if ( $olddomain != $domain ) {
-					return $dbw->update(
-						'ldap_domains',
-						[ 'domain' => $domain ],
-						[ 'user_id' => $user_id ],
-						__METHOD__
-					);
+					return MediaWikiServices::getInstance()
+						->getConnectionProvider()
+						->getPrimaryDatabase()
+						->update(
+							'ldap_domains',
+							[ 'domain' => $domain ],
+							[ 'user_id' => $user_id ],
+							__METHOD__
+						);
 				}
 			} else {
-				return $dbw->insert(
-					'ldap_domains',
-					[
-						'domain' => $domain,
-						'user_id' => $user_id
-					],
-					__METHOD__
-				);
+				return MediaWikiServices::getInstance()
+					->getConnectionProvider()
+					->getPrimaryDatabase()
+					->insert(
+						'ldap_domains',
+						[
+							'domain' => $domain,
+							'user_id' => $user_id
+						],
+						__METHOD__
+					);
 			}
 		}
 		return false;
