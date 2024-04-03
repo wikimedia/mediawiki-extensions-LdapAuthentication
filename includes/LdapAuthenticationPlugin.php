@@ -2159,7 +2159,6 @@ class LdapAuthenticationPlugin {
 	/**
 	 * @param User $user
 	 * @param string $domain
-	 * @return bool
 	 */
 	public static function saveDomain( $user, $domain ) {
 		$user_id = $user->getId();
@@ -2170,31 +2169,30 @@ class LdapAuthenticationPlugin {
 				// Otherwise we can receive an error when logging in with
 				// $wgReadOnly.
 				if ( $olddomain != $domain ) {
-					return MediaWikiServices::getInstance()
+					MediaWikiServices::getInstance()
 						->getConnectionProvider()
 						->getPrimaryDatabase()
-						->update(
-							'ldap_domains',
-							[ 'domain' => $domain ],
-							[ 'user_id' => $user_id ],
-							__METHOD__
-						);
+						->newUpdateQueryBuilder()
+						->update( 'ldap_domains' )
+						->set( [ 'domain' => $domain ] )
+						->where( [ 'user_id' => $user_id ] )
+						->caller( __METHOD__ )
+						->execute();
 				}
 			} else {
-				return MediaWikiServices::getInstance()
+				MediaWikiServices::getInstance()
 					->getConnectionProvider()
 					->getPrimaryDatabase()
-					->insert(
-						'ldap_domains',
-						[
-							'domain' => $domain,
-							'user_id' => $user_id
-						],
-						__METHOD__
-					);
+					->newInsertQueryBuilder()
+					->insertInto( 'ldap_domains' )
+					->row( [
+						'domain' => $domain,
+						'user_id' => $user_id
+					] )
+					->caller( __METHOD__ )
+					->execute();
 			}
 		}
-		return false;
 	}
 
 }
