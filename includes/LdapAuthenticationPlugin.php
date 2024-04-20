@@ -2141,12 +2141,12 @@ class LdapAuthenticationPlugin {
 			$row = MediaWikiServices::getInstance()
 				->getConnectionProvider()
 				->getReplicaDatabase()
-				->selectRow(
-					'ldap_domains',
-					[ 'domain' ],
-					[ 'user_id' => $user_id ],
-					__METHOD__
-				);
+				->newSelectQueryBuilder()
+				->select( 'domain' )
+				->from( 'ldap_domains' )
+				->where( [ 'user_id' => $user_id ] )
+				->caller( __METHOD__ )
+				->fetchRow();
 
 			if ( $row ) {
 				return $row->domain;
