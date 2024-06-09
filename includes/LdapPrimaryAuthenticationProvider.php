@@ -28,6 +28,7 @@ use MediaWiki\Auth\AuthManager;
 use MediaWiki\Auth\PasswordAuthenticationRequest;
 use MediaWiki\Auth\PasswordDomainAuthenticationRequest;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Message\Message;
 use MediaWiki\User\User;
 use MediaWiki\User\UserNameUtils;
 use Wikimedia\ScopedCallback;
@@ -452,7 +453,7 @@ class LdapPrimaryAuthenticationProvider
 		}
 
 		return AuthenticationResponse::newFail(
-			new \Message( 'authmanager-authplugin-create-fail' )
+			new Message( 'authmanager-authplugin-create-fail' )
 		);
 	}
 
