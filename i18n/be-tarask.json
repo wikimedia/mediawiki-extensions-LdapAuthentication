@@ -3,13 +3,14 @@
 		"authors": [
 			"EugeneZelenko",
 			"Kapatych",
-			"Red Winged Duck"
+			"Red Winged Duck",
+			"Renessaince"
 		]
 	},
 	"ldapauthentication-desc": "Дапаўненьне LDAP-аўтэнтыфікацыі з падтрымкай некалькіх мэтадаў аўтэнтыфікацыі LDAP",
 	"authmanager-authplugin-setpass-failed-title": "Памылка зьмены паролю",
-	"authmanager-authplugin-setpass-failed-message": "Праграма аўтэнтыфікацыі адмовіў зьмену паролю.",
-	"authmanager-authplugin-create-fail": "Праграма аўтэнтыфікацыі адмовіў у стварэнні рахунку.",
-	"authmanager-authplugin-setpass-denied": "Праграма аўтэнтыфікацыі не дазваляе змяняць паролі.",
+	"authmanager-authplugin-setpass-failed-message": "Дадатак аўтэнтыфікацыі адмовіў зьмену паролю.",
+	"authmanager-authplugin-create-fail": "Праграма аўтэнтыфікацыі адмовіла ў стварэньні ўліковага запісу.",
+	"authmanager-authplugin-setpass-denied": "Дадатак аўтэнтыфікацыі не дазваляе зьмяняць паролі.",
 	"authmanager-authplugin-setpass-bad-domain": "Няслушны дамэн."
 }
