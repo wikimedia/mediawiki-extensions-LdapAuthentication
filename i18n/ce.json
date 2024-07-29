@@ -4,5 +4,10 @@
 			"Умар"
 		]
 	},
-	"ldapauthentication-desc": "LDAP-аутентификацин плагин LDAP нийса йуй хьожу"
+	"ldapauthentication-desc": "LDAP-аутентификацин плагин LDAP нийса йуй хьожу",
+	"authmanager-authplugin-setpass-failed-title": "Пароль хийцаран гӀалат",
+	"authmanager-authplugin-setpass-failed-message": "Аутентификацин плагино дихкина ду пароль хийцар.",
+	"authmanager-authplugin-create-fail": "Аутентификацин плагино дихкина ду аккаунташ кхоллар.",
+	"authmanager-authplugin-setpass-denied": "Аутентификацин плагино бакъо ца ло парольш хийца.",
+	"authmanager-authplugin-setpass-bad-domain": "Нийса домен йац."
 }
