@@ -1,12 +1,13 @@
 {
 	"@metadata": {
 		"authors": [
-			"Smcnarayan"
+			"Smcnarayan",
+			"Thakurji"
 		]
 	},
 	"authmanager-authplugin-setpass-failed-title": "Pasword ke nai badle sakaa",
-	"authmanager-authplugin-setpass-failed-message": "The authentication plugin denied the password change.",
-	"authmanager-authplugin-create-fail": "The authentication plugin denied the account creation.",
-	"authmanager-authplugin-setpass-denied": "The authentication plugin does not allow changing passwords.",
+	"authmanager-authplugin-setpass-failed-message": "Authentication plugin password badle ke ijaajat nai diis hae.",
+	"authmanager-authplugin-create-fail": "Authentication plugin account banae ke ijaajat nai diis hae.",
+	"authmanager-authplugin-setpass-denied": "Authentication plugin password ke badle ke ijaajat nai de hae.",
 	"authmanager-authplugin-setpass-bad-domain": "Domain invalid hai."
 }
