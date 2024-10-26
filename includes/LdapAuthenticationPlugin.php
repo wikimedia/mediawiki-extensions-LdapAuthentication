@@ -2021,7 +2021,7 @@ class LdapAuthenticationPlugin {
 		global $wgLDAPDebug;
 
 		if ( $wgLDAPDebug >= $debugVal ) {
-			if ( isset( $debugArr ) ) {
+			if ( $debugArr !== null ) {
 				$debugText = $debugText . " " . implode( "::", $debugArr );
 			}
 			/* Update second parameter when bumping versions */
