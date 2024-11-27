@@ -1,8 +1,14 @@
 {
 	"@metadata": {
 		"authors": [
-			"Anakmalaysia"
+			"Anakmalaysia",
+			"Hakimi97"
 		]
 	},
-	"ldapauthentication-desc": "Pemalam pengesahan LDAP dengan sokongan untuk berbilang kaedah pengesahan LDAP"
+	"ldapauthentication-desc": "Pemalam pengesahan LDAP dengan sokongan untuk berbilang kaedah pengesahan LDAP",
+	"authmanager-authplugin-setpass-failed-title": "Penggantian kata laluan gagal",
+	"authmanager-authplugin-setpass-failed-message": "Pemalam pengesahihan menolak perubahan kata laluan.",
+	"authmanager-authplugin-create-fail": "Pemalam pengesahihan menolak penciptaan akaun.",
+	"authmanager-authplugin-setpass-denied": "Pemalam pengesahihan tidak membenarkan penukaran kata laluan.",
+	"authmanager-authplugin-setpass-bad-domain": "Domain tidak sah."
 }
