@@ -1,8 +1,0 @@
-{
-	"@metadata": {
-		"authors": [
-			"Helix84"
-		]
-	},
-	"ldapauthentication-desc": "Zásuvný modul na autentifikáciu prostredníctvom LDAP s podporou viacerých metód LDAP"
-}

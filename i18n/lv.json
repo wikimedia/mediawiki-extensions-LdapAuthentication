@@ -1,9 +1,0 @@
-{
-	"@metadata": {
-		"authors": [
-			"Papuass"
-		]
-	},
-	"ldapauthentication-desc": "LDAP autentifikācijas spraudnis ar atbalstu vairākām LDAP autentifikācijas metodēm",
-	"authmanager-authplugin-setpass-bad-domain": "Nederīgs domēns."
-}
